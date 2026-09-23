@@ -1,0 +1,6 @@
+{
+  "name": "Oank Cleaning CIC",
+  "description": "OanK Cleaning CIC - Independent Community Interest Company in Paisley, Scotland. Commercial & domestic cleaning, Home Reset pilot, and Employment Pathway initiatives.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
