@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0" />
                 <div className="flex flex-col">
                   <a href="tel:+447510911940" className="hover:text-amber-300 transition-colors">+44 75 1091 1940</a>
-                  <a href="tel:+447522441379" className="hover:text-amber-300 transition-colors">+44 75 2244 1379</a>
+                  <a href="tel:+447731956727" className="hover:text-amber-300 transition-colors">+44 75 2244 1379</a>
                 </div>
               </div>
               <div className="flex items-center gap-2.5 text-slate-300">

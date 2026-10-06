@@ -35,46 +35,63 @@ export default function App() {
     CLEANING_SERVICES[0]
   );
 
-  // Initialize and synchronize with standard pathname routing (e.g. /home, /services)
+  // Initialize and synchronize with standard pathname routing (e.g. /, /services, /services/domestic-cleaning)
   useEffect(() => {
-    const parseRouteFromUrl = (): PageRoute => {
-      // If legacy hash exists (e.g. #/home or #home), extract route and clear the hash
+    const parseRouteFromUrl = (): { route: PageRoute; service?: CleaningService } => {
+      // If legacy hash exists (e.g. #/services or #services), extract and resolve
       if (window.location.hash) {
         const hashClean = window.location.hash.replace(/^#\/?/, '').trim();
+        const hashParts = hashClean.split('/');
+        if (hashParts[0] === 'services' && hashParts[1]) {
+          const matched = CLEANING_SERVICES.find(s => s.slug === hashParts[1] || s.id === hashParts[1]);
+          if (matched) {
+            window.history.replaceState({ route: 'service-detail', slug: matched.slug }, '', `/services/${matched.slug}`);
+            return { route: 'service-detail', service: matched };
+          }
+        }
         if (VALID_ROUTES.includes(hashClean as PageRoute)) {
-          const cleanPath = hashClean === 'home' ? '/home' : `/${hashClean}`;
+          const cleanPath = hashClean === 'home' ? '/' : `/${hashClean}`;
           window.history.replaceState({ route: hashClean }, '', cleanPath);
-          return hashClean as PageRoute;
-        } else {
-          window.history.replaceState({ route: 'home' }, '', '/home');
-          return 'home';
+          return { route: hashClean as PageRoute };
         }
       }
 
       // Read clean pathname
-      const pathname = window.location.pathname.replace(/^\/+/, '').split('/')[0];
-      if (VALID_ROUTES.includes(pathname as PageRoute)) {
-        return pathname as PageRoute;
+      const pathSegments = window.location.pathname.replace(/^\/+/, '').split('/');
+      const mainPath = pathSegments[0] || '';
+
+      if (mainPath === '' || mainPath === 'home') {
+        return { route: 'home' };
       }
-      return 'home';
+
+      if (mainPath === 'services' && pathSegments[1]) {
+        const slug = pathSegments[1];
+        const matched = CLEANING_SERVICES.find(s => s.slug === slug || s.id === slug);
+        if (matched) {
+          return { route: 'service-detail', service: matched };
+        }
+        return { route: 'services' };
+      }
+
+      if (VALID_ROUTES.includes(mainPath as PageRoute)) {
+        return { route: mainPath as PageRoute };
+      }
+
+      return { route: 'home' };
     };
 
-    const initialRoute = parseRouteFromUrl();
-    setCurrentRoute(initialRoute);
-
-    // Ensure the browser address bar is set to clean /<route>
-    const expectedPath = initialRoute === 'home' ? '/home' : `/${initialRoute}`;
-    if (window.location.pathname !== expectedPath && !window.location.hash) {
-      window.history.replaceState({ route: initialRoute }, '', expectedPath);
+    const initial = parseRouteFromUrl();
+    setCurrentRoute(initial.route);
+    if (initial.service) {
+      setSelectedService(initial.service);
     }
 
     // Handle browser Back / Forward buttons
     const handlePopState = () => {
-      const pathname = window.location.pathname.replace(/^\/+/, '').split('/')[0];
-      if (VALID_ROUTES.includes(pathname as PageRoute)) {
-        setCurrentRoute(pathname as PageRoute);
-      } else {
-        setCurrentRoute('home');
+      const parsed = parseRouteFromUrl();
+      setCurrentRoute(parsed.route);
+      if (parsed.service) {
+        setSelectedService(parsed.service);
       }
     };
 
@@ -84,7 +101,7 @@ export default function App() {
 
   const handleNavigate = (route: PageRoute) => {
     setCurrentRoute(route);
-    const targetPath = route === 'home' ? '/home' : `/${route}`;
+    const targetPath = route === 'home' ? '/' : `/${route}`;
     if (window.location.pathname !== targetPath || window.location.hash) {
       window.history.pushState({ route }, '', targetPath);
     }
@@ -93,7 +110,12 @@ export default function App() {
 
   const handleSelectService = (service: CleaningService) => {
     setSelectedService(service);
-    handleNavigate('service-detail');
+    setCurrentRoute('service-detail');
+    const targetPath = `/services/${service.slug}`;
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ route: 'service-detail', slug: service.slug }, '', targetPath);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

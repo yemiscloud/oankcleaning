@@ -1,5 +1,4 @@
 import React from 'react';
-import ohk3dLogo from '../assets/images/ohk-1.jpg';
 
 interface LogoProps {
   variant?: 'light' | 'dark' | 'header';
@@ -32,7 +31,7 @@ export const Logo: React.FC<LogoProps> = ({
       {/* OANK Cleaning Logo Emblem */}
       <div className={`relative flex-shrink-0 ${logoDimensions.icon} transition-transform duration-300 hover:scale-105 flex items-center justify-center`}>
         <img 
-          src={ohk3dLogo} 
+          src="/images/logo-emblem.jpg" 
           alt="OANK Cleaning CIC Logo" 
           referrerPolicy="no-referrer"
           className="w-full h-full object-contain filter drop-shadow-md rounded-md"

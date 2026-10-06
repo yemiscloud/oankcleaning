@@ -1,34 +1,23 @@
-import domesticImg from '../assets/images/domestic_cleaning_pro_1786385237318.jpg';
-import commercialImg from '../assets/images/office_commercial_clean_1786385251204.jpg';
-import tenancyImg from '../assets/images/end_of_tenancy_clean_1786385264213.jpg';
-import heroImg from '../assets/images/hero_cleaning_banner_1786385221170.jpg';
-import groupImg from '../assets/images/EjzLF.jpg';
-import aboutTeamImg from '../assets/images/about-team.jpg';
-import heroWebpImg from '../assets/images/hero.webp';
-import serviceRegularImg from '../assets/images/service-regular.jpg';
-import serviceDeepImg from '../assets/images/service-deep.webp';
-import serviceCommercialImg from '../assets/images/service-commercial.webp';
-import serviceEotImg from '../assets/images/service-eot.jpg';
-import serviceLaundryImg from '../assets/images/service-laundry.jpg';
-
 import { CleaningService, Testimonial, FAQItem, CommunityProgram } from '../types';
 
 export const COMPANY_WHATSAPP_NUMBER = '+44 75 1091 1940';
 export const COMPANY_WHATSAPP_LINK = 'https://wa.me/447510911940';
 
 export const IMAGE_ASSETS = {
-  hero: heroImg,
-  heroSecondary: heroWebpImg,
-  domestic: domesticImg,
-  commercial: commercialImg,
-  tenancy: tenancyImg,
-  group: groupImg,
-  aboutTeam: aboutTeamImg,
-  serviceRegular: serviceRegularImg,
-  serviceDeep: serviceDeepImg,
-  serviceCommercial: serviceCommercialImg,
-  serviceEot: serviceEotImg,
-  serviceLaundry: serviceLaundryImg,
+  hero: '/images/hero-banner.jpg',
+  heroSecondary: '/images/hero.webp',
+  domestic: '/images/domestic-clean.jpg',
+  commercial: '/images/office-commercial.jpg',
+  tenancy: '/images/end-of-tenancy.jpg',
+  group: '/images/about-hub.jpg',
+  aboutTeam: '/images/about-team.jpg',
+  serviceRegular: '/images/service-regular.jpg',
+  serviceDeep: '/images/service-deep.webp',
+  serviceCommercial: '/images/service-commercial.webp',
+  serviceEot: '/images/service-eot.jpg',
+  serviceLaundry: '/images/service-laundry.jpg',
+  logo: '/images/logo-emblem.jpg',
+  logo3d: '/images/logo-emblem-3d.png',
 };
 
 export const CLEANING_SERVICES: CleaningService[] = [
@@ -59,7 +48,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £18.50 / hr',
     estimatedTime: '2 - 4 hours per visit',
-    image: serviceRegularImg,
+    image: '/images/service-regular.jpg',
     popular: true,
   },
   {
@@ -88,7 +77,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £85 one-off',
     estimatedTime: '4 - 7 hours team deployment',
-    image: serviceDeepImg,
+    image: '/images/service-deep.webp',
     popular: true,
   },
   {
@@ -118,7 +107,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £145 package',
     estimatedTime: '5 - 8 hours complete property clean',
-    image: serviceEotImg,
+    image: '/images/service-eot.jpg',
     popular: true,
   },
   {
@@ -147,7 +136,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £19.50 / hr contract',
     estimatedTime: 'Tailored commercial schedule',
-    image: serviceCommercialImg,
+    image: '/images/service-commercial.webp',
     popular: false,
   },
   {
@@ -176,7 +165,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'Custom Healthcare Quote',
     estimatedTime: 'Daily or continuous shift contract',
-    image: serviceLaundryImg,
+    image: '/images/service-laundry.jpg',
     popular: false,
   },
   {
@@ -205,7 +194,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £45 per room',
     estimatedTime: '1 - 3 hours depending on size',
-    image: domesticImg,
+    image: '/images/domestic-clean.jpg',
     popular: false,
   }
 ];

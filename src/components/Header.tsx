@@ -19,8 +19,9 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
 
   const navLinks: { label: string; route: PageRoute; badge?: string }[] = [
     { label: 'Home', route: 'home' },
+     { label: 'About Us', route: 'about' },
     { label: 'Services', route: 'services' },
-    { label: 'About Us', route: 'about' },
+    { label: 'Community', route: 'community', badge: 'CIC' },
     { label: 'FAQs', route: 'faqs' },
     { label: 'Get in Touch', route: 'contact' },
   ];
@@ -34,11 +35,15 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
   return (
     <header className="sticky top-0 z-50 w-full shadow-md bg-white">
       {/* Top CIC Announcement Bar */}
-      <div className="bg-[#0F382C] text-slate-200 text-[11px] py-1.5 px-4 text-center border-b border-emerald-800 flex items-center justify-center gap-2">
-        <HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />
-        <span>
-          <strong>OANK Cleaning CIC</strong> – Standalone Community Interest Company | Scotland
-        </span>
+      <div className="bg-[#0F382C] text-slate-200 text-[11px] py-1.5 px-4 text-center border-b border-emerald-800 flex items-center justify-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />
+          <span>
+            <strong>OANK Cleaning CIC</strong> – Standalone Community Interest Company | Scotland
+          </span>
+        </div>
+        <span className="text-emerald-700 hidden sm:inline">•</span>
+   
       </div>
 
       {/* Main Navigation Header */}
@@ -131,6 +136,18 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
                 </button>
               );
             })}
+
+            <button
+              onClick={() => handleNavClick('governance')}
+              className={`flex items-center justify-between w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                currentRoute === 'governance'
+                  ? 'bg-[#0F382C] text-white font-semibold'
+                  : 'text-slate-800 hover:bg-slate-100'
+              }`}
+            >
+              <span>Governance & Policies</span>
+              <ChevronRight className={`w-4 h-4 ${currentRoute === 'governance' ? 'text-[#D4AF37]' : 'text-slate-400'}`} />
+            </button>
 
             <div className="pt-2">
               <button

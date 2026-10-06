@@ -50,15 +50,37 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
             </div>
 
             <div className="space-y-4 text-xs">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#D4AF37] flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4" />
-                </div>
-                <div>
-                  <strong className="block text-white text-sm">Head Office Location:</strong>
-                  <span className="text-slate-200 text-xs">Paisley, Scotland, PA3 2PJ</span>
-                </div>
-              </div>
+            <div className="flex items-start gap-3">
+  <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#D4AF37] flex items-center justify-center flex-shrink-0 mt-0.5">
+    <MapPin className="w-4 h-4" />
+  </div>
+
+  <div className="space-y-4 min-w-0">
+    <div>
+      <strong className="block text-white text-sm mb-1">
+        Head Office
+      </strong>
+      <address className="not-italic text-slate-200 text-xs leading-relaxed">
+        Paisley, Scotland PA3 2PJ <br />
+        United Kingdom
+      </address>
+    </div>
+
+    <div className="pt-3 border-t border-emerald-800/70">
+      <strong className="block text-white text-sm mb-1">
+        Glasgow Office
+      </strong>
+      <address className="not-italic text-slate-200 text-xs leading-relaxed">
+        Office 1856, 3 Fitzroy Place, 1/1, Sauchiehall Street<br />
+        Finnieston, Glasgow Central<br />
+        Glasgow, G3 7RH<br />
+        United Kingdom
+      </address>
+    </div>
+  </div>
+</div>
+
+              
 
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#D4AF37] flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -67,7 +89,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
                 <div>
                   <strong className="block text-white text-sm">Phone Lines:</strong>
                   <a href="tel:+447510911940" className="hover:text-amber-300 font-bold block text-xs mt-0.5">+44 75 1091 1940</a>
-                  <a href="tel:+447522441379" className="hover:text-amber-300 font-bold block text-xs">+44 75 2244 1379</a>
+                  <a href="tel:+447731956726" className="hover:text-amber-300 font-bold block text-xs">+44 75 2244 1379</a>
                 </div>
               </div>
 
