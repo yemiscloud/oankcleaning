@@ -24,13 +24,15 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect, onQ
         <img
           src={service.image}
           alt={service.title}
+          loading="lazy"
+          decoding="async"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-95"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#082019]/90 via-[#082019]/30 to-transparent flex items-end p-5">
           <div>
             <span className="text-amber-300 font-bold text-[10px] uppercase tracking-wider block">
-              {service.category.toUpperCase()} SERVICE
+              {service.category.toUpperCase()} CLEANING
             </span>
             <h3 className="text-xl font-serif font-bold text-white leading-tight">
               {service.title}
@@ -75,7 +77,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, onSelect, onQ
               onClick={() => onSelect(service)}
               className="w-full py-2.5 px-3 rounded-xl border-2 border-[#0F382C] text-[#0F382C] font-bold text-xs hover:bg-[#0F382C] hover:text-white transition-all cursor-pointer flex items-center justify-center gap-1"
             >
-              <span>Check Checklist</span>
+              <span>See Details</span>
             </button>
 
             <button

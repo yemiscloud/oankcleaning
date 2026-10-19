@@ -33,6 +33,10 @@ export const Logo: React.FC<LogoProps> = ({
         <img 
           src="/images/logo-emblem.jpg" 
           alt="OANK Cleaning CIC Logo" 
+          width={48}
+          height={48}
+          loading="eager"
+          decoding="async"
           referrerPolicy="no-referrer"
           className="w-full h-full object-contain filter drop-shadow-md rounded-md"
         />

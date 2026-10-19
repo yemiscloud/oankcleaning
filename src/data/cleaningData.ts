@@ -4,7 +4,8 @@ export const COMPANY_WHATSAPP_NUMBER = '+44 75 1091 1940';
 export const COMPANY_WHATSAPP_LINK = 'https://wa.me/447510911940';
 
 export const IMAGE_ASSETS = {
-  hero: '/images/hero-banner.jpg',
+  hero: '/images/hero.webp',
+  heroBanner: '/images/hero-banner.jpg',
   heroSecondary: '/images/hero.webp',
   domestic: '/images/domestic-clean.jpg',
   commercial: '/images/office-commercial.jpg',
@@ -17,183 +18,185 @@ export const IMAGE_ASSETS = {
   serviceEot: '/images/service-eot.jpg',
   serviceLaundry: '/images/service-laundry.jpg',
   logo: '/images/logo-emblem.jpg',
-  logo3d: '/images/logo-emblem-3d.png',
+  logo3d: '/images/logo-emblem.jpg',
+  ohk3d: '/images/ohk-1.jpg',
+  ohk1: '/images/ohk-1.jpg',
 };
 
 export const CLEANING_SERVICES: CleaningService[] = [
   {
     id: 'domestic-regular',
     slug: 'domestic-cleaning',
-    title: 'Regular Domestic Cleaning',
-    tagline: 'Tailored weekly or fortnightly housekeeping for your sanctuary',
+    title: 'Regular Home Cleaning',
+    tagline: 'We keep your house tidy and clean every week or two',
     category: 'domestic',
-    shortDesc: 'Trustworthy, DBS-checked local cleaners who take care of your home on a schedule that fits your lifestyle perfectly.',
-    fullDesc: 'Our regular domestic cleaning service in Paisley and Greater Glasgow is designed around your individual preferences. We assign a dedicated, vetted cleaner to your home for consistent quality, handling everything from dusting and vacuuming to bathroom deep-cleans and kitchen sanitisation.',
+    shortDesc: 'Friendly, police-checked cleaners who take care of your home on days that work best for you.',
+    fullDesc: 'We clean homes across Paisley and Glasgow. You get the same friendly cleaner every time. We dust surfaces, vacuum carpets, mop floors, wipe kitchen counters, and clean bathrooms until they shine.',
     features: [
-      'Same dedicated cleaner every visit',
-      'Flexible weekly or fortnightly schedules',
-      'Full insurance & DBS verified staff',
-      'Eco-friendly non-toxic cleaning agents',
-      'Keyholding service with secure protocols',
-      'Customized room-by-room checklist'
+      'The same friendly cleaner each visit',
+      'Choose weekly or every two weeks',
+      'Police-checked and fully insured staff',
+      'Safe, eco-friendly cleaning soaps',
+      'Safe key holding if you are not home',
+      'You tell us what you want cleaned'
     ],
     checklist: [
-      'Dusting and wiping all accessible surfaces & skirting boards',
-      'Vacuuming all carpets, rugs, and soft upholstery',
-      'Mopping all hard flooring & tile surfaces',
-      'Sanitising kitchen worktops, hobs, sink & exterior appliances',
-      'Scrubbing shower cubicles, bath tubs, sinks & toilets',
-      'Polishing mirrors, chrome fixtures & glass tables',
-      'Emptying bins & replacing liners'
+      'Dusting tables, shelves, and skirting boards',
+      'Vacuuming all carpets, rugs, and sofas',
+      'Mopping all hard floors and tiles',
+      'Wiping kitchen worktops, sinks, and cooker tops',
+      'Scrubbing showers, baths, sinks, and toilets',
+      'Polishing glass mirrors and chrome taps',
+      'Emptying waste bins and putting in fresh bags'
     ],
     priceStart: 'From £18.50 / hr',
-    estimatedTime: '2 - 4 hours per visit',
+    estimatedTime: '2 to 4 hours per visit',
     image: '/images/service-regular.jpg',
     popular: true,
   },
   {
     id: 'deep-cleaning',
     slug: 'deep-cleaning',
-    title: 'Deep & Spring Cleaning',
-    tagline: 'Comprehensive top-to-bottom refreshing for complete peace of mind',
+    title: 'Deep Spring Cleaning',
+    tagline: 'A big, full clean from top to bottom for a fresh home',
     category: 'domestic',
-    shortDesc: 'Intensive restoration clean targeting hidden dust, limescale, grease, and built-up grime in every corner of your property.',
-    fullDesc: 'An exhaustive, detail-driven deep clean suitable for seasonal refreshes, pre-event preparations, or reviving a home that needs extra care. Our specialist team moves light furniture, tackles limescale in wet rooms, and degreases kitchen hoods.',
+    shortDesc: 'We clean away hidden dust, dirt, limescale, and grease from every corner of your home.',
+    fullDesc: 'This is a big, thorough clean for homes that need extra love. Our team moves light furniture, scrubs away bathroom limescale, degreases kitchen ovens and fans, and cleans every room so it feels brand new.',
     features: [
-      'Intensive multi-person team deployment',
-      'Includes internal window & frame polishing',
-      'Limescale removal in bathrooms & taps',
-      'Kitchen degreasing & appliance exterior detailing',
-      'Behind and under accessible furniture',
-      'Hospital-grade sanitization treatments'
+      'Hard-working team of cleaners',
+      'Washing inside windows and window sills',
+      'Removing hard limescale on taps and tiles',
+      'Cleaning grease off cookers and fans',
+      'Cleaning behind and under light furniture',
+      'Strong cleaning soaps that kill germs'
     ],
     checklist: [
-      'Detailed dusting of high-level fixtures, light fittings & ceiling corners',
-      'Wiping down all doors, handles, switches & sockets',
-      'Deep descaling of bath taps, shower heads, and tiles',
-      'Degreasing extractor fans, hob surrounds & splashbacks',
-      'Deep vacuuming including furniture cushions & crevices',
-      'Wiping down internal door frames & picture frames'
+      'Dusting light fittings, tall corners, and ceiling edges',
+      'Wiping all doors, door handles, and light switches',
+      'Scrubbing bath taps, shower heads, and wall tiles',
+      'Cleaning grease off cooker fans and kitchen tiles',
+      'Deep vacuuming cushions and sofa corners',
+      'Wiping down door frames, picture frames, and baseboards'
     ],
     priceStart: 'From £85 one-off',
-    estimatedTime: '4 - 7 hours team deployment',
+    estimatedTime: '4 to 7 hours with our team',
     image: '/images/service-deep.webp',
     popular: true,
   },
   {
     id: 'end-of-tenancy',
     slug: 'end-of-tenancy',
-    title: 'End of Tenancy Cleaning',
-    tagline: '100% Deposit Back Guarantee for landlords & tenants',
+    title: 'Move Out & Tenancy Cleaning',
+    tagline: '100% deposit back guarantee for renters and landlords',
     category: 'specialist',
-    shortDesc: 'Approved by top UK estate agencies and letting managers. Rigorous inventory-standard deep clean guarantees deposit release.',
-    fullDesc: 'Moving home in Paisley, Renfrewshire, or Glasgow? Our End of Tenancy cleaning adheres strictly to leading UK letting agent inventory checklists. We guarantee our work for 72 hours—if your landlord or agent raises any issues, we re-clean free of charge.',
+    shortDesc: 'Approved by top letting agents. A full clean that helps you get your rental deposit back.',
+    fullDesc: 'Moving to a new home in Paisley or Glasgow? We do the big move-out clean so your landlord is happy. If your landlord finds any dirty spot within 72 hours, we will come back and clean it again for free!',
     features: [
-      '100% Deposit Back Guarantee (72-hour re-clean safety net)',
-      'Agency & Landlord approved checklist',
-      'Oven deep clean included in package options',
-      'Invoice provided for deposit claim submission',
-      'Same-day emergency availability options',
-      'Professional team with full equipment supplied'
+      '100% Deposit Back Guarantee (free re-clean within 72 hours)',
+      'Follows official letting agency check lists',
+      'Oven deep clean included in package deals',
+      'Official receipt for your landlord or agent',
+      'Quick bookings available when you move fast',
+      'We bring all our own mops, cloths, and soaps'
     ],
     checklist: [
-      'Deep oven & hob degreasing (internal & external)',
-      'Internal window & ledge cleaning throughout',
-      'Inside and outside of all kitchen cupboards & drawers',
-      'Full descaling of all sanitary ware, glass screens & tiles',
-      'Skirting boards, doors, architraves & light switches',
-      'Cobweb removal and high dusting across all rooms',
-      'Deep vacuuming & floor sanitization'
+      'Deep cleaning inside and outside the oven and cooker',
+      'Cleaning inside windows and window ledges',
+      'Wiping inside and outside all kitchen cupboards and drawers',
+      'Scrubbing and descaling baths, showers, and toilets',
+      'Wiping all doors, skirting boards, and switches',
+      'Removing cobwebs from ceilings and corners',
+      'Deep vacuuming and mopping every floor'
     ],
     priceStart: 'From £145 package',
-    estimatedTime: '5 - 8 hours complete property clean',
+    estimatedTime: '5 to 8 hours full property clean',
     image: '/images/service-eot.jpg',
     popular: true,
   },
   {
     id: 'commercial-office',
     slug: 'commercial-office',
-    title: 'Commercial & Office Cleaning',
-    tagline: 'Spotless corporate environments that foster health & productivity',
+    title: 'Office & Business Cleaning',
+    tagline: 'Clean and tidy workplaces where your team can do their best',
     category: 'commercial',
-    shortDesc: 'Bespoke commercial hygiene contracts for offices, retail hubs, showrooms, and corporate headquarters across Paisley & Scotland.',
-    fullDesc: 'First impressions matter. Oank Cleaning delivers flexible out-of-hours commercial cleaning that keeps your workplace pristine, hygienic, and compliant. We customize cleaning frequencies to fit your business operations seamlessly.',
+    shortDesc: 'Regular cleaning for offices, shops, and work buildings across Paisley and Scotland.',
+    fullDesc: 'A clean office helps your team stay healthy and makes a great impression on guests. We clean desks, phones, kitchens, and toilets before or after your work hours so we never get in your way.',
     features: [
-      'Out-of-hours / overnight cleaning schedules',
-      'COSHH compliant chemicals & risk assessments',
-      'Touchpoint disinfection (keyboards, phones, door handles)',
-      'Communal kitchen, canteen & washroom maintenance',
-      'Dedicated Account Manager & regular audits',
-      'Flexible short-term or long-term commercial contracts'
+      'Cleaning early in the morning or in the evening',
+      'Safe cleaning soaps and safe working rules',
+      'Wiping high-touch spots like door handles and keyboards',
+      'Daily cleaning for office kitchens and staff toilets',
+      'Dedicated manager who checks quality regularly',
+      'Simple monthly contracts that fit your needs'
     ],
     checklist: [
-      'Sanitising work desks, monitors, keyboards & telephones',
-      'Emptying waste bins, recycling & replacing liners',
-      'Vacuuming high-traffic carpets and mopping hard floors',
-      'Disinfecting office kitchen, microwaves & coffee hubs',
-      'Deep cleaning washroom cubicles, mirrors & towel dispensers',
-      'Glass partition wiping & entryway mat maintenance'
+      'Wiping desks, computer screens, keyboards, and phones',
+      'Emptying rubbish bins and recycling into fresh bags',
+      'Vacuuming busy carpets and mopping hard hallways',
+      'Cleaning microwaves, kitchen counters, and kettle areas',
+      'Scrubbing toilets, mirrors, and towel holders',
+      'Wiping glass doors and entrance mats'
     ],
     priceStart: 'From £19.50 / hr contract',
-    estimatedTime: 'Tailored commercial schedule',
+    estimatedTime: 'Set to your office hours',
     image: '/images/service-commercial.webp',
     popular: false,
   },
   {
     id: 'healthcare-carehome',
     slug: 'healthcare-cleaning',
-    title: 'Healthcare & Care Home Cleaning',
-    tagline: 'CQC compliant infection control & clinical hygiene standards',
+    title: 'Care Home & Health Cleaning',
+    tagline: 'Extra clean spaces to keep residents safe and healthy',
     category: 'specialist',
-    shortDesc: 'Specialized bio-sanitisation and clinical hygiene standards to protect vulnerable residents and clinical spaces.',
-    fullDesc: 'Oank Cleaning understands clinical hygiene demands. We deploy strict infection prevention protocols, colour-coded microfiber systems, and hospital-grade germicides.',
+    shortDesc: 'High-care cleaning that stops germs and protects vulnerable people.',
+    fullDesc: 'We follow strict health guidelines for care homes and health clinics. We use colour-coded cloths so germs never move from room to room, and we use strong disinfectants that kill bacteria and viruses.',
     features: [
-      'CQC & NHS guideline compliant cleaning methods',
-      'Strict color-coded cross-contamination prevention',
-      'Enhanced viral & bacterial touchpoint disinfection',
-      'Enhanced DBS checked staff with care training',
-      'Daily resident room & communal lounge maintenance',
-      'Emergency spill & sanitisation response team'
+      'Meets strict NHS and care home cleanliness rules',
+      'Colour-coded cloths so germs never spread',
+      'Careful cleaning of handrails, buzzers, and door handles',
+      'Police-checked cleaners with special care training',
+      'Daily cleaning for resident rooms and lounges',
+      'Fast response if there is an accidental spill'
     ],
     checklist: [
-      'Hospital-grade surface disinfection across all resident areas',
-      'Mopping floors with EN1276 certified anti-microbial solutions',
-      'Sanitising handrails, call bells, door handles & grab bars',
-      'Deep clean of ensuite bathrooms & care equipment surfaces',
-      'Sluice room & waste management area sanitisation',
-      'Air freshening & odour neutralization treatment'
+      'Wiping all surfaces with hospital-grade germ killers',
+      'Mopping floors with certified germ-stopping solution',
+      'Sanitising handrails, call bells, and door handles',
+      'Deep cleaning ensuite bathrooms and care chairs',
+      'Washing waste bin areas and laundry spaces',
+      'Keeping air fresh and free from bad smells'
     ],
-    priceStart: 'Custom Healthcare Quote',
-    estimatedTime: 'Daily or continuous shift contract',
+    priceStart: 'Custom Health Care Quote',
+    estimatedTime: 'Daily or shift-based cleaning',
     image: '/images/service-laundry.jpg',
     popular: false,
   },
   {
     id: 'carpet-upholstery',
     slug: 'carpet-upholstery',
-    title: 'Carpet & Upholstery Care',
-    tagline: 'Deep steam extraction restoring pile, removing stains & allergens',
+    title: 'Carpet & Sofa Cleaning',
+    tagline: 'Warm water steam cleaning that lifts stains and dirt',
     category: 'specialist',
-    shortDesc: 'High-powered hot water extraction machines eliminate deep-seated dirt, dust mites, pet dander, and tough stains.',
-    fullDesc: 'Extend the lifespan of your carpets and fabric sofas. Our trained technicians inspect fiber types, apply targeted stain pre-treatments, and utilize industrial hot water extraction to lift stubborn marks and leave carpets fresh and fast-drying.',
+    shortDesc: 'Big steam cleaning machines that pull out deep dirt, pet hair, and tough spots.',
+    fullDesc: 'Make your carpets and sofas look and smell fresh again. Our powerful warm-water extraction machines pull out deep mud, juice spills, and dust mites. The carpets dry quickly in just 2 to 4 hours.',
     features: [
-      'Industrial steam & hot water extraction machinery',
-      'Stain protection treatment (Scotchgard protection optional)',
-      'Pet stain & stubborn odour removal specialist',
-      'Safe on wool, synthetic, velvet & delicate upholstery',
-      'Quick-drying technology (ready in 2-4 hours)',
-      'Non-allergenic child & pet safe solutions'
+      'Heavy-duty hot water steam machines',
+      'Stain treatment for tough spots and spills',
+      'Removes pet hair and bad pet smells',
+      'Safe for wool, velvet, and soft sofas',
+      'Fast drying time of 2 to 4 hours',
+      'Safe for kids and family pets'
     ],
     checklist: [
-      'Pre-inspection & fiber identification testing',
-      'High-power HEPA pre-vacuuming',
-      'Targeted pre-spray treatment for high-traffic soil',
-      'Agitation & stain lifting treatment',
-      'Hot water extraction rinse & deep soil suction',
-      'Grooming carpet pile for accelerated drying'
+      'Checking the carpet fabric to pick the safest soap',
+      'Vacuuming up all loose dust and pet hair first',
+      'Spraying tough stains with gentle spot lifters',
+      'Brushing deep into the carpet threads',
+      'Hot water steam rinse and strong suction pull',
+      'Brushing carpet pile so it dries fast and feels soft'
     ],
     priceStart: 'From £45 per room',
-    estimatedTime: '1 - 3 hours depending on size',
+    estimatedTime: '1 to 3 hours per room',
     image: '/images/domestic-clean.jpg',
     popular: false,
   }
@@ -202,31 +205,31 @@ export const CLEANING_SERVICES: CleaningService[] = [
 export const COMMUNITY_PROGRAMS: CommunityProgram[] = [
   {
     title: '1. OANK Home Reset',
-    tagline: 'Restoring dignity, hygiene & wellbeing for people facing practical barriers at home',
-    description: 'A structured community cleaning intervention for individuals and families who have accommodation but experience genuine practical, physical, mobility, or confidence barriers to keeping their home clean and manageable.',
+    tagline: 'Helping local people keep a clean, safe, and happy home',
+    description: 'A free community cleaning program. Sometimes people have a home, but illness, age, or hard times make it tough to keep it clean. We send caring cleaners to help them get back on track.',
     bullets: [
-      'Targeted, agreed household-cleaning support tailored to the client’s living space',
-      'Supports personal dignity, mental health, and tenancy sustainment',
-      'Assessed by OANK for eligibility, health & safety, and suitability',
-      'Delivered by trained, empathetic, DBS-checked community cleaning specialists'
+      'We agree on a clear cleaning plan for the home',
+      'Brings back comfort, pride, and peace of mind',
+      'We check to make sure the home is safe for our team',
+      'Delivered by kind, police-checked cleaners'
     ],
     exclusions: [
-      'Does NOT provide medical treatment or nursing care',
-      'Does NOT provide personal care or regulated social-care services'
+      'We do NOT give medicine or doctor care',
+      'We do NOT help with bathing or dressing'
     ],
-    referralInfo: 'Accessed via referral or structured assessment through local partners, housing officers, or community support teams.'
+    referralInfo: 'Local housing officers, doctors, or support groups can help people apply.'
   },
   {
     title: '2. OANK Employment Pathway',
-    tagline: 'Creating real workplace opportunities, paid experience & accredited skills training',
-    description: 'A structured progression pathway designed for people facing barriers to employment in Renfrewshire and Greater Glasgow, providing skills, mentorship, and paid work.',
+    tagline: 'Real paid jobs and friendly job training for local people',
+    description: 'We help local people in Paisley and Glasgow who want to work. We teach them good cleaning skills, help them build confidence, and give them paid jobs.',
     bullets: [
-      'Rigorous induction and workplace cleaning skills development',
-      'Comprehensive training: Safe cleaning practices, chemical handling (COSHH), equipment usage',
-      'Health & safety, professional conduct, client boundaries, and confidentiality',
-      'Safeguarding awareness (protecting vulnerable adults and children)',
-      'Supervised paid cleaning work with ongoing supportive feedback',
-      'Competency-based progression into permanent roles, supervisor pathways, or external jobs'
+      'Step-by-step training on how to clean like a pro',
+      'Learning safe use of soaps, mops, and machines',
+      'Learning workplace safety and good customer care',
+      'Learning how to protect client privacy and safety',
+      'Real paid cleaning work with friendly mentors',
+      'Chance to step up into full-time jobs and supervisor roles'
     ]
   }
 ];
@@ -236,75 +239,104 @@ export const TESTIMONIALS: Testimonial[] = [
     id: '1',
     name: 'Fiona MacLeod',
     location: 'Paisley, Renfrewshire',
-    service: 'End of Tenancy Cleaning',
+    service: 'Move Out Cleaning',
     rating: 5,
-    quote: 'Oank Cleaning delivered a flawless end of tenancy clean on my 3-bedroom flat near Paisley station. Our letting agent passed the inventory inspection without a single complaint and refunded our full £1,200 deposit. Exceptional service!',
+    quote: 'OANK Cleaning cleaned my 3-bedroom flat near Paisley station. Our letting agent checked every room, said it looked brand new, and gave us our full £1,200 deposit back right away. What a wonderful team!',
     date: '18 July 2026'
   },
   {
     id: '2',
     name: 'Dr. Alistair Campbell',
     location: 'Glasgow West End',
-    service: 'Regular Domestic Cleaning',
+    service: 'Regular Home Cleaning',
     rating: 5,
-    quote: 'Having a weekly cleaner from Oank Cleaning has transformed our family weekend time. Our dedicated cleaner is punctual, thoroughly DBS-checked, and so polite. The green and gold brand ethos truly shines through!',
+    quote: 'Having a weekly cleaner from OANK has given our family our weekends back. Our cleaner is on time, so polite, and police checked. Our home smells lovely every Friday!',
     date: '02 August 2026'
   },
   {
     id: '3',
     name: 'Sarah Jenkins',
     location: 'Renfrew Business Park',
-    service: 'Commercial Office Cleaning',
+    service: 'Office Cleaning',
     rating: 5,
-    quote: 'We contracted Oank Cleaning for our corporate office facilities in Paisley. Their professional standards, DBS-vetted cleaners, and out-of-hours service keep our offices spotless.',
+    quote: 'We hired OANK Cleaning for our offices in Paisley. Their team comes after hours, empties bins, cleans desks, and keeps our washrooms sparkling. We are very happy with their work.',
     date: '29 June 2026'
   }
 ];
 
 export const FAQS: FAQItem[] = [
   {
-    question: 'What is OANK Cleaning CIC and how is it different from ordinary cleaning companies?',
-    answer: 'OANK Cleaning CIC is incorporated as an independent Community Interest Company (CIC) standing on its own and funded by its own trading revenue. We combine high-standard commercial and domestic cleaning with social purpose: generating trading income to fund community Home Resets (hygiene support for individuals with practical barriers) and Employment Pathways (paid training and work for people facing barriers to employment).',
+    question: 'What is OANK Cleaning CIC and how is it different from other cleaners?',
+    answer: 'OANK Cleaning CIC is a Community Interest Company in Paisley, Scotland. That means we run as a social business. We do top-quality cleaning for homes and offices. Any extra money we make goes right back to helping local people through our Home Reset and job training programmes.',
     category: 'cic'
   },
   {
     question: 'What is the OANK Home Reset service?',
-    answer: 'Home Reset is our planned community project providing targeted household-cleaning support to people who experience genuine practical barriers to maintaining their homes. It focuses on agreed cleaning tasks to restore dignity, wellbeing, and manageable living conditions. Note: It does NOT provide medical treatment, nursing, personal care, or regulated social care.',
+    answer: 'Home Reset is our free community project. We help people who struggle to keep their home clean because of health, age, or hard times. We clean agreed rooms to restore comfort and safety. Note: We only do cleaning; we do not provide medical or personal nursing care.',
     category: 'cic'
   },
   {
     question: 'How does the OANK Employment Pathway work?',
-    answer: 'The Employment Pathway recruits individuals facing employment barriers, providing them with structured induction, professional training (safe cleaning, COSHH, health & safety, conduct, client boundaries, confidentiality, safeguarding), and supervised paid cleaning experience with competency-based progression.',
+    answer: 'Our Employment Pathway helps local people who want to work. We give them full cleaning training, teach them health and safety, and give them real paid cleaning jobs with supportive team leaders.',
     category: 'cic'
   },
   {
-    question: 'Where is Oank Cleaning CIC based and what areas do you cover?',
-    answer: 'Our headquarters are located in Paisley, Scotland (PA3 2PJ). We cover Paisley, Renfrew, Johnstone, Hillington, Erskine, Linwood, Barrhead, Glasgow City Centre, West End, and the wider Greater Glasgow & Renfrewshire region.',
+    question: 'Where is OANK Cleaning CIC based and what towns do you visit?',
+    answer: 'Our main office is in Paisley, Scotland (postcode PA3 2PJ). We clean across Paisley, Renfrew, Johnstone, Hillington, Erskine, Linwood, Barrhead, and all of Glasgow.',
     category: 'general'
   },
   {
     question: 'Is OANK Cleaning an independent Community Interest Company?',
-    answer: 'Yes. OANK Cleaning CIC is a fully independent Community Interest Company (CIC) registered in Scotland, operating on its own trading revenue and governed by our dedicated CIC board and statutory asset lock.',
+    answer: 'Yes! OANK Cleaning CIC is an independent company registered in Scotland. All our money is locked by law to benefit the community, not private shareholders.',
     category: 'general'
   },
   {
-    question: 'Are your cleaning staff vetted and insured?',
-    answer: 'Every member of the Oank Cleaning team undergoes strict background verification, including enhanced DBS / Disclosure Scotland checks, identity validation, and comprehensive in-house training in health, safety, and COSHH compliance.',
+    question: 'Are your cleaners police-checked and insured?',
+    answer: 'Yes, 100%! Every cleaner on our team has a full police check (Enhanced DBS and Disclosure Scotland) and is fully insured. We also train each cleaner thoroughly before they visit your home.',
     category: 'staff'
   },
   {
-    question: 'Do I need to provide cleaning supplies and equipment?',
-    answer: 'No, unless you prefer us to use your specialized products. Our cleaners arrive fully equipped with professional-grade, eco-friendly cleaning solutions, microfiber cloths, HEPA vacuums, and specialized mop systems.',
+    question: 'Do I need to supply soaps, vacuums, or cloths?',
+    answer: 'No, you do not need to buy anything! Our cleaners bring professional vacuums, clean cloths, mops, and safe cleaning products. If you have a special soap you love, just let us know.',
     category: 'booking'
   },
   {
-    question: 'How does your 100% Deposit Back Guarantee work for End of Tenancy?',
-    answer: 'Our End of Tenancy service follows strict UK letting agency inventory standards. If your landlord or estate agent notes any cleaning deficiency on the inventory report within 72 hours of completion, we will return and re-clean the flagged area free of charge.',
+    question: 'How does your 100% Deposit Back Guarantee work?',
+    answer: 'If you move out and your landlord finds any dirty spot within 72 hours of our clean, tell us right away. We will come back and re-clean that spot completely free of charge so you get your deposit back.',
     category: 'pricing'
   },
   {
-    question: 'How can I get an instant quote or book a service?',
-    answer: 'You can use our interactive Online Quote Calculator on this website, click "Get in Touch" to submit an enquiry via our secure contact form, or speak directly to our Paisley team at +44 75 1091 1940 or +44 75 2244 1379.',
+    question: 'How can I get an instant price estimate or book a clean?',
+    answer: 'You can use the simple Instant Quote Calculator on this website, send us a quick note on the Contact page, or call our friendly Paisley team at +44 75 1091 1940 or +44 75 2244 1379.',
     category: 'booking'
   }
+];
+
+export interface OhkayBrand {
+  name: string;
+  tagline: string;
+  description: string;
+}
+
+export const OHKAY_BRANDS: OhkayBrand[] = [
+  {
+    name: 'OANK Cleaning CIC',
+    tagline: 'Friendly community cleaning in Paisley and Scotland',
+    description: 'Top-quality cleaning for homes and workplaces. Extra profits fund free home resets and paid job training for local people.',
+  },
+  {
+    name: 'Ohkay Care',
+    tagline: 'Kind home care and friendly help',
+    description: 'Caring, police-checked helpers who visit seniors and people at home to help with daily living and friendly company.',
+  },
+  {
+    name: 'Ohkay Staffing',
+    tagline: 'Fast staffing for care homes and hospitals',
+    description: 'Providing helpful, qualified nurses and care workers to Scottish care homes and clinics when they need extra hands.',
+  },
+  {
+    name: 'Ohkay Recruitment',
+    tagline: 'Helping good workers find great care jobs',
+    description: 'Matching caring nurses, doctors, and healthcare workers with permanent jobs across the United Kingdom.',
+  },
 ];

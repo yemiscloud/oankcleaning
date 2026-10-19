@@ -7,7 +7,8 @@ export type PageRoute =
   | 'governance'
   | 'quote' 
   | 'faqs' 
-  | 'contact';
+  | 'contact'
+  | 'ohkay-group';
 
 export interface CleaningService {
   id: string;
@@ -32,6 +33,7 @@ export interface QuoteFormData {
   serviceType: string;
   frequency: 'one-off' | 'weekly' | 'fortnightly' | 'monthly';
   addOns: string[];
+  bestDays: string[];
   postcode: string;
   preferredDate: string;
   name: string;
@@ -47,6 +49,7 @@ export interface ContactFormData {
   service: string;
   postcode: string;
   preferredDate: string;
+  preferredDays?: string;
   message: string;
 }
 
@@ -57,6 +60,8 @@ export interface ApiResponse<T = any> {
   quoteId?: string;
   estimatedPrice?: number;
   breakdown?: any;
+  databaseDelivered?: boolean;
+  emailDelivered?: boolean;
   data?: T;
 }
 

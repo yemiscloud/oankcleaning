@@ -54,11 +54,11 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /about\s+your\s+services/i,
     ],
     answer:
-      `We provide professional commercial and domestic cleaning, including End of Tenancy cleaning, across Paisley, Renfrewshire and Greater Glasgow. As a Community Interest Company we also run Home Reset (cleaning support for people with practical barriers) and an Employment Pathway (paid training and work experience). When you book with us, you support a social enterprise that reinvests surplus into community benefit.`,
+      `We clean homes, offices, and move-out flats across Paisley and Glasgow! We are a Community Interest Company. That means any extra money we make helps fund our two community programs: Home Reset (free cleaning for people who need extra help) and Employment Pathway (paid training and jobs for local workers). When you book with us, you help your community!`,
     actions: [
-      { label: 'Calculate Instant Quote', route: 'quote', actionType: 'navigate' },
-      { label: 'Explore Services', route: 'services', actionType: 'navigate' },
-      { label: 'View Community Pilots', route: 'community', actionType: 'navigate' },
+      { label: 'Check Instant Price', route: 'quote', actionType: 'navigate' },
+      { label: 'See All Services', route: 'services', actionType: 'navigate' },
+      { label: 'Our Community Work', route: 'community', actionType: 'navigate' },
     ],
   },
 
@@ -86,10 +86,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /social\s+enterprise/i,
     ],
     answer:
-      `OANK Cleaning CIC is incorporated as an independent Community Interest Company (CIC) standing on its own and funded by its own trading revenue. We combine high-standard commercial and domestic cleaning with social purpose: generating trading income to fund community Home Resets and Employment Pathways.\n\nIn compliance with the Community Interest Company Regulations 2005, our assets are permanently locked and cannot be distributed for personal gain. Trading surpluses are reinvested into subsidised cleaning assistance for vulnerable households and structured workforce training.`,
+      `OANK Cleaning CIC is an independent Community Interest Company in Scotland. We are a social business. We do high quality cleaning, and all extra profit is locked by law to help local people. We use that money to clean homes for people having a hard time, and to give local workers good training and paid jobs.`,
     actions: [
-      { label: 'Learn About OANK', route: 'about', actionType: 'navigate' },
-      { label: 'Governance & Asset Lock', route: 'governance', actionType: 'navigate' },
+      { label: 'About OANK', route: 'about', actionType: 'navigate' },
+      { label: 'Our Rules & Promise', route: 'governance', actionType: 'navigate' },
     ],
   },
 
@@ -116,10 +116,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /vulnerable\s+cleaning/i,
     ],
     answer:
-      `Home Reset is our planned community project providing targeted household-cleaning support to people who experience genuine practical barriers to maintaining their homes. It focuses on agreed cleaning tasks to restore dignity, wellbeing and manageable living conditions. It does not provide medical treatment, nursing, personal care or regulated social care.\n\nPeople normally access Home Reset through an appropriate referral or assessment process. OANK assesses eligibility, safety and suitability before accepting a case.`,
+      `Home Reset is our free community project. Sometimes people have a home, but sickness or hard times make it hard to keep it clean. We send caring cleaners to help them clean up and feel proud of their home again. Note: We only do cleaning; we do not provide medical care or nursing.`,
     actions: [
-      { label: 'View Community Pilot', route: 'community', actionType: 'navigate' },
-      { label: 'Contact Referral Team', route: 'contact', actionType: 'navigate' },
+      { label: 'See Home Reset', route: 'community', actionType: 'navigate' },
+      { label: 'Contact Help Team', route: 'contact', actionType: 'navigate' },
     ],
   },
 
@@ -145,10 +145,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /administer\s+medication/i,
     ],
     answer:
-      `OANK Cleaning CIC and the Home Reset programme strictly provide domestic and hygiene cleaning support. Home Reset does NOT provide medical treatment, nursing, personal care (such as bathing/dressing), or regulated social-care services. Our staff are strictly prohibited from administering medication or giving medical care.`,
+      `We only do home cleaning. We do NOT give medicine, nurse patients, or help with bathing or dressing. Our team only cleans rooms, washes dishes, and mops floors to keep homes safe and fresh.`,
     actions: [
-      { label: 'Read Governance & Policies', route: 'governance', actionType: 'navigate' },
-      { label: 'Get in Touch', route: 'contact', actionType: 'navigate' },
+      { label: 'Read Safety Rules', route: 'governance', actionType: 'navigate' },
+      { label: 'Send Us a Message', route: 'contact', actionType: 'navigate' },
     ],
   },
 
@@ -171,10 +171,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /who\s+is\s+eligible/i,
     ],
     answer:
-      `People normally access the Home Reset programme through an appropriate referral or assessment process (e.g. via partner agencies, housing officers, or community support teams). OANK assesses eligibility, safety and the suitability of requested work before accepting a case.`,
+      `People usually join Home Reset when a housing officer, doctor, or local support group refers them. Our team visits first to make sure the home is safe for our cleaners and that we can truly help.`,
     actions: [
-      { label: 'Submit Referral Enquiry', route: 'contact', actionType: 'navigate' },
-      { label: 'Call Paisley HQ', phone: '+447510911940', actionType: 'call' },
+      { label: 'Ask About Referrals', route: 'contact', actionType: 'navigate' },
+      { label: 'Call Paisley Team', phone: '+447510911940', actionType: 'call' },
     ],
   },
 
@@ -202,10 +202,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /training\s+programme/i,
     ],
     answer:
-      `The Employment Pathway creates structured opportunities for individuals facing barriers to employment. OANK plans to recruit suitable individuals, provide induction and cleaning/workplace training, and provide supervised paid cleaning experience.\n\nTraining covers safe cleaning practices, cleaning equipment/products, health & safety, COSHH compliance, professional conduct, client boundaries, confidentiality, and safeguarding awareness.`,
+      `Our Employment Pathway gives local people a fresh start with real paid jobs. We teach them how to clean like professionals, how to stay safe with soaps and machines, and how to treat clients with respect. Then we give them paid work with friendly team leaders!`,
     actions: [
-      { label: 'View Employment Pathway', route: 'community', actionType: 'navigate' },
-      { label: 'Enquire About Pathway', route: 'contact', actionType: 'navigate' },
+      { label: 'See Job Training', route: 'community', actionType: 'navigate' },
+      { label: 'Ask About Jobs', route: 'contact', actionType: 'navigate' },
     ],
   },
 
@@ -230,10 +230,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /cleaning\s+products/i,
     ],
     answer:
-      `Our cleaners arrive fully equipped with professional-grade, eco-friendly cleaning solutions, microfiber cloths, HEPA vacuums and specialised mop systems. Customers do not need to supply cleaning products unless they prefer us to use their own specialised items.`,
+      `You do not need to buy anything! Our cleaners bring all the mops, clean cloths, safe soaps, and strong vacuums needed to make your home shine. If you want us to use your own special soap, just let us know!`,
     actions: [
-      { label: 'View Cleaning Services', route: 'services', actionType: 'navigate' },
-      { label: 'Get an Instant Quote', route: 'quote', actionType: 'navigate' },
+      { label: 'See Cleaning List', route: 'services', actionType: 'navigate' },
+      { label: 'Get Instant Price', route: 'quote', actionType: 'navigate' },
     ],
   },
 
@@ -263,10 +263,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /inventory\s+check/i,
     ],
     answer:
-      `Our End of Tenancy cleaning package is designed to meet the strict inventory checkout standards of UK estate agents and letting authorities. We offer a 72-Hour Free Re-Clean Guarantee: if your landlord, estate agent or inventory clerk notes any cleaning omission on the official inventory report within 72 hours of completion, we will return and rectify the specified item completely free of charge.`,
+      `Our move-out clean is made to please landlords and rental agents. We give you a 72-Hour Free Re-Clean Guarantee: if your landlord finds any spot they are not happy with within 72 hours, we will come back and clean it again for free so you get your deposit back!`,
     actions: [
-      { label: 'Get End of Tenancy Quote', route: 'quote', actionType: 'navigate' },
-      { label: 'Explore Services', route: 'services', actionType: 'navigate' },
+      { label: 'Move Out Price', route: 'quote', actionType: 'navigate' },
+      { label: 'See Details', route: 'services', actionType: 'navigate' },
     ],
   },
 
@@ -300,10 +300,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /glasgow/i,
     ],
     answer:
-      `We cover Paisley, Renfrew, Johnstone, Hillington, Erskine, Linwood, Barrhead, Glasgow City Centre, West End, and the wider Greater Glasgow & Renfrewshire region. Our headquarters are located in Paisley, Scotland (PA3 2PJ).`,
+      `Our office is in Paisley, Scotland (postcode PA3 2PJ). We clean homes and businesses in Paisley, Renfrew, Johnstone, Hillington, Erskine, Linwood, Barrhead, and all across Glasgow!`,
     actions: [
-      { label: 'Calculate Postcode Quote', route: 'quote', actionType: 'navigate' },
-      { label: 'Contact Paisley Team', route: 'contact', actionType: 'navigate' },
+      { label: 'Check Your Postcode', route: 'quote', actionType: 'navigate' },
+      { label: 'Talk to Us', route: 'contact', actionType: 'navigate' },
     ],
   },
 
@@ -332,10 +332,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /cost\s+of\s+cleaning/i,
     ],
     answer:
-      `You can book or get a quote in three easy ways:\n1. Use the interactive Online Quote Calculator on our website\n2. Click 'Get in Touch' and submit an enquiry via our contact form\n3. Call our Paisley team on +44 75 1091 1940 or +44 75 2244 1379`,
+      `Getting a price is super easy! You have three choices:\n1. Use our fast Online Price Calculator on this website\n2. Click 'Get in Touch' and send a quick message\n3. Call our friendly Paisley team at +44 75 1091 1940 or +44 75 2244 1379`,
     actions: [
-      { label: 'Open Quote Calculator', route: 'quote', actionType: 'navigate' },
-      { label: 'Submit Contact Form', route: 'contact', actionType: 'navigate' },
+      { label: 'Check Price Online', route: 'quote', actionType: 'navigate' },
+      { label: 'Send a Message', route: 'contact', actionType: 'navigate' },
       { label: 'Call +44 75 1091 1940', phone: '+447510911940', actionType: 'call' },
     ],
   },
@@ -365,10 +365,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /background\s+check/i,
     ],
     answer:
-      `Because our cleaning specialists operate inside private domestic residences, care facilities and community environments, we enforce an uncompromised safeguarding protocol:\n• Enhanced Disclosure Scotland / DBS Vetting on all specialists\n• Strict Client Boundaries: Staff are prohibited from handling client finances, accepting gifts, administering medication, or giving personal care\n• Confidentiality & Discretion: Protected by binding confidentiality agreements\n• Standardized escalation reporting to our Designated Safeguarding Lead.`,
+      `You can feel completely safe with us! Every cleaner has a full police check (Enhanced DBS and Disclosure Scotland). Our staff never ask for gifts or money, and they keep your home and keys safe and private at all times.`,
     actions: [
-      { label: 'Read Governance Policy', route: 'governance', actionType: 'navigate' },
-      { label: 'Contact Team', route: 'contact', actionType: 'navigate' },
+      { label: 'Our Safety Rules', route: 'governance', actionType: 'navigate' },
+      { label: 'Contact Us', route: 'contact', actionType: 'navigate' },
     ],
   },
 
@@ -396,10 +396,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /health\s+and\s+safety/i,
     ],
     answer:
-      `OANK Cleaning CIC complies fully with the Health and Safety at Work etc. Act 1974 and the Control of Substances Hazardous to Health (COSHH) Regulations 2002.\n\nOur Colour-Coded Hygiene System prevents cross-contamination:\n• 🔴 Red Code – Toilets & Washroom Urinals\n• 🟡 Yellow Code – Sinks & Bathroom Tiles\n• 🔵 Blue Code – General Living Areas & Desks\n• 🟢 Green Code – Kitchens & Food Prep Hubs`,
+      `We keep every room safe and germ-free with our 4-colour cloth rule:\n• 🔴 Red: Only for toilets and urinals\n• 🟡 Yellow: Only for bathroom sinks and tiles\n• 🔵 Blue: For bedrooms, living rooms, and desks\n• 🟢 Green: Only for kitchens and food areas\nThis makes sure toilet germs never touch your kitchen!`,
     actions: [
-      { label: 'Our Standards & Services', route: 'services', actionType: 'navigate' },
-      { label: 'View Governance', route: 'governance', actionType: 'navigate' },
+      { label: 'Our Cleaning Standards', route: 'services', actionType: 'navigate' },
+      { label: 'Safety Rules', route: 'governance', actionType: 'navigate' },
     ],
   },
 
@@ -423,10 +423,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /how\s+is\s+my\s+data\s+stored/i,
     ],
     answer:
-      `In accordance with the UK Data Protection Act 2018 and UK GDPR:\n• We only collect personal data necessary to quote, deliver cleaning services, verify safety, or process community referrals.\n• Data is stored in secure, encrypted relational databases and is never sold to commercial marketing brokers.\n• You have the right to request access, rectification, or erasure of your personal records at any time by emailing info@oankcleaning.co.uk.`,
+      `We protect your private details carefully. We only keep your name, phone number, and address so we can clean your home. We never sell your details to anyone. You can ask us to see or delete your details anytime by sending us a message via our secure Contact form.`,
     actions: [
-      { label: 'Contact Data Officer', route: 'contact', actionType: 'navigate' },
-      { label: 'Governance & Privacy', route: 'governance', actionType: 'navigate' },
+      { label: 'Contact Us Safely', route: 'contact', actionType: 'navigate' },
+      { label: 'Privacy Policy', route: 'governance', actionType: 'navigate' },
     ],
   },
 
@@ -452,7 +452,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /how\s+to\s+contact/i,
     ],
     answer:
-      `You can reach our Paisley team through:\n• Primary Telephone: +44 75 1091 1940\n• Secondary Telephone: +44 75 2244 1379\n• Email: info@oankcleaning.co.uk\n• Headquarters: Paisley, Scotland (PA3 2PJ)\n• Website: www.oankcleaning.co.uk`,
+      `Here is how you can talk to us in Paisley:\n• Main Phone: +44 75 1091 1940\n• Second Phone: +44 75 2244 1379\n• Secure Portal: Open Contact Form in Menu\n• Direct Email: info [at] oankcleaning.co.uk\n• Office: Paisley, Scotland (PA3 2PJ)\n• Opening Hours: Monday to Saturday 7:00am - 8:00pm`,
     actions: [
       { label: 'Go to Contact Page', route: 'contact', actionType: 'navigate' },
       { label: 'Call +44 75 1091 1940', phone: '+447510911940', actionType: 'call' },
@@ -476,10 +476,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /company\s+structure/i,
     ],
     answer:
-      `OANK Cleaning CIC is a fully independent Community Interest Company (CIC) standing on its own and funded entirely by its own commercial trading revenue (Headquarters: Paisley, Scotland, PA3 2PJ; website: www.oankcleaning.co.uk). We operate under a dedicated CIC board and statutory asset lock, reinvesting trading surpluses into community Home Resets and Employment Pathways across Scotland.`,
+      `OANK Cleaning CIC is a fully independent Community Interest Company standing on its own. We earn our own money by doing great cleaning. All extra money stays locked by law to help local families with free home cleaning and paid job training!`,
     actions: [
-      { label: 'About OANK', route: 'about', actionType: 'navigate' },
-      { label: 'Governance & Asset Lock', route: 'governance', actionType: 'navigate' },
+      { label: 'About Us', route: 'about', actionType: 'navigate' },
+      { label: 'Governance & Rules', route: 'governance', actionType: 'navigate' },
     ],
   },
 ];
@@ -500,67 +500,49 @@ export function queryReceptionist(userQuery: string): ReceptionistResponse {
     };
   }
 
-  // Greetings check
-  if (
-    query === 'hi' ||
-    query === 'hello' ||
-    query === 'hey' ||
-    query === 'good morning' ||
-    query === 'good afternoon' ||
-    query === 'good evening' ||
-    query === 'help'
-  ) {
-    return {
-      text: `Hello! I am Clara, your virtual front-desk receptionist at OANK Cleaning CIC (Paisley PA3 2PJ). I'm here to assist you with questions regarding our cleaning services, instant quotes, deposit back guarantees, or our community Home Reset & Employment Pathway programmes. How may I assist you today?`,
-      suggestedActions: [
-        { label: 'Instant Quote', route: 'quote', actionType: 'navigate' },
-        { label: 'Home Reset Pilot', route: 'community', actionType: 'navigate' },
-        { label: 'Contact Us', route: 'contact', actionType: 'navigate' },
-      ],
-    };
+  // 1. Direct regex pattern matches
+  for (const topic of KNOWLEDGE_TOPICS) {
+    for (const pattern of topic.patterns) {
+      if (pattern.test(query)) {
+        return {
+          text: topic.answer,
+          suggestedActions: topic.actions,
+        };
+      }
+    }
   }
 
-  // Score each knowledge topic
+  // 2. Keyword score matching
   let bestTopic: KnowledgeTopic | null = null;
   let highestScore = 0;
 
   for (const topic of KNOWLEDGE_TOPICS) {
     let score = 0;
-
-    // Pattern regex match
-    for (const pattern of topic.patterns) {
-      if (pattern.test(query)) {
-        score += 8;
+    for (const kw of topic.keywords) {
+      if (query.includes(kw)) {
+        score += kw.length;
       }
     }
-
-    // Keyword match
-    for (const keyword of topic.keywords) {
-      if (query.includes(keyword.toLowerCase())) {
-        score += keyword.includes(' ') ? 4 : 2;
-      }
-    }
-
     if (score > highestScore) {
       highestScore = score;
       bestTopic = topic;
     }
   }
 
-  // If score exceeds relevance threshold, return grounded answer from operation.md
-  if (bestTopic && highestScore >= 2) {
+  // If match score is high enough
+  if (bestTopic && highestScore >= 4) {
     return {
       text: bestTopic.answer,
       suggestedActions: bestTopic.actions,
     };
   }
 
-  // Strictly return the exact fallback specified in operation.md
+  // Fallback if not recognized
   return {
     text: EXACT_FALLBACK_MESSAGE,
     suggestedActions: [
       { label: 'Go to Contact Page', route: 'contact', actionType: 'navigate' },
-      { label: 'Call +44 75 1091 1940', phone: '+447510911940', actionType: 'call' },
+      { label: 'Call Paisley Office', phone: '+447510911940', actionType: 'call' },
     ],
   };
 }

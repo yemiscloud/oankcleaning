@@ -32,7 +32,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
           <div className="lg:col-span-7 p-8 sm:p-12 space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
               <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-                {service.category.toUpperCase()} CLEANING SPECIFICATION
+                {service.category.toUpperCase()} CLEANING DETAILS
               </span>
               <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white">
                 {service.title}
@@ -47,11 +47,11 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
 
             <div className="pt-4 border-t border-emerald-800/80 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-[10px] text-amber-300 uppercase font-bold block">Starting Investment</span>
+                <span className="text-[10px] text-amber-300 uppercase font-bold block">Starting Price</span>
                 <span className="text-2xl font-serif font-bold text-white">{service.priceStart}</span>
               </div>
               <div>
-                <span className="text-[10px] text-emerald-200 uppercase font-bold block">Typical Duration</span>
+                <span className="text-[10px] text-emerald-200 uppercase font-bold block">Time Needed</span>
                 <span className="text-xs text-white font-semibold flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
                   {service.estimatedTime}
@@ -62,7 +62,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
                 className="bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow cursor-pointer flex items-center gap-2"
               >
                 <CalendarCheck className="w-4 h-4" />
-                <span>Get Instant Quote</span>
+                <span>Get Instant Price</span>
               </button>
             </div>
           </div>
@@ -71,6 +71,8 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
             <img
               src={service.image}
               alt={service.title}
+              loading="lazy"
+              decoding="async"
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
@@ -84,10 +86,10 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
         <div className="lg:col-span-8 bg-white p-8 rounded-3xl border border-slate-200 shadow-lg space-y-6">
           <div className="border-b border-slate-200 pb-4">
             <span className="text-amber-700 font-bold text-xs uppercase tracking-wider block">
-              Inclusions & Standards
+              What We Do
             </span>
             <h2 className="text-2xl font-serif font-bold text-[#0F382C]">
-              Comprehensive Cleaning Checklist
+              What We Clean in Every Room
             </h2>
           </div>
 
@@ -108,7 +110,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
           <div className="bg-[#0F382C] text-white p-6 rounded-3xl border-2 border-[#D4AF37] space-y-4 shadow-xl">
             <h3 className="text-lg font-serif font-bold text-white flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
-              Service Guarantees
+              Our Clean Promises
             </h3>
 
             <ul className="space-y-3 text-xs text-slate-200">
@@ -122,8 +124,8 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
 
             <div className="pt-4 border-t border-emerald-800 text-xs space-y-3">
               <div className="bg-[#1B4332] p-3 rounded-xl">
-                <span className="font-bold text-amber-300 block mb-1">Paisley Scotland Office</span>
-                <p className="text-[11px] text-slate-300">Call our local team for fast scheduling or enquiries.</p>
+                <span className="font-bold text-amber-300 block mb-1">Paisley Office Help</span>
+                <p className="text-[11px] text-slate-300">Call our friendly team to book or ask questions.</p>
                 <a href="tel:+447510911940" className="text-white font-bold block mt-1 hover:underline">+44 75 1091 1940</a>
               </div>
 
@@ -131,7 +133,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
                 onClick={() => onNavigate('contact')}
                 className="w-full bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs uppercase tracking-wider py-3 rounded-xl transition-colors cursor-pointer"
               >
-                Get in Touch
+                Send Us a Note
               </button>
             </div>
           </div>

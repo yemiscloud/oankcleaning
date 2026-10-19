@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { telemetry } from './telemetry';
 
 import {
   ContactFormData,
@@ -29,6 +30,53 @@ const apiClient = axios.create({
   },
   timeout: 10000,
 });
+
+// Network Data Capture Interceptor (Performance, Latency & Error Tracking)
+interface CustomRequestConfig extends InternalAxiosRequestConfig {
+  _startTime?: number;
+}
+
+apiClient.interceptors.request.use((config: CustomRequestConfig) => {
+  config._startTime = performance.now();
+  return config;
+});
+
+apiClient.interceptors.response.use(
+  (response) => {
+    const config = response.config as CustomRequestConfig;
+    const durationMs = config._startTime
+      ? Math.round(performance.now() - config._startTime)
+      : 0;
+
+    telemetry.recordNetworkRequest({
+      url: response.config.url || '',
+      method: (response.config.method || 'GET').toUpperCase(),
+      status: response.status,
+      durationMs,
+      success: true,
+      sizeBytes: JSON.stringify(response.data || '').length,
+    });
+
+    return response;
+  },
+  (error) => {
+    const config = (error.config || {}) as CustomRequestConfig;
+    const durationMs = config._startTime
+      ? Math.round(performance.now() - config._startTime)
+      : 0;
+
+    telemetry.recordNetworkRequest({
+      url: config.url || '',
+      method: (config.method || 'GET').toUpperCase(),
+      status: error.response?.status || null,
+      durationMs,
+      success: false,
+      errorMessage: error.message || 'Network Error',
+    });
+
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Safely extract a server API response from an Axios error.
@@ -68,78 +116,109 @@ const getApiErrorResponse = (
 };
 
 /**
- * Submit Contact Form
+ * Submit Contact Form via Axios API
+ * ONLY resolves with success=true if the backend confirms both:
+ * 1. Form data was successfully stored in the MySQL enquiries database table.
+ * 2. Notification email was successfully dispatched to the preferred company email.
  */
 export const submitContactForm = async (
   formData: ContactFormData,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>(
+    const response = await apiClient.post<ApiResponse<any>>(
       '/contact',
       formData,
     );
 
-    return response.data;
-  } catch (error: unknown) {
-    // In dev/preview environment where Apache/PHP is not mounted, provide graceful local persistence
-    if (axios.isAxiosError(error) && (!error.response || error.response.status === 404 || error.code === 'ERR_NETWORK')) {
-      const refNo = 'OANK-ENQ-' + Math.floor(100000 + Math.random() * 900000);
-      try {
-        const stored = JSON.parse(localStorage.getItem('oank_enquiries') || '[]');
-        stored.push({ ...formData, refNo, createdAt: new Date().toISOString() });
-        localStorage.setItem('oank_enquiries', JSON.stringify(stored));
-      } catch {
-        // Ignore storage errors
-      }
+    const payload = response.data;
+    const isDbSaved = payload?.data?.database?.saved === true;
+    const isEmailSent = payload?.data?.mail?.adminSent === true;
+
+    // Strict validation: Only show success when BOTH database and preferred email succeeded
+    if (payload && payload.success && isDbSaved && isEmailSent) {
       return {
         success: true,
-        referenceNo: refNo,
-        message: 'Thank you! Your enquiry has been received. Our Paisley customer care team will contact you within 2 business hours.',
+        message: payload.message || 'Your enquiry has been successfully recorded in our database and delivered to our team.',
+        referenceNo: payload.data?.referenceNo || payload.referenceNo,
+        databaseDelivered: true,
+        emailDelivered: true,
+        data: payload.data,
       };
     }
 
+    // Identify specific failure reason if partial
+    const reasons: string[] = [];
+    if (!isDbSaved) reasons.push('Database table storage failed');
+    if (!isEmailSent) reasons.push('Preferred email dispatch failed');
+
+    return {
+      success: false,
+      message: reasons.length > 0
+        ? `Delivery incomplete: ${reasons.join(' and ')}. Please contact us directly at +44 75 1091 1940.`
+        : (payload?.message || 'Submission could not be completed.'),
+      databaseDelivered: isDbSaved,
+      emailDelivered: isEmailSent,
+    };
+  } catch (error: unknown) {
     return getApiErrorResponse(
       error,
-      'Unable to submit your enquiry right now. Please try again or contact us directly.',
+      'Unable to submit your enquiry right now. Please ensure the backend database and email services are reachable or call our team directly at +44 75 1091 1940.',
     );
   }
 };
 
 /**
- * Submit Quote Request
+ * Submit Quote Request via Axios API
+ * ONLY resolves with success=true if the backend confirms both:
+ * 1. Quote data was successfully stored in the MySQL enquiries database table.
+ * 2. Notification email was successfully dispatched to the preferred company email.
  */
 export const submitQuoteRequest = async (
   quoteData: QuoteFormData,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>(
+    const response = await apiClient.post<ApiResponse<any>>(
       '/quote',
       quoteData,
     );
 
-    return response.data;
-  } catch (error: unknown) {
-    // In dev/preview environment where Apache/PHP is not mounted, provide graceful local persistence
-    if (axios.isAxiosError(error) && (!error.response || error.response.status === 404 || error.code === 'ERR_NETWORK')) {
-      const refNo = 'OANK-QTE-' + Math.floor(100000 + Math.random() * 900000);
-      try {
-        const stored = JSON.parse(localStorage.getItem('oank_quotes') || '[]');
-        stored.push({ ...quoteData, refNo, createdAt: new Date().toISOString() });
-        localStorage.setItem('oank_quotes', JSON.stringify(stored));
-      } catch {
-        // Ignore storage errors
-      }
+    const payload = response.data;
+    const isDbSaved = payload?.data?.submission?.databaseSaved === true;
+    const isEmailSent = payload?.data?.submission?.mail?.adminSent === true;
+    const finalEstimate = payload?.data?.breakdown?.finalEstimate || payload?.estimatedPrice;
+    const refNo = payload?.data?.referenceNo || payload?.referenceNo;
+
+    // Strict validation: Only show success when BOTH database and preferred email succeeded
+    if (payload && payload.success && isDbSaved && isEmailSent) {
       return {
         success: true,
+        message: payload.message || 'Your quote request has been recorded in our database and delivered to our team.',
         referenceNo: refNo,
         quoteId: refNo,
-        message: 'Thank you! Your instant quote has been registered. Our operations team in Paisley will review your booking requirements and follow up promptly.',
+        estimatedPrice: finalEstimate,
+        breakdown: payload?.data?.breakdown,
+        databaseDelivered: true,
+        emailDelivered: true,
+        data: payload.data,
       };
     }
 
+    const reasons: string[] = [];
+    if (!isDbSaved) reasons.push('Database table storage failed');
+    if (!isEmailSent) reasons.push('Preferred email dispatch failed');
+
+    return {
+      success: false,
+      message: reasons.length > 0
+        ? `Delivery incomplete: ${reasons.join(' and ')}. Please contact us directly at +44 75 1091 1940.`
+        : (payload?.message || 'Quote request could not be completed.'),
+      databaseDelivered: isDbSaved,
+      emailDelivered: isEmailSent,
+    };
+  } catch (error: unknown) {
     return getApiErrorResponse(
       error,
-      'Unable to process your quote request right now. Please try again or contact us directly.',
+      'Unable to process your quote request right now. Please ensure the backend database and email services are reachable or call our team directly at +44 75 1091 1940.',
     );
   }
 };

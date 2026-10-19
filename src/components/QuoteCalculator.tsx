@@ -26,6 +26,7 @@ export const QuoteCalculator: React.FC = () => {
     serviceType: 'domestic-regular',
     frequency: 'one-off',
     addOns: ['oven'],
+    bestDays: ['Any.'],
     postcode: 'PA3 2PJ',
     preferredDate: '',
     name: '',
@@ -62,7 +63,8 @@ export const QuoteCalculator: React.FC = () => {
     if (formData.frequency === 'fortnightly') discount = 0.10;
     if (formData.frequency === 'monthly') discount = 0.05;
 
-    return Math.round(total - (total * discount));
+    total = Math.round(total * (1 - discount));
+    return total;
   };
 
   const estimatedPrice = calculateEstimate();
@@ -77,6 +79,29 @@ export const QuoteCalculator: React.FC = () => {
     });
   };
 
+  const handleToggleDay = (day: string) => {
+    setFormData((prev) => {
+      if (day === 'Any.') {
+        return {
+          ...prev,
+          bestDays: ['Any.'],
+        };
+      }
+
+      const withoutAny = prev.bestDays.filter((d) => d !== 'Any.' && d !== 'Any');
+      const isAlreadySelected = withoutAny.includes(day);
+
+      const updated = isAlreadySelected
+        ? withoutAny.filter((d) => d !== day)
+        : [...withoutAny, day];
+
+      return {
+        ...prev,
+        bestDays: updated.length > 0 ? updated : ['Any.'],
+      };
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeedback(null);
@@ -84,7 +109,7 @@ export const QuoteCalculator: React.FC = () => {
     if (!formData.name || !formData.email || !formData.phone) {
       setFeedback({
         type: 'error',
-        message: 'Please complete your contact details (Name, Email, and Phone Number) so our Paisley team can confirm your reservation.',
+        message: 'Please tell us your name, email, and phone number so we can call you to confirm.',
       });
       return;
     }
@@ -92,36 +117,25 @@ export const QuoteCalculator: React.FC = () => {
     setLoading(true);
 
     try {
-      // 1. Get official quote from backend API via Axios
       const quoteRes = await submitQuoteRequest(formData);
-      
-      // 2. Submit booking request
-      const contactRes = await submitContactForm({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        service: `${formData.serviceType.toUpperCase()} (${formData.frequency}) - Est. £${estimatedPrice}`,
-        postcode: formData.postcode || 'PA3 2PJ',
-        preferredDate: formData.preferredDate || 'As soon as possible',
-        message: `Quote ID: ${quoteRes.quoteId || 'OANK-Q'}. Property: ${formData.bedrooms} Bed, ${formData.bathrooms} Bath ${formData.propertyType}. Add-ons: ${formData.addOns.join(', ')}. Client Notes: ${formData.notes || 'None'}`,
-      });
 
-      if (contactRes.success) {
+      // ONLY show success when form data is successfully delivered to both database table AND preferred email
+      if (quoteRes.success && quoteRes.databaseDelivered && quoteRes.emailDelivered) {
         setFeedback({
           type: 'success',
-          message: contactRes.message || `Quote request confirmed! Reference ID: ${contactRes.referenceNo}. Our team in Paisley will call you shortly.`,
-          referenceNo: contactRes.referenceNo,
+          message: `Thank you, ${formData.name}! Your quote request [${quoteRes.referenceNo || 'Confirmed'}] has been successfully saved to our database and delivered to our team at info@oankcleaning.co.uk.`,
+          referenceNo: quoteRes.referenceNo,
         });
       } else {
         setFeedback({
           type: 'error',
-          message: contactRes.message || 'Something went wrong while submitting your request. Please call +44 75 1091 1940 directly.',
+          message: quoteRes.message || 'Delivery could not be confirmed for database table and preferred email. Please call us directly at +44 75 1091 1940.',
         });
       }
-    } catch (err: any) {
+    } catch {
       setFeedback({
         type: 'error',
-        message: 'An error occurred while connecting to the server. Please check your internet or call +44 75 1091 1940.',
+        message: 'Could not connect to the backend server. Please verify your internet connection or call our Paisley office at +44 75 1091 1940.',
       });
     } finally {
       setLoading(false);
@@ -135,24 +149,24 @@ export const QuoteCalculator: React.FC = () => {
         <div>
           <div className="flex items-center gap-2 text-amber-300 font-bold text-xs uppercase tracking-wider mb-1">
             <Calculator className="w-4 h-4 text-[#D4AF37]" />
-            <span>Instant Estimate Tool</span>
+            <span>Fast Price Check</span>
           </div>
           <h3 className="text-2xl font-serif font-bold text-white">
-            Custom Cleaning Calculator
+            Cleaning Price Calculator
           </h3>
           <p className="text-xs text-slate-300 mt-1">
-            Get an instant transparent estimate for your Paisley, Glasgow or Scotland property.
+            See your price in seconds. Clear prices for Paisley, Glasgow, and Scotland.
           </p>
         </div>
 
         {/* Live Estimate Badge */}
         <div className="bg-[#1B4332] border border-emerald-700/80 rounded-2xl p-4 text-right flex-shrink-0">
-          <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">Estimated Price</span>
+          <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">Estimated Total</span>
           <div className="text-3xl font-serif font-bold text-white flex items-baseline gap-1">
             <span>£{estimatedPrice}</span>
-            <span className="text-xs text-slate-300 font-normal">inc. VAT</span>
+            <span className="text-xs text-slate-300 font-normal">total</span>
           </div>
-          <span className="text-[10px] text-emerald-200 block mt-0.5">Zero hidden fees</span>
+          <span className="text-[10px] text-emerald-200 block mt-0.5">No hidden fees</span>
         </div>
       </div>
 
@@ -161,15 +175,15 @@ export const QuoteCalculator: React.FC = () => {
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-wider text-[#0F382C] flex items-center gap-2 border-b border-slate-200 pb-2">
             <Home className="w-4 h-4 text-[#D4AF37]" />
-            1. Property & Size Details
+            1. What kind of building is it?
           </h4>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { id: 'house', label: 'House', icon: Home },
-              { id: 'flat', label: 'Flat / Apartment', icon: Building },
-              { id: 'office', label: 'Office Space', icon: Building },
-              { id: 'commercial', label: 'Commercial Site', icon: Building },
+              { id: 'flat', label: 'Flat', icon: Building },
+              { id: 'office', label: 'Office', icon: Building },
+              { id: 'commercial', label: 'Business', icon: Building },
             ].map((p) => {
               const Icon = p.icon;
               const isSelected = formData.propertyType === p.id;
@@ -194,7 +208,7 @@ export const QuoteCalculator: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Bedrooms / Key Rooms
+                Bedrooms or Big Rooms
               </label>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5, 6].map((num) => (
@@ -202,9 +216,9 @@ export const QuoteCalculator: React.FC = () => {
                     type="button"
                     key={num}
                     onClick={() => setFormData({ ...formData, bedrooms: num })}
-                    className={`flex-1 py-2 rounded-lg font-bold text-xs border transition-all cursor-pointer ${
+                    className={`flex-1 min-h-[44px] flex items-center justify-center py-2 rounded-xl font-bold text-sm sm:text-xs border transition-all cursor-pointer ${
                       formData.bedrooms === num
-                        ? 'bg-[#0F382C] text-white border-[#0F382C]'
+                        ? 'bg-[#0F382C] text-white border-[#0F382C] shadow-sm'
                         : 'border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -216,7 +230,7 @@ export const QuoteCalculator: React.FC = () => {
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Bathrooms / Washrooms
+                Bathrooms or Toilets
               </label>
               <div className="flex items-center gap-2">
                 {[1, 2, 3, 4, 5].map((num) => (
@@ -224,9 +238,9 @@ export const QuoteCalculator: React.FC = () => {
                     type="button"
                     key={num}
                     onClick={() => setFormData({ ...formData, bathrooms: num })}
-                    className={`flex-1 py-2 rounded-lg font-bold text-xs border transition-all cursor-pointer ${
+                    className={`flex-1 min-h-[44px] flex items-center justify-center py-2 rounded-xl font-bold text-sm sm:text-xs border transition-all cursor-pointer ${
                       formData.bathrooms === num
-                        ? 'bg-[#0F382C] text-white border-[#0F382C]'
+                        ? 'bg-[#0F382C] text-white border-[#0F382C] shadow-sm'
                         : 'border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -242,17 +256,17 @@ export const QuoteCalculator: React.FC = () => {
         <div className="space-y-4">
           <h4 className="text-sm font-bold uppercase tracking-wider text-[#0F382C] flex items-center gap-2 border-b border-slate-200 pb-2">
             <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-            2. Service Type & Frequency
+            2. Which clean and how often?
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
-              { id: 'domestic-regular', title: 'Regular Domestic Clean', sub: 'Weekly / Fortnightly maintenance' },
-              { id: 'deep-cleaning', title: 'Deep & Spring Clean', sub: 'Thorough top-to-bottom refresh' },
-              { id: 'end-of-tenancy', title: 'End of Tenancy Clean', sub: '100% Deposit Back Guarantee' },
-              { id: 'commercial-office', title: 'Office & Commercial', sub: 'Corporate hygiene contracts' },
-              { id: 'healthcare-carehome', title: 'Healthcare & Care Home', sub: 'CQC infection control protocols' },
-              { id: 'carpet-upholstery', title: 'Carpet & Upholstery', sub: 'Hot steam extraction restoration' },
+              { id: 'domestic-regular', title: 'Regular Home Clean', sub: 'Every week or two' },
+              { id: 'deep-cleaning', title: 'Deep Spring Clean', sub: 'Top-to-bottom fresh clean' },
+              { id: 'end-of-tenancy', title: 'Move Out Clean', sub: '100% Deposit Back Guarantee' },
+              { id: 'commercial-office', title: 'Office & Business Clean', sub: 'For shops, desks, and offices' },
+              { id: 'healthcare-carehome', title: 'Care Home & Health Clean', sub: 'Extra careful germ-free clean' },
+              { id: 'carpet-upholstery', title: 'Carpet & Sofa Clean', sub: 'Hot water steam cleaning' },
             ].map((s) => {
               const isSelected = formData.serviceType === s.id;
               return (
@@ -284,14 +298,14 @@ export const QuoteCalculator: React.FC = () => {
           <div>
             <label className="block text-xs font-semibold text-slate-700 mb-2 flex items-center gap-1.5">
               <Percent className="w-3.5 h-3.5 text-[#D4AF37]" />
-              Select Frequency (Save with recurring schedules)
+              How often? (Save money when we visit regularly)
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
-                { id: 'one-off', label: 'One-Off Clean', discount: 'Standard Rate' },
-                { id: 'weekly', label: 'Weekly Clean', discount: 'Save 15%' },
-                { id: 'fortnightly', label: 'Fortnightly', discount: 'Save 10%' },
-                { id: 'monthly', label: 'Monthly Clean', discount: 'Save 5%' },
+                { id: 'one-off', label: 'One Time', discount: 'Normal Price' },
+                { id: 'weekly', label: 'Every Week', discount: 'Save 15%' },
+                { id: 'fortnightly', label: 'Every 2 Weeks', discount: 'Save 10%' },
+                { id: 'monthly', label: 'Once a Month', discount: 'Save 5%' },
               ].map((f) => (
                 <button
                   type="button"
@@ -311,21 +325,64 @@ export const QuoteCalculator: React.FC = () => {
               ))}
             </div>
           </div>
+
+          <div className="pt-2">
+            <label className="block text-xs font-semibold text-slate-700 mb-2 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#D4AF37]" />
+                When are the best days for cleaning?
+              </span>
+              <span className="text-[11px] text-amber-700 font-normal">
+                {formData.bestDays.includes('Any.') ? 'Flexible: Any day' : `${formData.bestDays.length} day(s) selected`}
+              </span>
+            </label>
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+              {[
+                'Monday',
+                'Tuesday',
+                'Wednesday',
+                'Thursday',
+                'Friday',
+                'Saturday',
+                'Sunday',
+                'Any.',
+              ].map((day) => {
+                const isSelected = formData.bestDays.includes(day);
+                return (
+                  <button
+                    type="button"
+                    key={day}
+                    onClick={() => handleToggleDay(day)}
+                    className={`min-h-[44px] flex items-center justify-center py-2.5 px-2 rounded-xl text-center border-2 transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-[#0F382C] bg-[#0F382C] text-white font-bold shadow-sm'
+                        : 'border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span className="text-xs block">{day}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1.5">
+              Pick one or more days that work best for you, or choose Any.
+            </p>
+          </div>
         </div>
 
         {/* Step 3: Add-Ons */}
         <div className="space-y-3">
           <h4 className="text-sm font-bold uppercase tracking-wider text-[#0F382C] flex items-center gap-2 border-b border-slate-200 pb-2">
             <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
-            3. Optional Add-On Services
+            3. Extra items you want cleaned
           </h4>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
             {[
               { id: 'oven', label: 'Oven Deep Clean', price: '+£35' },
               { id: 'carpet', label: 'Carpet Steam', price: '+£45' },
-              { id: 'windows', label: 'Internal Windows', price: '+£25' },
-              { id: 'fridge', label: 'Fridge Sanitise', price: '+£20' },
+              { id: 'windows', label: 'Inside Windows', price: '+£25' },
+              { id: 'fridge', label: 'Fridge Clean', price: '+£20' },
             ].map((addon) => {
               const isChecked = formData.addOns.includes(addon.id);
               return (
@@ -359,13 +416,13 @@ export const QuoteCalculator: React.FC = () => {
         <div className="space-y-4 pt-2">
           <h4 className="text-sm font-bold uppercase tracking-wider text-[#0F382C] flex items-center gap-2 border-b border-slate-200 pb-2">
             <User className="w-4 h-4 text-[#D4AF37]" />
-            4. Confirm Details & Request Reservation
+            4. Your Contact Details
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Full Name *
+                Your Full Name *
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -375,7 +432,7 @@ export const QuoteCalculator: React.FC = () => {
                   placeholder="e.g. Fiona MacLeod"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0F382C] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
                 />
               </div>
             </div>
@@ -385,14 +442,14 @@ export const QuoteCalculator: React.FC = () => {
                 Email Address *
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <input
                   type="email"
                   required
-                  placeholder="name@domain.co.uk"
+                  placeholder="name@example.co.uk"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0F382C] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
                 />
               </div>
             </div>
@@ -402,14 +459,14 @@ export const QuoteCalculator: React.FC = () => {
                 Phone Number *
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <input
                   type="tel"
                   required
-                  placeholder="+44 7500 000000"
+                  placeholder="+44 7510 911940"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0F382C] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
                 />
               </div>
             </div>
@@ -418,38 +475,38 @@ export const QuoteCalculator: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Postcode / Area
+                Your Postcode or Town
               </label>
               <div className="relative">
-                <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <input
                   type="text"
                   placeholder="e.g. Paisley PA3 2PJ"
                   value={formData.postcode}
                   onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0F382C] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Preferred Cleaning Date
+                Preferred Date
               </label>
               <div className="relative">
-                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
                 <input
                   type="date"
                   value={formData.preferredDate}
                   onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                  className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#0F382C] focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Feedback Messages */}
+        {/* Feedback Alert */}
         {feedback && (
           <div
             className={`p-4 rounded-xl border flex items-start gap-3 ${
@@ -467,31 +524,31 @@ export const QuoteCalculator: React.FC = () => {
               <p className="text-xs font-bold">{feedback.message}</p>
               {feedback.referenceNo && (
                 <p className="text-[11px] text-slate-600 mt-1">
-                  Keep reference <strong>{feedback.referenceNo}</strong> for enquiries when contacting Paisley office (+44 75 1091 1940).
+                  Your Booking Reference: <strong>{feedback.referenceNo}</strong>
                 </p>
               )}
             </div>
           </div>
         )}
 
-        {/* Submit CTA */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+        {/* Action Button */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-            <span>Fully vetted staff • Insured • Paisley, Scotland HQ</span>
+            <span>100% Deposit Back Guarantee on move out cleans</span>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#0F382C] hover:bg-[#1B4332] text-white font-bold text-xs uppercase tracking-wider px-8 py-3.5 rounded-xl shadow-md transition-all cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#0F382C] hover:bg-[#1B4332] text-white font-bold text-xs uppercase tracking-wider px-8 py-4 rounded-xl shadow-lg transition-all cursor-pointer disabled:opacity-50"
           >
             {loading ? (
-              <span>Calculating & Sending...</span>
+              <span>Sending Request...</span>
             ) : (
               <>
                 <Send className="w-4 h-4 text-[#D4AF37]" />
-                <span>Submit Quote & Enquire Now</span>
+                <span>Send Booking Request Now</span>
               </>
             )}
           </button>

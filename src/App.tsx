@@ -1,181 +1,107 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, Suspense, lazy } from 'react';
 import { PageRoute, CleaningService } from './types';
+import { CLEANING_SERVICES } from './data/cleaningData';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { SEOHelmet } from './components/SEOHelmet';
 import { ChatWidget } from './components/ChatWidget';
+import { SEOHelmet } from './components/SEOHelmet';
 
+// Critical Route: Statically imported for instant FCP & LCP on initial load
 import { HomePage } from './pages/HomePage';
-import { ServicesPage } from './pages/ServicesPage';
-import { ServiceDetailPage } from './pages/ServiceDetailPage';
-import { CommunityPage } from './pages/CommunityPage';
-import { GovernancePage } from './pages/GovernancePage';
-import { AboutPage } from './pages/AboutPage';
-import { QuotePage } from './pages/QuotePage';
-import { FAQsPage } from './pages/FAQsPage';
-import { ContactPage } from './pages/ContactPage';
 
-import { CLEANING_SERVICES } from './data/cleaningData';
+// Non-Critical Secondary Routes: Lazy loaded with code-splitting
+const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })));
+const ServicesPage = lazy(() => import('./pages/ServicesPage').then(m => ({ default: m.ServicesPage })));
+const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage').then(m => ({ default: m.ServiceDetailPage })));
+const CommunityPage = lazy(() => import('./pages/CommunityPage').then(m => ({ default: m.CommunityPage })));
+const GovernancePage = lazy(() => import('./pages/GovernancePage').then(m => ({ default: m.GovernancePage })));
+const QuotePage = lazy(() => import('./pages/QuotePage').then(m => ({ default: m.QuotePage })));
+const FAQsPage = lazy(() => import('./pages/FAQsPage').then(m => ({ default: m.FAQsPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
+const OhkayGroupPage = lazy(() => import('./pages/OhkayGroupPage').then(m => ({ default: m.OhkayGroupPage })));
 
-const VALID_ROUTES: PageRoute[] = [
-  'home',
-  'services',
-  'service-detail',
-  'community',
-  'governance',
-  'about',
-  'quote',
-  'faqs',
-  'contact'
-];
+// Telemetry & Vitals: Only loaded and visible in development mode
+const DevTelemetryModal = import.meta.env.DEV
+  ? lazy(() => import('./components/DevTelemetryModal').then(m => ({ default: m.DevTelemetryModal })))
+  : null;
+
+// Route loading skeleton with zero layout shift
+function RouteLoadingFallback() {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-8 py-16 animate-pulse space-y-6">
+      <div className="h-44 bg-slate-200/80 rounded-3xl w-full" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-64 bg-slate-200/70 rounded-2xl" />
+        <div className="h-64 bg-slate-200/70 rounded-2xl" />
+        <div className="h-64 bg-slate-200/70 rounded-2xl" />
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<PageRoute>('home');
-  const [selectedService, setSelectedService] = useState<CleaningService | null>(
-    CLEANING_SERVICES[0]
-  );
-
-  // Initialize and synchronize with standard pathname routing (e.g. /, /services, /services/domestic-cleaning)
-  useEffect(() => {
-    const parseRouteFromUrl = (): { route: PageRoute; service?: CleaningService } => {
-      // If legacy hash exists (e.g. #/services or #services), extract and resolve
-      if (window.location.hash) {
-        const hashClean = window.location.hash.replace(/^#\/?/, '').trim();
-        const hashParts = hashClean.split('/');
-        if (hashParts[0] === 'services' && hashParts[1]) {
-          const matched = CLEANING_SERVICES.find(s => s.slug === hashParts[1] || s.id === hashParts[1]);
-          if (matched) {
-            window.history.replaceState({ route: 'service-detail', slug: matched.slug }, '', `/services/${matched.slug}`);
-            return { route: 'service-detail', service: matched };
-          }
-        }
-        if (VALID_ROUTES.includes(hashClean as PageRoute)) {
-          const cleanPath = hashClean === 'home' ? '/' : `/${hashClean}`;
-          window.history.replaceState({ route: hashClean }, '', cleanPath);
-          return { route: hashClean as PageRoute };
-        }
-      }
-
-      // Read clean pathname
-      const pathSegments = window.location.pathname.replace(/^\/+/, '').split('/');
-      const mainPath = pathSegments[0] || '';
-
-      if (mainPath === '' || mainPath === 'home') {
-        return { route: 'home' };
-      }
-
-      if (mainPath === 'services' && pathSegments[1]) {
-        const slug = pathSegments[1];
-        const matched = CLEANING_SERVICES.find(s => s.slug === slug || s.id === slug);
-        if (matched) {
-          return { route: 'service-detail', service: matched };
-        }
-        return { route: 'services' };
-      }
-
-      if (VALID_ROUTES.includes(mainPath as PageRoute)) {
-        return { route: mainPath as PageRoute };
-      }
-
-      return { route: 'home' };
-    };
-
-    const initial = parseRouteFromUrl();
-    setCurrentRoute(initial.route);
-    if (initial.service) {
-      setSelectedService(initial.service);
-    }
-
-    // Handle browser Back / Forward buttons
-    const handlePopState = () => {
-      const parsed = parseRouteFromUrl();
-      setCurrentRoute(parsed.route);
-      if (parsed.service) {
-        setSelectedService(parsed.service);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  const [selectedService, setSelectedService] = useState<CleaningService>(CLEANING_SERVICES[0]);
 
   const handleNavigate = (route: PageRoute) => {
     setCurrentRoute(route);
-    const targetPath = route === 'home' ? '/' : `/${route}`;
-    if (window.location.pathname !== targetPath || window.location.hash) {
-      window.history.pushState({ route }, '', targetPath);
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectService = (service: CleaningService) => {
     setSelectedService(service);
     setCurrentRoute('service-detail');
-    const targetPath = `/services/${service.slug}`;
-    if (window.location.pathname !== targetPath) {
-      window.history.pushState({ route: 'service-detail', slug: service.slug }, '', targetPath);
-    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF9F5] text-slate-900 font-sans selection:bg-[#74C69D] selection:text-[#0F382C]">
-      {/* Dynamic SEO Meta & Document Title */}
-      <SEOHelmet
-        currentRoute={currentRoute}
-        serviceTitle={selectedService?.title}
-      />
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans antialiased selection:bg-[#D4AF37] selection:text-[#0F382C]">
+      {/* Dynamic SEO Tags */}
+      <SEOHelmet currentRoute={currentRoute} serviceTitle={selectedService?.title} />
 
-      {/* Main Header */}
+      {/* Main Header Navigation */}
       <Header currentRoute={currentRoute} onNavigate={handleNavigate} />
 
-      {/* View Switcher */}
-      <main className="flex-1">
+      {/* Dynamic Page Views with Suspense */}
+      <main className="flex-grow">
         {currentRoute === 'home' && (
-          <HomePage
-            onNavigate={handleNavigate}
-            onSelectService={handleSelectService}
-          />
+          <HomePage onNavigate={handleNavigate} onSelectService={handleSelectService} />
         )}
 
-        {currentRoute === 'services' && (
-          <ServicesPage
-            onNavigate={handleNavigate}
-            onSelectService={handleSelectService}
-          />
-        )}
-
-        {currentRoute === 'service-detail' && selectedService && (
-          <ServiceDetailPage
-            service={selectedService}
-            onNavigate={handleNavigate}
-          />
-        )}
-
-        {currentRoute === 'community' && (
-          <CommunityPage onNavigate={handleNavigate} />
-        )}
-
-        {currentRoute === 'governance' && (
-          <GovernancePage onNavigate={handleNavigate} />
-        )}
-
-        {currentRoute === 'about' && <AboutPage onNavigate={handleNavigate} />}
-
-        {currentRoute === 'quote' && <QuotePage onNavigate={handleNavigate} />}
-
-        {currentRoute === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
-
-        {currentRoute === 'contact' && (
-          <ContactPage onNavigate={handleNavigate} />
-        )}
+        <Suspense fallback={<RouteLoadingFallback />}>
+          {currentRoute === 'about' && <AboutPage onNavigate={handleNavigate} />}
+          {currentRoute === 'services' && (
+            <ServicesPage onNavigate={handleNavigate} onSelectService={handleSelectService} />
+          )}
+          {currentRoute === 'service-detail' && (
+            <ServiceDetailPage service={selectedService} onNavigate={handleNavigate} />
+          )}
+          {currentRoute === 'community' && <CommunityPage onNavigate={handleNavigate} />}
+          {currentRoute === 'governance' && <GovernancePage onNavigate={handleNavigate} />}
+          {currentRoute === 'quote' && <QuotePage onNavigate={handleNavigate} />}
+          {currentRoute === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
+          {currentRoute === 'contact' && <ContactPage onNavigate={handleNavigate} />}
+          {currentRoute === 'ohkay-group' && <OhkayGroupPage onNavigate={handleNavigate} />}
+        </Suspense>
       </main>
 
-      {/* Interactive Instant Chat & Support Assistant (Strictly grounded in operation.md) */}
-      <ChatWidget onNavigate={handleNavigate} />
-
-      {/* Main Footer */}
+      {/* Global Footer */}
       <Footer onNavigate={handleNavigate} />
+
+      {/* Performance & Telemetry Diagnostics Inspector - Only visible in Development Mode */}
+      {DevTelemetryModal && (
+        <Suspense fallback={null}>
+          <DevTelemetryModal />
+        </Suspense>
+      )}
+
+      {/* Interactive Virtual Receptionist Clara Widget */}
+      <ChatWidget onNavigate={handleNavigate} />
     </div>
   );
 }

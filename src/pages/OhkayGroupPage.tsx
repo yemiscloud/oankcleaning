@@ -14,16 +14,16 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
   return (
     <div className="space-y-16 pb-16">
       {/* Header Banner */}
-      <section className="bg-[#0F382C] text-white py-16 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
-        <div className="max-w-7xl mx-auto space-y-4 text-center">
+      <section className="bg-[#0F382C] text-white py-14 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
+        <div className="max-w-7xl mx-auto space-y-3 text-center">
           <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-            Brand Portfolio Overview
+            Our Family of Brands
           </span>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             Ohkay Limited Brands
           </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto">
-            A trusted Scottish group bringing together premier brands across Care, Recruitment, Care Staffing, Food Logistics, alongside the independent, self-funded OANK Cleaning CIC.
+          <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
+            A caring Scottish family of brands providing home care, healthcare staffing, recruitment, and friendly community cleaning with OANK Cleaning CIC.
           </p>
 
           <div className="pt-2">
@@ -43,23 +43,23 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
 
       {/* Corporate Overview */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-6 space-y-6">
+        <div className="lg:col-span-6 space-y-5">
           <span className="text-amber-700 font-bold text-xs uppercase tracking-wider block">
-            Corporate Architecture
+            Our Group
           </span>
           <h2 className="text-3xl font-serif font-bold text-[#0F382C]">
-            Multiple Brands, One Commitment to Quality
+            One Big Family, One Big Goal
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Ohkay Limited was founded on the principle that essential services—whether caring for seniors, placing specialized healthcare workers, catering logistics, or cleaning homes and workplaces—deserve unwavering professionalism and empathy.
+            Ohkay Limited was built on a simple promise: essential services—caring for grandparents, helping hospitals with nurses, or cleaning homes and workplaces—should always be done with kindness and excellence.
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            By collaborating across the Ohkay Limited family of brands, our network shares centralized compliance, DBS/PVG screening procedures, and quality assurance frameworks.
+            All our brands share full police checking (DBS/PVG), high safety standards, and caring team members.
           </p>
 
           <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3 text-xs">
-            <span className="font-bold text-[#0F382C] block">Ohkay Limited Group HQ</span>
-            <p className="text-slate-600">Paisley, Scotland, PA3 2PJ • Tel: +44 75 1091 1940 | +44 75 2244 1379</p>
+            <span className="font-bold text-[#0F382C] block">Ohkay Limited Main Office</span>
+            <p className="text-slate-600">Paisley, Scotland, PA3 2PJ • Phone: +44 75 1091 1940 | +44 75 2244 1379</p>
 
             <a
               href="https://ohkaylimited.co.uk"
@@ -79,20 +79,34 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
             <img
               src={IMAGE_ASSETS.group}
               alt="Ohkay Limited Group Overview"
+              loading="lazy"
+              decoding="async"
               referrerPolicy="no-referrer"
               className="w-full h-[380px] object-cover"
             />
             <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-amber-200 flex items-center gap-3">
-              <img src={IMAGE_ASSETS.ohk3d} alt="Ohkay Limited 3D Emblem" className="w-12 h-12 object-contain" />
+              <img 
+                src={IMAGE_ASSETS.ohk3d} 
+                alt="Ohkay Limited 3D Emblem" 
+                loading="lazy" 
+                decoding="async" 
+                className="w-12 h-12 object-contain" 
+              />
               <div>
                 <span className="font-serif font-bold text-xs text-[#0F382C] block">Ohkay Limited</span>
                 <span className="text-[10px] text-amber-800 font-semibold uppercase">Official Crest</span>
               </div>
             </div>
             <div className="absolute bottom-4 left-4 bg-[#0F382C]/90 text-white p-3 rounded-xl border border-emerald-700/80 text-xs flex items-center gap-2">
-              <img src={IMAGE_ASSETS.ohk1} alt="Ohkay Quality Badge" className="w-8 h-8 rounded-full border border-[#D4AF37]" />
+              <img 
+                src={IMAGE_ASSETS.ohk1} 
+                alt="Ohkay Quality Badge" 
+                loading="lazy" 
+                decoding="async" 
+                className="w-8 h-8 rounded-full border border-[#D4AF37]" 
+              />
               <div>
-                <span className="font-bold text-amber-300 block">Paisley HQ Operations</span>
+                <span className="font-bold text-amber-300 block">Paisley Office</span>
                 <span className="text-slate-200 text-[10px]">Serving Scotland & PA3 2PJ</span>
               </div>
             </div>
@@ -104,7 +118,7 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
       <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-8">
         <div className="text-center max-w-xl mx-auto">
           <h2 className="text-3xl font-serif font-bold text-[#0F382C]">
-            The Ohkay Limited Brand Portfolio
+            The Ohkay Limited Family of Brands
           </h2>
         </div>
 
@@ -137,7 +151,7 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
                 </button>
               ) : (
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span>Inquiries via Ohkay Limited HQ</span>
+                  <span>Questions for Ohkay Limited Office</span>
                   <a href="tel:+447510911940" className="text-[#0F382C] font-bold hover:underline">+44 75 1091 1940</a>
                 </div>
               )}

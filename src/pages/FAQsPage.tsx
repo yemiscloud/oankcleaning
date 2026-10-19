@@ -20,16 +20,16 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
   return (
     <div className="space-y-12 pb-16">
       {/* Header Banner */}
-      <section className="bg-[#0F382C] text-white py-16 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
-        <div className="max-w-7xl mx-auto space-y-4 text-center">
+      <section className="bg-[#0F382C] text-white py-14 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
+        <div className="max-w-7xl mx-auto space-y-3 text-center">
           <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-            Client Knowledge Base
+            Help & Answers
           </span>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             Frequently Asked Questions
           </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto">
-            Everything you need to know about our domestic, deep, commercial, end-of-tenancy, and CIC community initiatives in Paisley and Scotland.
+          <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
+            Find quick, easy answers about our cleaning, prices, police checks, and community work in Paisley and Glasgow.
           </p>
         </div>
       </section>
@@ -40,7 +40,7 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
           <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5" />
           <input
             type="text"
-            placeholder="Search questions (e.g., DBS checks, deposit guarantee, community pilot, Paisley coverage)..."
+            placeholder="Type a word (like prices, keys, cleaners, or deposit)..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-3 text-xs sm:text-sm border border-slate-300 rounded-2xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none bg-white shadow-sm"
@@ -53,7 +53,7 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
             <p className="text-sm font-semibold text-slate-700">No matching questions found.</p>
-            <p className="text-xs text-slate-500">Call our Paisley office directly for immediate answers: +44 75 1091 1940</p>
+            <p className="text-xs text-slate-500">Call our friendly Paisley office for quick answers: +44 75 1091 1940</p>
           </div>
         ) : (
           filteredFaqs.map((faq, idx) => {
@@ -90,21 +90,21 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
 
       {/* Direct Help Banner */}
       <section className="max-w-3xl mx-auto px-4 sm:px-8 text-center bg-emerald-50 rounded-2xl p-8 border border-emerald-200 space-y-4">
-        <h3 className="text-xl font-serif font-bold text-[#0F382C]">Still Have Questions?</h3>
-        <p className="text-xs text-slate-600">Our customer support team in Paisley is happy to assist you.</p>
+        <h3 className="text-xl font-serif font-bold text-[#0F382C]">Still Have a Question?</h3>
+        <p className="text-xs text-slate-600">Our friendly team in Paisley is happy to help you!</p>
         <div className="flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={() => onNavigate('contact')}
             className="bg-[#0F382C] text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl cursor-pointer"
           >
-            Get in Touch
+            Send Us a Note
           </button>
           <a
             href="tel:+447510911940"
             className="bg-white text-[#0F382C] border border-[#0F382C] text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl flex items-center gap-2"
           >
             <Phone className="w-4 h-4 text-[#D4AF37]" />
-            <span>+44 75 1091 1940</span>
+            <span>Call +44 75 1091 1940</span>
           </a>
         </div>
       </section>

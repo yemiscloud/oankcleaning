@@ -2,31 +2,36 @@
 
 > **Official Website:** [www.oankcleaning.co.uk](https://www.oankcleaning.co.uk)  
 > **Company Structure:** Standalone Community Interest Company (CIC)  
-> **Headquarters:** Paisley, Scotland, PA3 2PJ  
+> **Registration Jurisdiction:** Scotland & United Kingdom  
+> **Headquarters:** Paisley, Renfrewshire, Scotland, PA3 2PJ  
 > **Operational Coverage:** Paisley, Renfrewshire, Greater Glasgow, and Central Scotland  
 > **Direct Telephone:** +44 75 1091 1940 | +44 75 2244 1379  
-> **Official Email:** info@oankcleaning.co.uk  
+> **Official Operational Email:** info@oankcleaning.co.uk  
 > **Operating Hours:** Monday – Saturday: 07:00 – 20:00 (24/7 Out-of-hours commercial response available)  
 
 ---
 
 ## 1. Corporate Identity & Community Interest Statement
 
-### 1.1 Purpose of OANK Cleaning CIC
-OANK Cleaning CIC is incorporated as a **Community Interest Company (CIC)** under the Companies (Audit, Investigations and Community Enterprise) Act 2004. Unlike conventional commercial cleaning businesses, OANK Cleaning CIC combines commercial trading excellence with direct, measurable, and enduring community benefit.
+### 1.1 Statutory Purpose of OANK Cleaning CIC
+OANK Cleaning CIC is incorporated as a **Community Interest Company (CIC)** under the Companies (Audit, Investigations and Community Enterprise) Act 2004 and the Community Interest Company Regulations 2005. Unlike conventional commercial cleaning corporations organized for private shareholder enrichment, OANK Cleaning CIC combines commercial trading excellence with direct, measurable, and enduring community benefit.
 
 ### 1.2 Asset Lock & Non-Profit Reinvestment
-- **Statutory Asset Lock:** Under statutory CIC regulations, all assets and trading surpluses of OANK Cleaning CIC are locked and dedicated solely to community interest objectives. Assets cannot be transferred or distributed for less than full market value except to another asset-locked body (such as another registered CIC or Scottish charity).
-- **Trading Surplus Reinvestment:** Surpluses generated from commercial, specialist, and domestic cleaning contracts fund our core community programmes—specifically the **OANK Home Reset** initiative and the **Employment Pathway Pilot**—to expand support for individuals facing practical, physical, and employment barriers in Renfrewshire and Scotland.
+- **Statutory Asset Lock:** In strict adherence to UK CIC regulations, all assets, retained capital, and operational trading surpluses of OANK Cleaning CIC are permanently locked and dedicated solely to community interest objectives. Assets cannot be transferred or distributed for less than full market value except to another asset-locked entity (such as another registered Scottish charity or CIC).
+- **Trading Surplus Reinvestment:** Surpluses generated from commercial facilities maintenance, end-of-tenancy restorations, and private domestic cleaning contracts directly fund our core community social programmes:
+  1. **The OANK Home Reset Initiative:** Targeted domestic hygiene restoration for households facing severe practical, physical, or situational hurdles.
+  2. **The Employment Pathway Pilot:** Paid living-wage training, COSHH certification, and supervised work experience for individuals facing systemic labour-market barriers in Renfrewshire and Scotland.
+- **Annual CIC34 Community Reporting:** Every financial year, the Board of Directors submits a formal CIC34 Community Interest Company Report to the Office of the Regulator of Community Interest Companies, detailing trading turnover, community hours delivered, and social impact metrics.
 
-### 1.3 Operational Governance & Compliance Standards
-OANK Cleaning CIC is an independent, self-funded Community Interest Company standing on its own, dedicated to excellence in commercial, domestic, and specialist cleaning across Scotland.
+### 1.3 Operational Independence & Governance Standards
+OANK Cleaning CIC is an independent, self-funded social enterprise standing on its own, dedicated to excellence in commercial, domestic, and specialist cleaning across Scotland.
 
 Our governance framework enforces strict standards in:
 - Health and Social Care compliance protocols
 - Enhanced background vetting and Disclosure Scotland / DBS verification
 - Health & Safety, COSHH, and infection prevention control systems
 - Human resources, ethical employment, and safeguarding oversight
+- Digital data governance and dual-delivery transmission accountability
 
 ---
 
@@ -36,11 +41,11 @@ OANK Cleaning CIC operates six core commercial and residential service categorie
 
 | Service Category | Key Features & Inclusions | Compliance & Quality Standards |
 | :--- | :--- | :--- |
-| **Regular Domestic Cleaning** | Dusting, vacuuming, mopping, bathroom sanitisation, kitchen surfaces, customized room checklists | Dedicated cleaner, full insurance, DBS vetting, eco-friendly non-toxic agents |
+| **Regular Domestic Cleaning** | Dusting, vacuuming, mopping, bathroom sanitisation, kitchen surfaces, customized room checklists | Dedicated cleaner, full public liability insurance, DBS vetting, eco-friendly non-toxic agents |
 | **Deep & Spring Cleaning** | Top-to-bottom intensive restoration, high-level light fittings, lime-scale descaling, light furniture moving | Multi-person team, COSHH-compliant hospital-grade sanitization |
 | **End of Tenancy Cleaning** | Full inventory-standard deep clean, inside/outside cupboards, oven & hob degreasing, internal windows | **100% Deposit Back Guarantee** with 72-hour free re-clean safety net |
 | **Commercial & Office Cleaning** | Work desk sanitisation, touchpoint disinfection, washrooms, kitchenettes, waste management | Out-of-hours & overnight shifts, dedicated account manager, audit reports |
-| **Healthcare & Care Home Cleaning** | EN1276 anti-microbial solutions, sluice rooms, resident ensuite disinfection, bed touchpoints | CQC & NHS infection control protocols, enhanced care-trained DBS staff |
+| **Healthcare & Care Home Cleaning** | EN1276 anti-microbial solutions, sluice rooms, resident ensuite disinfection, bed touchpoints | Care Inspectorate & NHS infection control protocols, enhanced care-trained DBS staff |
 | **Carpet & Upholstery Care** | Hot water extraction, deep pile agitation, pre-spray stain treatment, odour removal | HEPA vacuuming, fast-drying tech (2-4 hrs), child & pet safe solutions |
 
 ---
@@ -99,53 +104,61 @@ OANK Cleaning CIC operates six core commercial and residential service categorie
 
 ---
 
-## 4. Operational Policies & Compliance
+## 4. Operational Policies, Data Integrity & Compliance
 
-### 4.1 Safeguarding Policy
-OANK Cleaning CIC enforces a strict safeguarding framework to protect both service users (especially vulnerable adults and children) and cleaning personnel:
-- **Enhanced Vetting:** All cleaning and supervisory personnel undergo criminal record background checks (Disclosure Scotland / Enhanced DBS).
-- **Client Boundaries:** Staff are prohibited from accepting gifts, handling client money/banking, providing medical/nursing aid, or entering unassigned private areas.
-- **Designated Safeguarding Lead (DSL):** Any concerns regarding abuse, neglect, exploitation, or radicalization must be immediately documented and escalated to the DSL and relevant local statutory authorities (Renfrewshire Social Work / Police Scotland).
+### 4.1 Safeguarding & Vetting Policy
+OANK Cleaning CIC enforces an absolute safeguarding framework to protect both service users (especially vulnerable adults and children) and cleaning personnel:
+- **Enhanced Criminal Record Vetting:** Every cleaning technician and supervisor undergoes mandatory background screening via Disclosure Scotland and Enhanced DBS before entering any customer property.
+- **Client Boundaries & Anti-Financial Abuse:** Cleaners are strictly prohibited from handling client money, operating bank cards, accepting financial gifts, dispensing medication, or entering non-contracted private areas.
+- **Designated Safeguarding Lead (DSL):** Any concerns regarding abuse, neglect, exploitation, or radicalization must be immediately documented and escalated to the DSL and relevant statutory bodies (Renfrewshire Health and Social Care Partnership / Police Scotland).
 
-### 4.2 Health, Safety & COSHH Compliance Policy
-- **COSHH Protocols:** All chemical agents used are registered with Material Safety Data Sheets (MSDS), stored in original labeled containers, and handled in accordance with manufacturer dilutions.
-- **Colour-Coded Cross-Contamination System:**
-  - 🔴 **Red:** Washrooms, toilets, bidets, and urinals
-  - 🟡 **Yellow:** Clinical rooms, sinks in bathrooms, washroom fixtures
-  - 🔵 **Blue:** General living areas, desks, offices, bedrooms
-  - 🟢 **Green:** Kitchens, food preparation hubs, canteens
-- **Risk Assessment:** Site-specific risk assessments are conducted prior to undertaking major commercial or deep cleaning assignments.
+### 4.2 Health, Safety, COSHH & 4-Colour Cloth System
+- **COSHH Protocols:** All cleaning agents used are registered under UK COSHH and European REACH regulations, accompanied by Material Safety Data Sheets (MSDS), kept in original labeled containers, and dispensed at exact manufacturer dilution ratios.
+- **British Institute of Cleaning Science (BICSc) 4-Colour Cloth Standard:**
+  - 🔴 **Red Cloths & Buckets:** Washrooms, toilet bowls, urinals, and sanitary bins.
+  - 🟡 **Yellow Cloths & Buckets:** Bathroom washbasins, tiles, mirrors, and shower cubicles.
+  - 🔵 **Blue Cloths & Buckets:** General living areas, bedrooms, office desks, and hallways.
+  - 🟢 **Green Cloths & Buckets:** Kitchens, food preparation surfaces, counters, and dining hubs.
+- **Cross-Contamination Guarantee:** Red cloths never cross into yellow, blue, or green zones under any circumstances.
 
 ### 4.3 Privacy, GDPR & Data Protection Policy
-- OANK Cleaning CIC adheres to the UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018.
-- Personal data collected via contact forms, quote calculators, or referral pathways (Name, Email, Phone, Address, Health/Barrier considerations) is processed solely for service delivery, quality assurance, and statutory CIC reporting.
-- Data is encrypted in transit and stored in access-restricted relational databases. We never sell or transfer personal data to third-party commercial advertisers.
+- OANK Cleaning CIC complies fully with the UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018.
+- Personal data collected via online calculators, quote forms, or partner referrals (Name, Email, Phone, Address, Health/Accessibility requirements) is processed exclusively for service execution, safety audits, and statutory CIC compliance.
+- All communications are encrypted in transit via SSL/TLS 1.3. We maintain a strict zero-resale policy: client information is never sold, leased, or transferred to third-party commercial advertisers.
 
-### 4.4 Service Standards & 100% Deposit Back Guarantee
-- **End of Tenancy Standard:** All End of Tenancy cleaning follows recognized UK Letting Agent & Landlord inventory checklists.
-- **72-Hour Re-Clean Guarantee:** If any cleaning-related deficiency is noted on the formal inventory checkout report within 72 hours of completion, OANK Cleaning CIC will return and re-clean the flagged area free of charge.
+### 4.4 Dual-Delivery Transmission & Data Accountability Protocol
+To guarantee absolute operational reliability and prevent lost customer bookings:
+- **Dual-Receipt Requirement:** Online quote requests and contact enquiries are governed by a synchronized dual-delivery transaction protocol. The system only reports completion when:
+  1. The record is permanently committed to the secure MySQL database `enquiries` table with an immutable tracking code (`OANK-XXXXXX`).
+  2. The dispatch transmission is verified received by the operations desk email (`info@oankcleaning.co.uk`).
+- **Audit Trails:** Every booking captures complete property specifications, selected add-ons, preferred dates, preferred cleaning days, and special instructions so operations personnel have complete data fidelity before deployment.
+- **Anti-Duplication:** Client-side Axios interceptors and server-side idempotent reference generation prevent duplicate entries.
 
-### 4.5 Quality Assurance & Complaints Procedure
-- **Feedback Collection:** Follow-up satisfaction checks are initiated after each commercial clean and Home Reset intervention.
-- **Complaints Escalation:**
-  - **Stage 1 (Local Resolution):** Report issue within 48 hours to `info@oankcleaning.co.uk` or call +44 75 1091 1940.
-  - **Stage 2 (Management Review):** A Senior Operations Officer inspects the site and provides written resolution within 3 business days.
-  - **Stage 3 (Directorate Review):** Unresolved matters are reviewed by the Board of Directors of OANK Cleaning CIC.
+### 4.5 Service Standards & 100% Deposit Back Guarantee
+- **End of Tenancy Inventory Standard:** All move-out cleanings align with Scottish letting agent checkout checklists.
+- **72-Hour Free Re-Clean Safety Net:** If a landlord, estate agent, or inventory clerk identifies any cleaning deficiency within 72 hours of completion, OANK Cleaning CIC will dispatch cleaners to re-clean the flagged area free of charge.
 
----
-
-## 5. Governance & Verification Matrix
-
-| Area | Governance Rule | Responsible Body |
-| :--- | :--- | :--- |
-| **Legal Status** | Standalone Community Interest Company (CIC) | Companies House & CIC Regulator |
-| **Entity Governance** | Independent CIC Board | OANK Cleaning CIC Board |
-| **Headquarters** | Paisley, Scotland, PA3 2PJ | OANK Operations Team |
-| **Community Program** | Home Reset & Employment Pathway Pilot | Community Steering Committee |
-| **Vetting Level** | Enhanced DBS / Disclosure Scotland | HR & Compliance Department |
-| **Customer Support** | +44 75 1091 1940 / +44 75 2244 1379 | Customer Care Paisley HQ |
-| **Official Website** | [https://www.oankcleaning.co.uk](https://www.oankcleaning.co.uk) | OANK Cleaning CIC Operations |
+### 4.6 Quality Assurance & Complaints Procedure
+- **Stage 1 (Local Resolution):** Report issue within 48 hours to `info@oankcleaning.co.uk` or call +44 75 1091 1940.
+- **Stage 2 (Management Audit):** A Senior Operations Officer inspects the site and provides written resolution within 3 business days.
+- **Stage 3 (Directorate Review):** Unresolved matters are elevated to the Board of Directors of OANK Cleaning CIC.
 
 ---
 
-*This document serves as the official corporate governance and operational standard for OANK Cleaning CIC.*
+## 5. Master Governance & Verification Matrix
+
+| Area | Statutory Standard / Governance Rule | Governing Body / Legislation | Verification Mechanism |
+| :--- | :--- | :--- | :--- |
+| **Legal Entity** | Community Interest Company (CIC) | Companies House / CIC Regulator | Registered in Scotland |
+| **Asset Lock** | 100% Non-Distribution Asset Lock | Community Interest Company Regulations 2005 | Statutory Annual CIC34 Submission |
+| **Staff Vetting** | Enhanced Criminal Record Checks | Disclosure Scotland & Enhanced DBS | 100% Verified Staff Roster |
+| **Hygiene Standard** | 4-Colour Cross-Contamination System | British Institute of Cleaning Science (BICSc) | Red, Yellow, Blue, Green Cloth Isolation |
+| **Chemical Safety** | Non-Toxic, Biodegradable Soaps | UK COSHH & EU REACH Compliance | Material Safety Data Sheets (MSDS) on site |
+| **Data Protection** | Encryption in transit & strict retention | UK GDPR & Data Protection Act 2018 | SSL/TLS 1.3 & Encrypted Database |
+| **Transaction Integrity** | Dual-Delivery Verification Protocol | OANK Operating Policy v2.4 | DB Persistence + Management Email Confirmation |
+| **Move-Out Guarantee** | 100% Deposit Back Guarantee | Scottish Letting Inventory Standards | 72-Hour Free Re-Clean Warranty |
+| **HQ Operations** | Paisley PA3 2PJ, Renfrewshire | Renfrewshire Council / Local Authority | +44 75 1091 1940 / info@oankcleaning.co.uk |
+
+---
+
+*This document serves as the authoritative corporate governance, social compliance, and operating standard for OANK Cleaning CIC.*

@@ -39,12 +39,12 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
     {
       id: 'welcome-1',
       sender: 'bot',
-      text: `Good day! Welcome to OANK Cleaning CIC. I am Clara, your virtual front-desk receptionist.\n\nI am here to assist you with any questions regarding our commercial & domestic cleaning services, price estimates, our 100% deposit back guarantee, or our community Home Reset and Employment Pathway programmes.\n\nHow can I help you today?`,
+      text: `Hello! Welcome to OANK Cleaning. I am Clara, your friendly assistant.\n\nI can help you check cleaning prices, book a clean, or learn how we help our community with free home cleans and paid job training.\n\nHow can I help you today?`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       actionButtons: [
-        { label: 'Calculate Instant Quote', action: () => { onNavigate('quote'); setIsOpen(false); } },
+        { label: 'Check Instant Price', action: () => { onNavigate('quote'); setIsOpen(false); } },
         { label: 'What is Home Reset?', action: () => handleSendPrompt('What is the OANK Home Reset?') },
-        { label: 'Employment Pathway', action: () => handleSendPrompt('How does the Employment Pathway work?') }
+        { label: 'Paid Job Training', action: () => handleSendPrompt('How does the Employment Pathway work?') }
       ]
     }
   ]);
@@ -278,7 +278,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
                   <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  <span className="text-[10px] text-slate-400 ml-1">Clara is checking operation records...</span>
+                  <span className="text-[10px] text-slate-400 ml-1">Clara is typing...</span>
                 </div>
               </div>
             )}
@@ -294,7 +294,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder="Ask about Home Reset, quotes, deposits, CIC..."
+                placeholder="Ask about home cleaning, prices, or jobs..."
                 className="flex-1 px-3.5 py-2.5 text-xs border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none bg-slate-50 focus:bg-white text-slate-800"
               />
               <button
@@ -310,7 +310,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
             <div className="flex items-center justify-between text-[10px] text-slate-500 pt-0.5">
               <span className="flex items-center gap-1 text-slate-600">
                 <ShieldCheck className="w-3 h-3 text-[#0F382C]" />
-                <span>Grounded in operation.md</span>
+                <span>Friendly help</span>
               </span>
 
               <a 
