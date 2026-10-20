@@ -1,12 +1,113 @@
+
+# ==============================================================================
+# OanK Cleaning — Production Apache Configuration
+# Location: deployed document root, alongside index.html and api/
+# Requires Apache mod_rewrite, mod_headers, mod_deflate and mod_expires as used.
+# ==============================================================================
+
+Options -Indexes
+
+# Reduce server information exposure where permitted by the host.
+ServerSignature Off
+
 <IfModule mod_rewrite.c>
-  RewriteEngine On
+    RewriteEngine On
+    RewriteBase /
 
-  RewriteBase /
+    # --------------------------------------------------------------------------
+    # Preserve Authorization headers for PHP applications.
+    # --------------------------------------------------------------------------
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-  RewriteRule ^index\.html$ - [L]
+    # --------------------------------------------------------------------------
+    # API ROUTES — these MUST be before the React SPA fallback.
+    # /api/contact  -> /api/contact.php
+    # /api/quote    -> /api/quote.php
+    # --------------------------------------------------------------------------
+    RewriteRule ^api/contact/?$ api/contact.php [END]
+    RewriteRule ^api/quote/?$ api/quote.php [END]
+    RewriteRule ^api/config/?$ api/config.php [END]
+    RewriteRule ^api/sitemap/?$ api/sitemap.php [END]
+    RewriteRule ^api/chat-log/?$ api/chat_log.php [END]
+    RewriteRule ^api/chat_log/?$ api/chat_log.php [END]
 
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+    # --------------------------------------------------------------------------
+    # Never return index.html for an unknown API endpoint.
+    # Existing PHP endpoints such as /api/contact.php remain directly accessible.
+    # --------------------------------------------------------------------------
+    RewriteRule ^api/ - [R=404,END]
 
-  RewriteRule . /index.html [L]
+    # --------------------------------------------------------------------------
+    # Allow real files and directories to be served normally.
+    # --------------------------------------------------------------------------
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [END]
+
+    # --------------------------------------------------------------------------
+    # React / Vite single-page application fallback.
+    # --------------------------------------------------------------------------
+    RewriteRule ^ index.html [END]
+</IfModule>
+
+# ==============================================================================
+# SECURITY HEADERS
+# ==============================================================================
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Enable HSTS only if this domain and all its subdomains use HTTPS.
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+    Header always unset X-Powered-By
+</IfModule>
+
+# ==============================================================================
+# HTTP METHOD RESTRICTIONS
+# PHP handlers should enforce their own allowed methods and handle OPTIONS/CORS.
+# ==============================================================================
+
+<LimitExcept GET POST OPTIONS>
+    Require all denied
+</LimitExcept>
+
+# ==============================================================================
+# COMPRESSION
+# ==============================================================================
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ==============================================================================
+# BROWSER CACHING
+# ==============================================================================
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+
+    # Keep JSON/API responses short-lived; PHP may set its own cache headers.
+    ExpiresByType application/json "access plus 0 seconds"
 </IfModule>
