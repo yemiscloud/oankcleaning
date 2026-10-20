@@ -148,8 +148,8 @@ export const submitContactForm = async (
 
     // Identify specific failure reason if partial
     const reasons: string[] = [];
-    if (!isDbSaved) reasons.push('Database table storage failed');
-    if (!isEmailSent) reasons.push('Preferred email dispatch failed');
+    if (!isDbSaved) reasons.push('1 failed');
+    if (!isEmailSent) reasons.push('2 failed');
 
     return {
       success: false,
@@ -204,8 +204,8 @@ export const submitQuoteRequest = async (
     }
 
     const reasons: string[] = [];
-    if (!isDbSaved) reasons.push('Database table storage failed');
-    if (!isEmailSent) reasons.push('Preferred email dispatch failed');
+    if (!isDbSaved) reasons.push('1 failed');
+    if (!isEmailSent) reasons.push('2 failed');
 
     return {
       success: false,
