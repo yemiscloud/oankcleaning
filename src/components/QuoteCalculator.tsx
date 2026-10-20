@@ -16,7 +16,7 @@ import {
   Percent
 } from 'lucide-react';
 import { QuoteFormData } from '../types';
-import { submitQuoteRequest, submitContactForm } from '../lib/api';
+import { telemetry } from '../lib/telemetry';
 
 export const QuoteCalculator: React.FC = () => {
   const [formData, setFormData] = useState<QuoteFormData>({
@@ -115,24 +115,52 @@ export const QuoteCalculator: React.FC = () => {
     }
 
     setLoading(true);
+    const startTime = performance.now();
 
     try {
-      const quoteRes = await submitQuoteRequest(formData);
+      const response = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-      // ONLY show success when form data is successfully delivered to both database table AND preferred email
-      if (quoteRes.success && quoteRes.databaseDelivered && quoteRes.emailDelivered) {
+      const payload = await response.json();
+      const durationMs = Math.round(performance.now() - startTime);
+
+      telemetry.recordNetworkRequest({
+        url: '/api/quote',
+        method: 'POST',
+        status: response.status,
+        durationMs,
+        success: response.ok && payload.success,
+        sizeBytes: JSON.stringify(payload).length,
+      });
+
+      const isDbSaved = payload?.data?.submission?.databaseSaved === true;
+      const isEmailSent = payload?.data?.submission?.mail?.adminSent === true;
+
+      // Strict validation: Only show success when BOTH database and preferred email succeeded
+      if (response.ok && payload.success && isDbSaved && isEmailSent) {
         setFeedback({
           type: 'success',
-          message: `Thank you, ${formData.name}! Your quote request [${quoteRes.referenceNo || 'Confirmed'}] has been successfully saved to our database and delivered to our team at info@oankcleaning.co.uk.`,
-          referenceNo: quoteRes.referenceNo,
+          message: `Thank you, ${formData.name}! Your quote request [${payload.data?.referenceNo || 'Confirmed'}] one of our team will call you within 2 hours`,
+          referenceNo: payload.data?.referenceNo || payload.referenceNo,
         });
       } else {
         setFeedback({
           type: 'error',
-          message: quoteRes.message || 'Delivery could not be confirmed for database table and preferred email. Please call us directly at +44 75 1091 1940.',
+          message: payload.message || 'Delivery could not be confirmed for database table and preferred email. Please call us directly at +44 75 1091 1940.',
         });
       }
-    } catch {
+    } catch (error) {
+      telemetry.recordNetworkRequest({
+        url: '/api/quote',
+        method: 'POST',
+        status: null,
+        durationMs: Math.round(performance.now() - startTime),
+        success: false,
+        errorMessage: 'Network Error',
+      });
       setFeedback({
         type: 'error',
         message: 'Could not connect to the backend server. Please verify your internet connection or call our Paisley office at +44 75 1091 1940.',

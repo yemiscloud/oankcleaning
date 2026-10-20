@@ -134,6 +134,7 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
               );
             })}
 
+  {/* Hide "Rules & Promises" button from Mobile view ** 
             <button
               onClick={() => handleNavClick('governance')}
               className={`flex items-center justify-between w-full px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
@@ -145,6 +146,7 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
               <span>Our Rules & Promises</span>
               <ChevronRight className={`w-4 h-4 ${currentRoute === 'governance' ? 'text-[#D4AF37]' : 'text-slate-400'}`} />
             </button>
+     */}       
 
             <div className="pt-2">
               <button

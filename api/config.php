@@ -1,19 +1,338 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * OanK Cleaning
  * Global PHP Configuration
  *
- * Subsidiary of Ohkay Limited
+ * Subsidiary of Ohkay Limited.
  *
- * File:
- * /home/oankxyiu/public_html/api/config.php
- *
- * Environment:
- * /home/oankxyiu/.env_variables/oank.env
+ * Private environment file:
+ * /home/oankxyju/.env_variables/oank.env
  */
+
+declare(strict_types=1);
+
+/*
+|--------------------------------------------------------------------------
+| PHP Error Configuration
+|--------------------------------------------------------------------------
+|
+| Errors are logged on the server.
+| Detailed errors are never displayed to visitors in production.
+|
+*/
+
+ini_set('log_errors', '1');
+ini_set('display_errors', '0');
+ini_set('display_startup_errors', '0');
+
+error_reporting(E_ALL);
+
+/*
+|--------------------------------------------------------------------------
+| Application Logging
+|--------------------------------------------------------------------------
+*/
+
+if (!function_exists('oankLog')) {
+    function oankLog(
+        string $message,
+        string $level = 'INFO',
+        array $context = []
+    ): void {
+        $allowedLevels = [
+            'DEBUG',
+            'INFO',
+            'WARNING',
+            'ERROR',
+            'CRITICAL',
+        ];
+
+        if (!in_array($level, $allowedLevels, true)) {
+            $level = 'INFO';
+        }
+
+        // Do not write credentials, passwords or tokens to logs.
+        $sensitiveKeys = [
+            'password',
+            'db_pass',
+            'db_password',
+            'secret',
+            'token',
+            'api_key',
+            'authorization',
+            'cookie',
+        ];
+
+        foreach ($context as $key => $value) {
+            if (
+                in_array(
+                    strtolower((string) $key),
+                    $sensitiveKeys,
+                    true
+                )
+            ) {
+                $context[$key] = '[REDACTED]';
+            }
+        }
+
+        $entry = sprintf(
+            '[OanK Cleaning] [%s] [%s] %s',
+            date('Y-m-d H:i:s'),
+            $level,
+            $message
+        );
+
+        if ($context !== []) {
+            $encoded = json_encode(
+                $context,
+                JSON_UNESCAPED_SLASHES
+                | JSON_INVALID_UTF8_SUBSTITUTE
+            );
+
+            if ($encoded !== false) {
+                $entry .= ' | Context: ' . $encoded;
+            }
+        }
+
+        error_log($entry);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Browser Console Diagnostics
+|--------------------------------------------------------------------------
+|
+| Console messages are returned only when debug mode is enabled.
+| Never place credentials or private server information in this output.
+|
+*/
+
+if (!function_exists('oankConsoleLog')) {
+    function oankConsoleLog(
+        string $message,
+        array $context = []
+    ): void {
+        if (!defined('APP_DEBUG') || APP_DEBUG !== true) {
+            return;
+        }
+
+        $safeContext = [];
+
+        foreach ($context as $key => $value) {
+            if (
+                preg_match(
+                    '/password|secret|token|credential|authorization|api.?key/i',
+                    (string) $key
+                )
+            ) {
+                $safeContext[$key] = '[REDACTED]';
+                continue;
+            }
+
+            if (
+                is_string($value)
+                || is_numeric($value)
+                || is_bool($value)
+                || $value === null
+            ) {
+                $safeContext[$key] = $value;
+            }
+        }
+
+        $json = json_encode(
+            [
+                'source' => 'OanK Cleaning',
+                'message' => $message,
+                'context' => $safeContext,
+            ],
+            JSON_HEX_TAG
+            | JSON_HEX_APOS
+            | JSON_HEX_QUOT
+            | JSON_HEX_AMP
+            | JSON_INVALID_UTF8_SUBSTITUTE
+        );
+
+        if ($json !== false) {
+            error_log('[OanK Browser Debug] ' . $json);
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Load Private Environment Variables
+|--------------------------------------------------------------------------
+*/
+
+$envPaths = [
+    dirname(__DIR__, 2) . '/.env_variables/oank.env',
+    '/home/oankxyju/.env_variables/oank.env',
+];
+
+$envLoaded = false;
+$selectedEnvPath = null;
+
+foreach ($envPaths as $envPath) {
+    if (!is_file($envPath) || !is_readable($envPath)) {
+        continue;
+    }
+
+    $lines = file(
+        $envPath,
+        FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+    );
+
+    if ($lines === false) {
+        oankLog(
+            'Unable to read environment file.',
+            'ERROR'
+        );
+
+        continue;
+    }
+
+    foreach ($lines as $line) {
+        $line = trim($line);
+
+        if ($line === '' || $line[0] === '#') {
+            continue;
+        }
+
+        if (strncmp($line, 'export ', 7) === 0) {
+            $line = trim(substr($line, 7));
+        }
+
+        if (strpos($line, '=') === false) {
+            continue;
+        }
+
+        [$key, $value] = explode('=', $line, 2);
+
+        $key = trim($key);
+        $value = trim($value);
+
+        if (
+            !preg_match(
+                '/^[A-Za-z_][A-Za-z0-9_]*$/',
+                $key
+            )
+        ) {
+            continue;
+        }
+
+        if (
+            strlen($value) >= 2
+            && (
+                ($value[0] === '"' && substr($value, -1) === '"')
+                || ($value[0] === "'" && substr($value, -1) === "'")
+            )
+        ) {
+            $value = substr($value, 1, -1);
+        }
+
+        // Existing hosting environment values take precedence.
+        if (
+            getenv($key) !== false
+            || array_key_exists($key, $_ENV)
+        ) {
+            continue;
+        }
+
+        putenv($key . '=' . $value);
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+    }
+
+    $envLoaded = true;
+    $selectedEnvPath = $envPath;
+
+    // Stop after loading the first readable environment file.
+    break;
+}
+
+if ($envLoaded) {
+    oankLog(
+        'Environment file loaded successfully.',
+        'INFO',
+        [
+            'file_exists' => true,
+            'file_readable' => true,
+        ]
+    );
+} else {
+    oankLog(
+        'No readable environment file was found.',
+        'CRITICAL'
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Environment Variable Helper
+|--------------------------------------------------------------------------
+*/
+
+if (!function_exists('appEnv')) {
+    function appEnv(
+        string $key,
+        string $default = ''
+    ): string {
+        $value = getenv($key);
+
+        if ($value !== false) {
+            return (string) $value;
+        }
+
+        if (array_key_exists($key, $_ENV)) {
+            return (string) $_ENV[$key];
+        }
+
+        if (array_key_exists($key, $_SERVER)) {
+            return (string) $_SERVER[$key];
+        }
+
+        return $default;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Application Settings
+|--------------------------------------------------------------------------
+*/
+
+date_default_timezone_set(
+    appEnv('APP_TIMEZONE', 'Europe/London')
+);
+
+if (!defined('APP_ENV')) {
+    define(
+        'APP_ENV',
+        appEnv('APP_ENV', 'production')
+    );
+}
+
+if (!defined('APP_DEBUG')) {
+    define(
+        'APP_DEBUG',
+        filter_var(
+            appEnv('APP_DEBUG', 'false'),
+            FILTER_VALIDATE_BOOLEAN
+        )
+    );
+}
+
+oankLog(
+    'Application initialized.',
+    'INFO',
+    [
+        'environment' => APP_ENV,
+        'debug_enabled' => APP_DEBUG,
+        'php_version' => PHP_VERSION,
+        'timezone' => date_default_timezone_get(),
+    ]
+);
 
 /*
 |--------------------------------------------------------------------------
@@ -21,21 +340,21 @@ declare(strict_types=1);
 |--------------------------------------------------------------------------
 */
 
-defined('COMPANY_NAME') || define('COMPANY_NAME', 'OanK Cleaning');
-defined('PARENT_GROUP') || define('PARENT_GROUP', 'Ohkay Limited');
-defined('COMPANY_DOMAIN') || define('COMPANY_DOMAIN', 'oankcleaning.co.uk');
+define('COMPANY_NAME', 'OanK Cleaning');
+define('PARENT_GROUP', 'Ohkay Limited');
+define('COMPANY_DOMAIN', 'oankcleaning.co.uk');
 
-defined('COMPANY_ADDRESS') || define(
+define(
     'COMPANY_ADDRESS',
     'Paisley, Scotland, PA3 2PJ'
 );
 
-defined('COMPANY_PHONE_PRIMARY') || define(
+define(
     'COMPANY_PHONE_PRIMARY',
     '+44 75 1091 1940'
 );
 
-defined('COMPANY_PHONE_SECONDARY') || define(
+define(
     'COMPANY_PHONE_SECONDARY',
     '+44 75 2244 1379'
 );
@@ -46,12 +365,12 @@ defined('COMPANY_PHONE_SECONDARY') || define(
 |--------------------------------------------------------------------------
 */
 
-defined('COMPANY_WHATSAPP_NUMBER') || define(
+define(
     'COMPANY_WHATSAPP_NUMBER',
     '+447510911940'
 );
 
-defined('COMPANY_WHATSAPP_LINK') || define(
+define(
     'COMPANY_WHATSAPP_LINK',
     'https://wa.me/447510911940'
 );
@@ -62,189 +381,215 @@ defined('COMPANY_WHATSAPP_LINK') || define(
 |--------------------------------------------------------------------------
 */
 
-defined('NOTIFICATION_EMAIL') || define(
+define(
     'NOTIFICATION_EMAIL',
     'info@oankcleaning.co.uk'
 );
 
-defined('BACKUP_EMAIL') || define(
+define(
     'BACKUP_EMAIL',
     'hormotholar@yahoo.com'
 );
 
-defined('SUPPORT_EMAIL') || define(
+define(
     'SUPPORT_EMAIL',
     'support@ohkaylimited.co.uk'
 );
 
 /*
 |--------------------------------------------------------------------------
-| Environment Loader
+| Database Configuration
 |--------------------------------------------------------------------------
-|
-| Loads simple KEY=value entries from a private file outside public_html.
-| No Composer package is required.
-|
-| Existing server-provided environment variables take precedence.
-|
 */
 
-$envFile = '/home/oankxyiu/.env_variables/oank.env';
-
-if (is_readable($envFile)) {
-    $envLines = file(
-        $envFile,
-        FILE_IGNORE_NEW_LINES
-    );
-
-    if ($envLines !== false) {
-        foreach ($envLines as $line) {
-            $line = trim($line);
-
-            if ($line === '' || $line[0] === '#') {
-                continue;
-            }
-
-            // Support an optional "export KEY=value" prefix.
-            if (strncmp($line, 'export ', 7) === 0) {
-                $line = trim(substr($line, 7));
-            }
-
-            if (strpos($line, '=') === false) {
-                continue;
-            }
-
-            [$key, $value] = explode('=', $line, 2);
-
-            $key = trim($key);
-            $value = trim($value);
-
-            // Only accept standard environment variable names.
-            if (!preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $key)) {
-                continue;
-            }
-
-            // Remove matching surrounding quotes.
-            if (strlen($value) >= 2) {
-                $first = $value[0];
-                $last = substr($value, -1);
-
-                if (
-                    ($first === '"' && $last === '"') ||
-                    ($first === "'" && $last === "'")
-                ) {
-                    $value = substr($value, 1, -1);
-                }
-            }
-
-            // Never overwrite variables already supplied by the host.
-            if (
-                getenv($key) === false &&
-                !array_key_exists($key, $_ENV) &&
-                !array_key_exists($key, $_SERVER)
-            ) {
-                putenv($key . '=' . $value);
-                $_ENV[$key] = $value;
-                $_SERVER[$key] = $value;
-            }
-        }
-    }
-} else {
-    // Do not expose private paths or credentials to visitors.
-    error_log(
-        'OanK Cleaning: private environment file is missing or unreadable.'
+if (!defined('DB_HOST')) {
+    define(
+        'DB_HOST',
+        appEnv('DB_HOST', 'localhost')
     );
 }
 
-/*
-|--------------------------------------------------------------------------
-| Environment Value Helper
-|--------------------------------------------------------------------------
-|
-| Reads server environment variables first, followed by $_ENV and $_SERVER.
-| Empty values are treated as unset.
-|
-*/
-
-if (!function_exists('configEnv')) {
-    function configEnv(string $key, ?string $default = null): ?string
-    {
-        $value = getenv($key);
-
-        if ($value === false && array_key_exists($key, $_ENV)) {
-            $value = $_ENV[$key];
-        }
-
-        if ($value === false && array_key_exists($key, $_SERVER)) {
-            $value = $_SERVER[$key];
-        }
-
-        if (!is_string($value) || trim($value) === '') {
-            return $default;
-        }
-
-        return $value;
-    }
+if (!defined('DB_NAME')) {
+    define('DB_NAME', appEnv('DB_NAME'));
 }
 
+if (!defined('DB_USER')) {
+    define('DB_USER', appEnv('DB_USER'));
+}
+
+if (!defined('DB_PASS')) {
+    define('DB_PASS', appEnv('DB_PASS'));
+}
+
+// Log configuration status without exposing credentials.
+$dbConfigReady = (
+    DB_HOST !== ''
+    && DB_NAME !== ''
+    && DB_USER !== ''
+    && DB_PASS !== ''
+);
+
+oankLog(
+    $dbConfigReady
+        ? 'Database configuration loaded.'
+        : 'Database configuration is incomplete.',
+    $dbConfigReady ? 'INFO' : 'CRITICAL',
+    [
+        'host_configured' => DB_HOST !== '',
+        'database_name_configured' => DB_NAME !== '',
+        'database_user_configured' => DB_USER !== '',
+        'database_password_configured' => DB_PASS !== '',
+    ]
+);
+
 /*
 |--------------------------------------------------------------------------
-| Database Credentials
+| PHP Error Handler
 |--------------------------------------------------------------------------
-|
-| Set these in /home/oankxyiu/.env_variables/oank.env.
-| Do not commit real credentials to source control.
-|
 */
 
-defined('DB_HOST') || define(
-    'DB_HOST',
-    configEnv('DB_HOST', 'localhost')
-);
+if (!defined('OANK_ERROR_HANDLER_REGISTERED')) {
+    define('OANK_ERROR_HANDLER_REGISTERED', true);
 
-defined('DB_NAME') || define(
-    'DB_NAME',
-    configEnv('DB_NAME', 'oankxyju_cleaning')
-);
+    set_error_handler(
+        function (
+            int $severity,
+            string $message,
+            string $file,
+            int $line
+        ): bool {
+            // Respect PHP's configured error_reporting level.
+            if (!(error_reporting() & $severity)) {
+                return false;
+            }
 
-defined('DB_USER') || define(
-    'DB_USER',
-    configEnv('DB_USER', 'oankxyju_cleaninguk')
-);
+            $level = in_array(
+                $severity,
+                [E_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR],
+                true
+            ) ? 'ERROR' : 'WARNING';
 
-defined('DB_PASS') || define(
-    'DB_PASS',
-    configEnv('DB_PASS', '')
-);
+            oankLog(
+                'PHP runtime error.',
+                $level,
+                [
+                    'severity' => $severity,
+                    'message' => $message,
+                    'file' => basename($file),
+                    'line' => $line,
+                ]
+            );
 
-/*
-|--------------------------------------------------------------------------
-| Optional Application Settings
-|--------------------------------------------------------------------------
-|
-| Configure these in oank.env if your application needs them.
-|
-*/
+            // Prevent the same handled error from being logged twice.
+            return true;
+        }
+    );
 
-defined('APP_ENV') || define(
-    'APP_ENV',
-    configEnv('APP_ENV', 'production')
-);
+    register_shutdown_function(
+        function (): void {
+            $lastError = error_get_last();
 
-defined('APP_DEBUG') || define(
-    'APP_DEBUG',
-    filter_var(
-        configEnv('APP_DEBUG', 'false'),
-        FILTER_VALIDATE_BOOLEAN
-    )
-);
+            if ($lastError === null) {
+                return;
+            }
 
-defined('APP_TIMEZONE') || define(
-    'APP_TIMEZONE',
-    configEnv('APP_TIMEZONE', 'Europe/London')
-);
+            $fatalTypes = [
+                E_ERROR,
+                E_PARSE,
+                E_CORE_ERROR,
+                E_COMPILE_ERROR,
+                E_USER_ERROR,
+                E_RECOVERABLE_ERROR,
+            ];
 
-date_default_timezone_set(APP_TIMEZONE);
+            if (!in_array($lastError['type'], $fatalTypes, true)) {
+                return;
+            }
+
+            oankLog(
+                'Fatal PHP error.',
+                'CRITICAL',
+                [
+                    'type' => $lastError['type'],
+                    'message' => $lastError['message'],
+                    'file' => basename($lastError['file']),
+                    'line' => $lastError['line'],
+                ]
+            );
+
+            if (headers_sent()) {
+                return;
+            }
+
+            $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+            $isApiRequest = strpos($requestUri, '/api/') !== false;
+
+            if ($isApiRequest) {
+                http_response_code(500);
+
+                header(
+                    'Content-Type: application/json; charset=utf-8'
+                );
+
+                echo json_encode(
+                    [
+                        'success' => false,
+                        'message' => 'An internal server error occurred.',
+                        'timestamp' => date('c'),
+                    ],
+                    JSON_UNESCAPED_SLASHES
+                    | JSON_INVALID_UTF8_SUBSTITUTE
+                );
+            }
+        }
+    );
+
+    set_exception_handler(
+        function (Throwable $exception): void {
+            oankLog(
+                'Uncaught exception.',
+                'CRITICAL',
+                [
+                    'type' => get_class($exception),
+                    'message' => $exception->getMessage(),
+                    'file' => basename($exception->getFile()),
+                    'line' => $exception->getLine(),
+                ]
+            );
+
+            if (headers_sent()) {
+                return;
+            }
+
+            $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+            $isApiRequest = strpos($requestUri, '/api/') !== false;
+
+            if ($isApiRequest) {
+                http_response_code(500);
+
+                header(
+                    'Content-Type: application/json; charset=utf-8'
+                );
+
+                echo json_encode(
+                    [
+                        'success' => false,
+                        'message' => 'An internal server error occurred.',
+                        'timestamp' => date('c'),
+                    ],
+                    JSON_UNESCAPED_SLASHES
+                    | JSON_INVALID_UTF8_SUBSTITUTE
+                );
+
+                return;
+            }
+
+            http_response_code(500);
+
+            echo 'An internal server error occurred. Please try again later.';
+        }
+    );
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -261,38 +606,58 @@ if (!function_exists('sendJsonResponse')) {
     ): void {
         http_response_code($statusCode);
 
-        header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: no-store, max-age=0');
+        header(
+            'Content-Type: application/json; charset=utf-8'
+        );
 
         $response = [
             'success' => $success,
             'message' => $message,
-            'timestamp' => date(DATE_ATOM),
+            'timestamp' => date('c'),
             'company' => COMPANY_NAME,
             'parentGroup' => PARENT_GROUP,
             'data' => $data,
         ];
 
-        try {
-            $json = json_encode(
-                $response,
-                JSON_UNESCAPED_SLASHES |
-                JSON_UNESCAPED_UNICODE |
-                JSON_INVALID_UTF8_SUBSTITUTE |
-                JSON_THROW_ON_ERROR
-            );
+        if (APP_DEBUG) {
+            $response['debug'] = [
+                'request_id' => bin2hex(random_bytes(8)),
+                'environment' => APP_ENV,
+            ];
+        }
 
-            echo $json;
-        } catch (JsonException $exception) {
-            error_log(
-                'OanK Cleaning: JSON response encoding failed.'
+        $json = json_encode(
+            $response,
+            JSON_UNESCAPED_SLASHES
+            | JSON_UNESCAPED_UNICODE
+            | JSON_INVALID_UTF8_SUBSTITUTE
+        );
+
+        if ($json === false) {
+            oankLog(
+                'Failed to encode JSON response.',
+                'ERROR',
+                ['json_error' => json_last_error_msg()]
             );
 
             http_response_code(500);
 
-            echo '{"success":false,"message":"Unable to create response.","data":[]}';
+            echo '{"success":false,"message":"Unable to generate response."}';
+            exit;
         }
 
+        if (!$success) {
+            oankLog(
+                'Application returned an unsuccessful JSON response.',
+                'WARNING',
+                [
+                    'status_code' => $statusCode,
+                    'message' => $message,
+                ]
+            );
+        }
+
+        echo $json;
         exit;
     }
 }
@@ -301,16 +666,17 @@ if (!function_exists('sendJsonResponse')) {
 |--------------------------------------------------------------------------
 | Safe Header Value
 |--------------------------------------------------------------------------
-|
-| Prevents carriage-return and line-feed injection into email headers.
-|
 */
 
 if (!function_exists('safeHeaderValue')) {
     function safeHeaderValue(string $value): string
     {
         return trim(
-            str_replace(["\r", "\n"], '', $value)
+            str_replace(
+                ["\r", "\n"],
+                '',
+                $value
+            )
         );
     }
 }
@@ -328,22 +694,54 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
         string $service,
         string $preferredDate
     ): string {
-        $escape = static function (string $value): string {
-            return htmlspecialchars(
-                $value,
-                ENT_QUOTES | ENT_SUBSTITUTE,
-                'UTF-8'
-            );
-        };
+        $companyName = htmlspecialchars(
+            COMPANY_NAME,
+            ENT_QUOTES,
+            'UTF-8'
+        );
 
-        $companyName = $escape(COMPANY_NAME);
-        $safeName = $escape($name);
-        $safeReference = $escape($referenceNo);
-        $safeService = $escape($service);
-        $safePreferredDate = $escape($preferredDate);
-        $phone = $escape(COMPANY_PHONE_PRIMARY);
-        $whatsappLink = $escape(COMPANY_WHATSAPP_LINK);
-        $address = $escape(COMPANY_ADDRESS);
+        $safeName = htmlspecialchars(
+            $name,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $safeReference = htmlspecialchars(
+            $referenceNo,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $safeService = htmlspecialchars(
+            $service,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $safePreferredDate = htmlspecialchars(
+            $preferredDate,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $phone = htmlspecialchars(
+            COMPANY_PHONE_PRIMARY,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $whatsappLink = htmlspecialchars(
+            COMPANY_WHATSAPP_LINK,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
+        $address = htmlspecialchars(
+            COMPANY_ADDRESS,
+            ENT_QUOTES,
+            'UTF-8'
+        );
+
         $year = date('Y');
 
         return <<<HTML
@@ -429,3 +827,36 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
 HTML;
     }
 }
+
+
+/**
+ * Sends a critical email notification to the site admin when
+ * the database connection/insertion fails.
+ */
+function sendDatabaseFailureEmail(string $subject, string $body): bool
+{
+    $headers = [
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+        'From: ' . COMPANY_NAME . ' <info@' . COMPANY_DOMAIN . '>',
+        'Reply-To: info@' . COMPANY_DOMAIN,
+        'X-Mailer: PHP/' . phpversion(),
+    ];
+
+    $emailBody = "DATABASE INSERTION FAILURE ALERT\n\n" .
+                 "Date: " . date('Y-m-d H:i:s') . "\n" .
+                 "Subject: $subject\n\n" .
+                 "Details:\n$body";
+
+    return @mail(
+        NOTIFICATION_EMAIL,
+        'CRITICAL ALERT: Database Failure - ' . $subject,
+        $emailBody,
+        implode("\r\n", $headers)
+    );
+}
+
+oankLog(
+    'Global configuration loaded successfully.',
+    'INFO'
+);

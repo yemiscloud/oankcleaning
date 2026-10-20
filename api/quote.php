@@ -497,13 +497,20 @@ if ($hasCustomerDetails) {
     if (!$dbSaved) {
 
         error_log(
-            "OanK Cleaning quote could not be saved. "
+            "OanK Cleaning quote could not be saved to database. Attempting email fallback. "
             . "Quote ID: {$quoteId}"
+        );
+
+        $emailBody = "Quote ID: {$quoteId}\nClient: {$name}\nEmail: {$email}\nMessage: {$quoteMessage}";
+        
+        sendDatabaseFailureEmail(
+            "Quote Request Failure - Quote ID: {$quoteId}",
+            $emailBody
         );
 
         sendJsonResponse(
             false,
-            'We were unable to securely record your quote request. Please try again or contact us directly.',
+            'We encountered a temporary issue saving your quote request, but it has been emailed to our team. We will be in touch shortly.',
             [],
             500
         );

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { PageRoute } from '../types';
 import { queryReceptionist } from '../lib/receptionistEngine';
-import { logChatInteraction } from '../lib/api';
+
 
 interface ChatWidgetProps {
   onNavigate: (route: PageRoute) => void;
@@ -134,11 +134,16 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
       ]);
 
       // Asynchronously log the conversation interaction to backend/chat_history.php
-      logChatInteraction({
-        sessionId,
-        userMessage: query,
-        botResponse: engineResult.text,
-        timestamp: `${new Date().toLocaleDateString()} ${botTimestamp}`,
+      // Asynchronously log the conversation interaction
+      fetch('/api/chat-log', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          userMessage: query,
+          botResponse: engineResult.text,
+          timestamp: `${new Date().toLocaleDateString()} ${botTimestamp}`,
+        }),
       }).catch((err) => {
         console.warn('Chat log async record error:', err);
       });

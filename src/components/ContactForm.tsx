@@ -12,7 +12,7 @@ import {
   Building2 
 } from 'lucide-react';
 import { ContactFormData } from '../types';
-import { submitContactForm } from '../lib/api';
+import { telemetry } from '../lib/telemetry';
 
 interface ContactFormProps {
   defaultService?: string;
@@ -49,16 +49,36 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
     }
 
     setLoading(true);
+    const startTime = performance.now();
 
     try {
-      const response = await submitContactForm(formData);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-      // ONLY show success when form data is successfully delivered to both database table AND preferred email
-      if (response.success && response.databaseDelivered && response.emailDelivered) {
+      const payload = await response.json();
+      const durationMs = Math.round(performance.now() - startTime);
+
+      telemetry.recordNetworkRequest({
+        url: '/api/contact',
+        method: 'POST',
+        status: response.status,
+        durationMs,
+        success: response.ok && payload.success,
+        sizeBytes: JSON.stringify(payload).length,
+      });
+
+      const isDbSaved = payload?.data?.database?.saved === true;
+      const isEmailSent = payload?.data?.mail?.adminSent === true;
+
+      // Strict validation: Only show success when BOTH database and preferred email succeeded
+      if (response.ok && payload.success && isDbSaved && isEmailSent) {
         setStatus({
           type: 'success',
-          message: 'Thank you! Your enquiry has been safely recorded in our database table and delivered to our team at info@oankcleaning.co.uk.',
-          refNo: response.referenceNo,
+          message: 'Thank you! Your enquiry has been safely delivered to our team. We will respond to you within 2 hours.',
+          refNo: payload.data?.referenceNo || payload.referenceNo,
         });
         setFormData({
           name: '',
@@ -72,10 +92,18 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
       } else {
         setStatus({
           type: 'error',
-          message: response.message || 'Delivery could not be confirmed for database table and preferred email. Please call us at +44 75 1091 1940.',
+          message: payload.message || 'Delivery could not be confirmed, Please call us at +44 75 1091 1940.',
         });
       }
-    } catch {
+    } catch (error) {
+      telemetry.recordNetworkRequest({
+        url: '/api/contact',
+        method: 'POST',
+        status: null,
+        durationMs: Math.round(performance.now() - startTime),
+        success: false,
+        errorMessage: 'Network Error',
+      });
       setStatus({
         type: 'error',
         message: 'Could not connect to the backend server. Please verify your internet connection or call our Paisley team at +44 75 1091 1940.',

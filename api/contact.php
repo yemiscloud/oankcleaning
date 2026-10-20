@@ -274,13 +274,20 @@ $dbSaved = saveSubmissionToDb([
 if (!$dbSaved) {
 
     error_log(
-        "OanK Cleaning contact enquiry could not be saved. "
+        "OanK Cleaning contact enquiry could not be saved to database. Attempting email fallback. "
         . "Reference: {$referenceNo}"
+    );
+
+    $emailBody = "Name: {$name}\nEmail: {$email}\nPhone: {$phone}\nService: {$service}\nMessage: {$message}";
+    
+    sendDatabaseFailureEmail(
+        "Contact Enquiry Failure - Reference: {$referenceNo}",
+        $emailBody
     );
 
     sendJsonResponse(
         false,
-        'We were unable to securely record your enquiry. Please try again or contact us directly.',
+        'We encountered a temporary issue saving your request, but it has been emailed to our team. We will be in touch shortly.',
         [],
         500
     );
