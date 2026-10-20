@@ -116,15 +116,31 @@ export const QuoteCalculator: React.FC = () => {
 
     setLoading(true);
     const startTime = performance.now();
+    let responseStatus: number | null = null;
 
     try {
       const response = await fetch('/api/quote', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      const payload = await response.json();
+      responseStatus = response.status;
+      const responseText = await response.text();
+      let payload: any;
+
+      try {
+        payload = JSON.parse(responseText);
+      } catch {
+        console.error(
+          'API returned a non-JSON response:',
+          response.status,
+          responseText.slice(0, 300)
+        );
+        throw new Error(
+          `The server returned an unexpected response (HTTP ${response.status}). Please contact support.`
+        );
+      }
       const durationMs = Math.round(performance.now() - startTime);
 
       telemetry.recordNetworkRequest({
@@ -153,17 +169,20 @@ export const QuoteCalculator: React.FC = () => {
         });
       }
     } catch (error) {
+      console.error('API submission failed:', error);
       telemetry.recordNetworkRequest({
         url: '/api/quote',
         method: 'POST',
-        status: null,
+        status: responseStatus,
         durationMs: Math.round(performance.now() - startTime),
         success: false,
-        errorMessage: 'Network Error',
+        errorMessage: error instanceof Error ? error.message : 'Unknown request error',
       });
       setFeedback({
         type: 'error',
-        message: 'Could not connect to the backend server. Please verify your internet connection or call our Paisley office at +44 75 1091 1940.',
+        message: responseStatus !== null
+          ? `The server could not process your quote request (HTTP ${responseStatus}). Please try again or call +44 75 1091 1940.`
+          : 'Could not connect to the server. Please check your connection or call +44 75 1091 1940.',
       });
     } finally {
       setLoading(false);
