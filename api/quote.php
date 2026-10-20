@@ -532,7 +532,6 @@ if ($hasCustomerDetails) {
 
     $adminBody .= "==========================================\n";
     $adminBody .= " OANK CLEANING - QUOTE REQUEST\n";
-    $adminBody .= " A Subsidiary of Ohkay Limited\n";
     $adminBody .= "==========================================\n\n";
 
     $adminBody .=

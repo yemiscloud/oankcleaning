@@ -308,7 +308,6 @@ $adminSubject =
 $adminEmailBody = '';
 $adminEmailBody .= "==========================================\n";
 $adminEmailBody .= " OANK CLEANING - CLIENT ENQUIRY FORM\n";
-$adminEmailBody .= " A Subsidiary of Ohkay Limited\n";
 $adminEmailBody .= "==========================================\n\n";
 
 $adminEmailBody .=
