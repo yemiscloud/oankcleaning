@@ -120,9 +120,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                   <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-white">Friendly Phone Help:</strong>
+                   <a href="tel:+447731956727" className="hover:underline font-semibold block">+44 77 3195 6727</a>
                     <a href="tel:+447510911940" className="hover:underline font-semibold block">+44 75 1091 1940</a>
-                    <a href="tel:+447522441379" className="hover:underline font-semibold block">+44 75 2244 1379</a>
+                   
                   </div>
+                 
                 </div>
               </div>
 
@@ -351,7 +353,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               Talk to Our Paisley Team Today
             </h2>
             <p className="text-xs sm:text-sm text-slate-200">
-              Paisley, Scotland PA3 2PJ • Phone: +44 75 1091 1940 | +44 75 2244 1379
+              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 | +44 75 1091 1940 
             </p>
           </div>
 

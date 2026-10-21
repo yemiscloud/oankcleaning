@@ -86,8 +86,9 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 </div>
                 <div>
                   <strong className="block text-white text-sm">Phone Lines:</strong>
+                  <a href="tel:+447731956727" className="hover:text-amber-300 font-bold block text-xs">+44 77 3195 6727</a>
                   <a href="tel:+447510911940" className="hover:text-amber-300 font-bold block text-xs mt-0.5">+44 75 1091 1940</a>
-                  <a href="tel:+447522441379" className="hover:text-amber-300 font-bold block text-xs">+44 75 2244 1379</a>
+                 
                 </div>
               </div>
 
