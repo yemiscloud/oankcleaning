@@ -112,7 +112,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                   <MapPin className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-white">Our Main Office:</strong>
-                    <span>Paisley, Scotland, PA3 2PJ</span>
+                    <span> 9 Inchinnan Road, Paisley, PA3 2PJ</span>
                   </div>
                 </div>
 
@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                   <div>
                     <strong className="block text-white">Friendly Phone Help:</strong>
                    <a href="tel:+447731956727" className="hover:underline font-semibold block">+44 77 3195 6727</a>
-                    <a href="tel:+447510911940" className="hover:underline font-semibold block">+44 75 1091 1940</a>
+                    <a href="tel:+442034324738" className="hover:underline font-semibold block">+44 20 3432 4738</a>
                    
                   </div>
                  

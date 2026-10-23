@@ -8,3 +8,4 @@ coverage/
 !.env.example
 .env_variables
 public.zip
+AdminTask.md

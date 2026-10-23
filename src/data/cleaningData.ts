@@ -1,7 +1,7 @@
 import { CleaningService, Testimonial, FAQItem, CommunityProgram } from '../types';
 
-export const COMPANY_WHATSAPP_NUMBER = '+44 75 1091 1940';
-export const COMPANY_WHATSAPP_LINK = 'https://wa.me/447510911940';
+export const COMPANY_WHATSAPP_NUMBER = '+44 77 3195 6727';
+export const COMPANY_WHATSAPP_LINK = 'https://wa.me/message/EJKXRLHN7TGKK1';
 
 export const IMAGE_ASSETS = {
   hero: '/images/hero.webp',

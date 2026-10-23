@@ -62,7 +62,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                       Main Office
                     </strong>
                     <address className="not-italic text-slate-200 text-xs leading-relaxed">
-                      Paisley, Scotland PA3 2PJ <br />
+                      9 Inchinnan Road, Paisley, Pa3 2pj <br />
                       United Kingdom
                     </address>
                   </div>
@@ -87,7 +87,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 <div>
                   <strong className="block text-white text-sm">Phone Lines:</strong>
                   <a href="tel:+447731956727" className="hover:text-amber-300 font-bold block text-xs">+44 77 3195 6727</a>
-                  <a href="tel:+447510911940" className="hover:text-amber-300 font-bold block text-xs mt-0.5">+44 75 1091 1940</a>
+                  <a href="tel:+442034324738" className="hover:text-amber-300 font-bold block text-xs mt-0.5">+44 20 3432 4738</a>
                  
                 </div>
               </div>

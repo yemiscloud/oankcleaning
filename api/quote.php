@@ -749,7 +749,7 @@ if ($hasCustomerDetails) {
         }
 
         error_log(
-            "OanK Cleaning quote delivery incomplete [{$referenceNo}]: " .
+            "OanK Cleaning quote delivery incomplete [{$quoteId}]: " .
             implode(', ', $deliveryFailures)
         );
 
@@ -765,7 +765,7 @@ if ($hasCustomerDetails) {
         true,
         "Your estimated cleaning quote is £" .
         number_format($finalEstimate, 2) .
-        ". Your request [{$referenceNo}] has been successfully delivered to our team. ",
+        ". Your request [{quoteId}] has been successfully delivered to our team. ",
         $responseData,
         200
     );

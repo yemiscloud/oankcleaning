@@ -83,13 +83,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div className="space-y-2.5 pt-2 text-xs">
               <div className="flex items-start gap-2.5 text-slate-300">
                 <MapPin className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span>Paisley, Scotland, PA3 2PJ</span>
+                <span>9 Inchinnan Road, Paisley, Pa3 2pj</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-300">
                 <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0" />
                 <div className="flex flex-col">
                                   <a href="tel:+447731956727" className="hover:text-amber-300 transition-colors">+44 77 3195 6727</a>
-                 <a href="tel:+447510911940" className="hover:text-amber-300 transition-colors">+44 75 1091 1940</a>
+                 <a href="tel:+442034324738" className="hover:text-amber-300 transition-colors">+44 20 3432 4738</a>
                 </div>
               </div>
               <div className="flex items-center gap-2.5 text-slate-300">

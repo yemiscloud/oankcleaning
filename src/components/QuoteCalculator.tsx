@@ -63,8 +63,13 @@ export const QuoteCalculator: React.FC = () => {
     if (formData.frequency === 'fortnightly') discount = 0.10;
     if (formData.frequency === 'monthly') discount = 0.05;
 
-    total = Math.round(total * (1 - discount));
-    return total;
+    const discountAmount =
+  Math.round(total * discount * 100) / 100;
+
+total = Math.round((total - discountAmount) * 100) / 100;
+
+return total;
+
   };
 
   const estimatedPrice = calculateEstimate();
@@ -210,7 +215,7 @@ export const QuoteCalculator: React.FC = () => {
         <div className="bg-[#1B4332] border border-emerald-700/80 rounded-2xl p-4 text-right flex-shrink-0">
           <span className="text-[10px] text-amber-300 font-bold uppercase tracking-wider block">Estimated Total</span>
           <div className="text-3xl font-serif font-bold text-white flex items-baseline gap-1">
-            <span>£{estimatedPrice}</span>
+                        <span>£{estimatedPrice.toFixed(2)}</span>
             <span className="text-xs text-slate-300 font-normal">total</span>
           </div>
           <span className="text-[10px] text-emerald-200 block mt-0.5">No hidden fees</span>

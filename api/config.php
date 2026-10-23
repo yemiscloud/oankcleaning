@@ -346,17 +346,17 @@ define('COMPANY_DOMAIN', 'oankcleaning.co.uk');
 
 define(
     'COMPANY_ADDRESS',
-    'Paisley, Scotland, PA3 2PJ'
+    '9 Inchinnan RdPaisley PA3 2RJ, UK'
 );
 
 define(
     'COMPANY_PHONE_PRIMARY',
-    '+44 75 1091 1940'
+    '+44 77 3195 6727'
 );
 
 define(
     'COMPANY_PHONE_SECONDARY',
-    '+44 75 2244 1379'
+    '+44 20 3432 4738'
 );
 
 /*
@@ -367,12 +367,12 @@ define(
 
 define(
     'COMPANY_WHATSAPP_NUMBER',
-    '+447510911940'
+    '+447731956727'
 );
 
 define(
     'COMPANY_WHATSAPP_LINK',
-    'https://wa.me/447510911940'
+    'https://wa.me/message/EJKXRLHN7TGKK1'
 );
 
 /*
@@ -797,7 +797,7 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
 
             <p style="font-size:14px;line-height:1.6;">
                 If you need immediate assistance, please call us on
-                <a href="tel:+447510911940" style="color:#0F382C;font-weight:bold;text-decoration:none;">
+                <a href="tel:+447731956727" style="color:#0F382C;font-weight:bold;text-decoration:none;">
                     {$phone}
                 </a>
                 or
@@ -827,6 +827,31 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
 HTML;
     }
 }
+
+/*
+simple email Template 
+<p> </p>
+<p> </p>
+<p>OANK Cleaning - Email Acknowledgement</p>
+<table width="100%" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td>
+<h2>Thank You for Contacting OANK Cleaning</h2>
+<p>Thank you for getting in touch with us. We have received your email, and a member of our team will review your enquiry and respond as soon as possible.</p>
+<p>We appreciate your patience.</p>
+<p>Kind regards,</p>
+<p>Support Team<br /> OANK Cleaning</p>
+<hr />
+<p>OANK CLEANING CIC</p>
+<p>Cleaning Services | Community Interest Company<br /> Paisley, Scotland</p>
+<p>🌐 <a href="https://www.oankcleaning.co.uk"> www.oankcleaning.co.uk </a><br /> 📞 <a href="tel:+447731956727"> +44 77 3195 6727 </a></p>
+</td>
+</tr>
+</tbody>
+</table>
+*/
+
 
 
 /**
