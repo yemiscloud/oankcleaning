@@ -1,106 +1,113 @@
+# ==============================================================================
+# OanK Cleaning
+# Apache Server Configuration & Security Hardening
+# ==============================================================================
 
-# ==============================================================================
-# OanK Cleaning — Production Apache Configuration
-# Location: deployed document root, alongside index.html and api/
-# Requires Apache mod_rewrite, mod_headers, mod_deflate and mod_expires as used.
-# ==============================================================================
+ServerSignature Off
+TraceEnable Off
+
+# ------------------------------------------------------------------------------
+# SECURITY HEADERS (OWASP / SOC2 / ISO 27001 Hardening)
+# ------------------------------------------------------------------------------
+
+<IfModule mod_headers.c>
+    # Prevent MIME-type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Strict Transport Security (HSTS - 1 year with subdomains and preload)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Referrer Policy (prevent user tracking and info leakage)
+    Header always set Referrer-Policy "no-referrer"
+
+    # Tightened Content Security Policy (CSP)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://oankcleaning.co.uk; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
+
+    # Remove server technology fingerprints
+    Header unset X-Powered-By
+    Header unset Server
+</IfModule>
+
+# ------------------------------------------------------------------------------
+# RESTRICT HTTP METHODS (Mitigates insecure OPTIONS/TRACE exposure)
+# ------------------------------------------------------------------------------
+
+<LimitExcept GET POST OPTIONS>
+    Order allow,deny
+    Deny from all
+</LimitExcept>
+
+# ------------------------------------------------------------------------------
+# Authorization Header
+# ------------------------------------------------------------------------------
+
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# ------------------------------------------------------------------------------
+# API ROUTES
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# API ROUTES
+# ------------------------------------------------------------------------------
+
+RewriteRule ^api/contact/?$ /api/contact.php [QSA,L]
+RewriteRule ^api/quote/?$ /api/quote.php [QSA,L]
+RewriteRule ^api/config/?$ /api/config.php [QSA,L]
+RewriteRule ^api/sitemap/?$ /api/sitemap.php [QSA,L]
+RewriteRule ^sitemap\.xml$ /api/sitemap.php [QSA,L]
+RewriteRule ^api/chat-log/?$ /api/chat_log.php [QSA,L]
+RewriteRule ^api/chat_log/?$ /api/chat_log.php [QSA,L]
+
+# ------------------------------------------------------------------------------
+# SPA CLIENT-SIDE ROUTING
+# ------------------------------------------------------------------------------
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# ------------------------------------------------------------------------------
+# SECURITY FILE ACCESS
+# ------------------------------------------------------------------------------
 
 Options -Indexes
 
-# Reduce server information exposure where permitted by the host.
-ServerSignature Off
-
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-
-    # --------------------------------------------------------------------------
-    # Preserve Authorization headers for PHP applications.
-    # --------------------------------------------------------------------------
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # --------------------------------------------------------------------------
-    # API ROUTES — these MUST be before the React SPA fallback.
-    # /api/contact  -> /api/contact.php
-    # /api/quote    -> /api/quote.php
-    # --------------------------------------------------------------------------
-    RewriteRule ^api/contact/?$ api/contact.php [END]
-    RewriteRule ^api/quote/?$ api/quote.php [END]
-    RewriteRule ^api/config/?$ api/config.php [END]
-    RewriteRule ^api/sitemap/?$ api/sitemap.php [END]
-    RewriteRule ^api/chat-log/?$ api/chat_log.php [END]
-    RewriteRule ^api/chat_log/?$ api/chat_log.php [END]
-
-    # --------------------------------------------------------------------------
-    # Never return index.html for an unknown API endpoint.
-    # Existing PHP endpoints such as /api/contact.php remain directly accessible.
-    # --------------------------------------------------------------------------
-    RewriteRule ^api/ - [R=404,END]
-
-    # --------------------------------------------------------------------------
-    # Allow real files and directories to be served normally.
-    # --------------------------------------------------------------------------
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [END]
-
-    # --------------------------------------------------------------------------
-    # React / Vite single-page application fallback.
-    # --------------------------------------------------------------------------
-    RewriteRule ^ index.html [END]
-</IfModule>
-
-# ==============================================================================
-# SECURITY HEADERS
-# ==============================================================================
-
-<IfModule mod_headers.c>
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-
-    # Enable HSTS only if this domain and all its subdomains use HTTPS.
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
-
-    Header always unset X-Powered-By
-</IfModule>
-
-# ==============================================================================
-# HTTP METHOD RESTRICTIONS
-# PHP handlers should enforce their own allowed methods and handle OPTIONS/CORS.
-# ==============================================================================
-
-<LimitExcept GET POST OPTIONS>
-    Require all denied
-</LimitExcept>
-
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # COMPRESSION
-# ==============================================================================
+# ------------------------------------------------------------------------------
 
 <IfModule mod_deflate.c>
+
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
     AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
     AddOutputFilterByType DEFLATE application/xml
     AddOutputFilterByType DEFLATE application/xhtml+xml
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
     AddOutputFilterByType DEFLATE application/json
     AddOutputFilterByType DEFLATE image/svg+xml
+
 </IfModule>
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # BROWSER CACHING
-# ==============================================================================
+# ------------------------------------------------------------------------------
 
 <IfModule mod_expires.c>
+
     ExpiresActive On
 
     ExpiresByType text/css "access plus 1 year"
     ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/json "access plus 1 hour"
     ExpiresByType image/svg+xml "access plus 1 year"
 
     ExpiresByType image/jpeg "access plus 1 year"
@@ -108,6 +115,4 @@ ServerSignature Off
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
 
-    # Keep JSON/API responses short-lived; PHP may set its own cache headers.
-    ExpiresByType application/json "access plus 0 seconds"
 </IfModule>
