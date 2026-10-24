@@ -62,7 +62,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                       Main Office
                     </strong>
                     <address className="not-italic text-slate-200 text-xs leading-relaxed">
-                      9 Inchinnan Road, Paisley, Pa3 2pj <br />
+                      9 Inchinnan Road, Paisley, PA3 2PJ <br />
                       United Kingdom
                     </address>
                   </div>
