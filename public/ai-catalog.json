@@ -1,0 +1,17 @@
+{
+  "name": "OanK Cleaning",
+  "description": "Professional cleaning services in Paisley, Glasgow, and Scotland.",
+  "version": "1.0.0",
+  "resources": [
+    {
+      "name": "Quote API",
+      "url": "/api/quote",
+      "type": "api"
+    },
+    {
+      "name": "Contact API",
+      "url": "/api/contact",
+      "type": "api"
+    }
+  ]
+}

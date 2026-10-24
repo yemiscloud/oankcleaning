@@ -1,0 +1,16 @@
+# OanK Cleaning AI Documentation
+
+This document provides structured information about OanK Cleaning services to assist AI agents and search crawlers.
+
+## Services
+- [Domestic Cleaning](/services/domestic-cleaning)
+- [Deep Cleaning](/services/deep-cleaning)
+- [End of Tenancy Cleaning](/services/end-of-tenancy)
+- [Commercial Cleaning](/services/commercial-office)
+- [Healthcare Cleaning](/services/healthcare-cleaning)
+- [Carpet & Upholstery](/services/carpet-upholstery)
+
+## Useful Links
+- [Contact Us](/contact)
+- [Get a Quote](/quote)
+- [FAQs](/faqs)
