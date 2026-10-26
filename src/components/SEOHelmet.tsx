@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { PageRoute } from '../types';
 
@@ -6,58 +7,267 @@ interface SEOHelmetProps {
   serviceTitle?: string;
 }
 
-export const SEOHelmet: React.FC<SEOHelmetProps> = ({ currentRoute, serviceTitle }) => {
+const SITE_URL = 'https://oankcleaning.co.uk';
+
+const PRIMARY_PHONE = '+447731956727';
+const ALTERNATIVE_PHONE = '+447510911940';
+
+const PAGES: Record<
+  string,
+  { title: string; description: string; path: string }
+> = {
+  home: {
+    title: 'OANK Cleaning CIC | Cleaning Services Across Scotland',
+    description:
+      'OANK Cleaning CIC provides domestic and commercial cleaning across Scotland, with our head office in Paisley. Our staff undergo certification training. Contact us for a quote.',
+    path: '/',
+  },
+
+  services: {
+    title: 'Cleaning Services Across Scotland | OANK Cleaning CIC',
+    description:
+      'Explore domestic cleaning, deep cleaning, end-of-tenancy cleaning, carpet cleaning and commercial office cleaning across Scotland.',
+    path: '/services',
+  },
+
+  community: {
+    title: 'Community Cleaning & Support | OANK Cleaning CIC',
+    description:
+      'Discover OANK Cleaning CIC, our community-focused mission, and our cleaning and employment initiatives in Scotland.',
+    path: '/ohkay-group',
+  },
+
+  governance: {
+    title: 'Our Policies & Standards | OANK Cleaning CIC',
+    description:
+      'Learn about OANK Cleaning CIC policies, staff training, service standards and community commitments.',
+    path: '/governance',
+  },
+
+  about: {
+    title: 'About OANK Cleaning CIC | Paisley, Scotland',
+    description:
+      'Meet OANK Cleaning CIC, a community-focused cleaning company headquartered in Paisley and serving customers across Scotland.',
+    path: '/about',
+  },
+
+  quote: {
+    title: 'Request a Cleaning Quote | OANK Cleaning CIC',
+    description:
+      'Request a cleaning quote from OANK Cleaning CIC. Explore our services and check availability across Scotland.',
+    path: '/quote',
+  },
+
+  faqs: {
+    title: 'Cleaning FAQs | OANK Cleaning CIC',
+    description:
+      'Find answers to common questions about our cleaning services, staff training, bookings and service arrangements.',
+    path: '/faqs',
+  },
+
+  contact: {
+    title: 'Contact OANK Cleaning CIC | Scotland-Wide Cleaning',
+    description:
+      'Contact OANK Cleaning CIC about domestic or commercial cleaning across Scotland. Call our primary or alternative business number.',
+    path: '/contact',
+  },
+};
+
+const SERVICES = [
+  'Domestic Cleaning',
+  'Deep Cleaning',
+  'End of Tenancy Cleaning',
+  'Commercial Office Cleaning',
+  'Healthcare Cleaning',
+  'Carpet and Upholstery Cleaning',
+];
+
+export const SEOHelmet: React.FC<SEOHelmetProps> = ({
+  currentRoute,
+  serviceTitle,
+}) => {
   useEffect(() => {
-    let title = 'OANK Cleaning CIC | Friendly Community Cleaning | Paisley, Scotland';
-    let description = 'OANK Cleaning is a friendly community cleaning company in Paisley, Scotland (PA3 2PJ). We clean homes and workplaces and help our local community. Call +44 75 1091 1940.';
+    const page =
+      currentRoute === 'service-detail' && serviceTitle
+        ? {
+            title: `${serviceTitle} Across Scotland | OANK Cleaning CIC`,
+            description:
+              `Explore ${serviceTitle} from OANK Cleaning CIC. Our head office is in Paisley, and we serve customers across Scotland. Contact us to check availability and request a quote.`,
+            path: window.location.pathname,
+          }
+        : PAGES[currentRoute] ?? PAGES.home;
 
-    switch (currentRoute) {
-      case 'home':
-        title = 'OANK Cleaning CIC | Friendly Cleaning & Community Help | Paisley';
-        description = 'Top-rated cleaning for homes and businesses in Paisley and Glasgow. Friendly, police-checked cleaners and free community home cleaning.';
-        break;
-      case 'services':
-        title = 'Cleaning Services | Home, Office & Move Out | OANK Cleaning CIC';
-        description = 'Explore our simple cleaning services: home cleaning, 100% deposit back move-out cleaning, carpet cleaning, and office cleaning.';
-        break;
-      case 'service-detail':
-        if (serviceTitle) {
-          title = `${serviceTitle} | OANK Cleaning CIC Paisley`;
-          description = `Book friendly ${serviceTitle} in Paisley and Glasgow. Fully police-checked staff, safe soaps, and 100% satisfaction guarantee.`;
-        }
-        break;
-      case 'community':
-        title = 'Our Community Work | Free Home Cleans & Jobs | OANK Cleaning CIC';
-        description = 'Learn how we help Paisley: free home cleaning for people having hard times, and real paid jobs with friendly training.';
-        break;
-      case 'governance':
-        title = 'Our Rules & Promises | Safety & Community Care | OANK Cleaning CIC';
-        description = 'Read our simple safety rules, police checks, safe soaps, and our 100% deposit back guarantee.';
-        break;
-      case 'about':
-        title = 'About Us | Friendly Community Cleaning in Paisley | OANK Cleaning';
-        description = 'Meet OANK Cleaning in Paisley, Scotland. We are an independent Community Interest Company dedicated to clean homes and good local jobs.';
-        break;
-      case 'quote':
-        title = 'Instant Price Check | Fast Online Estimate | OANK Cleaning CIC';
-        description = 'Find out how much your clean will cost in seconds! Clear prices, no hidden fees, and fast booking.';
-        break;
-      case 'faqs':
-        title = 'Questions & Answers | Help with Cleaning | OANK Cleaning CIC';
-        description = 'Have questions about our cleaners, police checks, keys, or our 100% deposit guarantee? Find easy answers here.';
-        break;
-      case 'contact':
-        title = 'Contact Us | Talk to OANK Cleaning in Paisley | +44 75 1091 1940';
-        description = 'Talk to our friendly Paisley team at +44 75 1091 1940 or send us a quick message. We are happy to help!';
-        break;
+    const canonicalUrl = new URL(page.path, SITE_URL).href;
+
+    document.title = page.title;
+
+    const setMeta = (
+      selector: string,
+      attribute: string,
+      key: string,
+      value: string
+    ) => {
+      let element = document.head.querySelector(
+        selector
+      ) as HTMLMetaElement | null;
+
+      if (!element) {
+        element = document.createElement('meta');
+        document.head.appendChild(element);
+      }
+
+      element.setAttribute(attribute, key);
+      element.setAttribute('content', value);
+    };
+
+    setMeta(
+      'meta[name="description"]',
+      'name',
+      'description',
+      page.description
+    );
+
+    setMeta(
+      'meta[property="og:title"]',
+      'property',
+      'og:title',
+      page.title
+    );
+
+    setMeta(
+      'meta[property="og:description"]',
+      'property',
+      'og:description',
+      page.description
+    );
+
+    setMeta(
+      'meta[property="og:url"]',
+      'property',
+      'og:url',
+      canonicalUrl
+    );
+
+    setMeta(
+      'meta[property="og:type"]',
+      'property',
+      'og:type',
+      'website'
+    );
+
+    setMeta(
+      'meta[name="twitter:card"]',
+      'name',
+      'twitter:card',
+      'summary'
+    );
+
+    setMeta(
+      'meta[name="twitter:title"]',
+      'name',
+      'twitter:title',
+      page.title
+    );
+
+    setMeta(
+      'meta[name="twitter:description"]',
+      'name',
+      'twitter:description',
+      page.description
+    );
+
+    let canonical = document.head.querySelector(
+      'link[rel="canonical"]'
+    ) as HTMLLinkElement | null;
+
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.rel = 'canonical';
+      document.head.appendChild(canonical);
     }
 
-    document.title = title;
+    canonical.href = canonicalUrl;
 
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', description);
+    // Structured business data.
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'HouseCleaning',
+      '@id': `${SITE_URL}/#business`,
+      name: 'OANK Cleaning CIC',
+      url: SITE_URL,
+      description:
+        'OANK Cleaning CIC provides domestic and commercial cleaning services across Scotland. Headquartered in Paisley, our staff undergo certification training.',
+      telephone: PRIMARY_PHONE,
+
+      contactPoint: [
+        {
+          '@type': 'ContactPoint',
+          telephone: PRIMARY_PHONE,
+          contactType: 'customer service',
+          areaServed: {
+            '@type': 'Country',
+            name: 'Scotland',
+          },
+          availableLanguage: 'English',
+        },
+        {
+          '@type': 'ContactPoint',
+          telephone: ALTERNATIVE_PHONE,
+          contactType: 'alternative customer service',
+          areaServed: {
+            '@type': 'Country',
+            name: 'Scotland',
+          },
+          availableLanguage: 'English',
+        },
+      ],
+
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Paisley',
+        addressRegion: 'Scotland',
+        addressCountry: 'GB',
+      },
+
+      areaServed: {
+        '@type': 'AdministrativeArea',
+        name: 'Scotland',
+      },
+
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Cleaning Services',
+        itemListElement: SERVICES.map((name) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name,
+            provider: {
+              '@id': `${SITE_URL}/#business`,
+            },
+            areaServed: {
+              '@type': 'AdministrativeArea',
+              name: 'Scotland',
+            },
+          },
+        })),
+      },
+    };
+
+    const scriptId = 'json-ld-schema';
+
+    let script = document.getElementById(
+      scriptId
+    ) as HTMLScriptElement | null;
+
+    if (!script) {
+      script = document.createElement('script');
+      script.id = scriptId;
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
     }
+
+    script.textContent = JSON.stringify(schema);
   }, [currentRoute, serviceTitle]);
 
   return null;

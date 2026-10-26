@@ -1,16 +1,25 @@
 # OanK Cleaning AI Documentation
 
-This document provides structured information about OanK Cleaning services to assist AI agents and search crawlers.
+OanK Cleaning is a professional cleaning service provider based in Paisley, serving the Glasgow area and wider Scotland. We offer comprehensive cleaning solutions for domestic, commercial, and specialist healthcare settings.
 
-## Services
-- [Domestic Cleaning](/services/domestic-cleaning)
-- [Deep Cleaning](/services/deep-cleaning)
-- [End of Tenancy Cleaning](/services/end-of-tenancy)
-- [Commercial Cleaning](/services/commercial-office)
-- [Healthcare Cleaning](/services/healthcare-cleaning)
-- [Carpet & Upholstery](/services/carpet-upholstery)
+## Service Areas
+- Paisley
+- Glasgow
+- Scotland
 
-## Useful Links
-- [Contact Us](/contact)
-- [Get a Quote](/quote)
-- [FAQs](/faqs)
+## Cleaning Services
+- **Domestic Cleaning**: Regular home maintenance and housekeeping.
+- **Deep & Spring Cleaning**: Thorough, one-off deep cleaning services.
+- **End of Tenancy**: Move-out cleaning services ensuring 100% deposit return.
+- **Commercial & Office Cleaning**: Tailored solutions for businesses and offices.
+- **Healthcare & Care Home Cleaning**: Specialist cleaning protocols for healthcare environments.
+- **Carpet & Upholstery Care**: Deep cleaning for carpets and furniture.
+
+## API Resources
+- [Quote Request API](/api/quote): Accepts JSON payloads for instant quote estimates.
+- [Contact API](/api/contact): For general service enquiries.
+
+## Contact Information
+- **Phone**: +44 77 3195 6727 / +44 20 3432 4738
+- **Email**: info@oankcleaning.co.uk
+- **Website**: https://oankcleaning.co.uk
