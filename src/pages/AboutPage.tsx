@@ -54,7 +54,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             </div>
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 space-y-1">
               <span className="font-serif font-bold text-2xl text-amber-800">100%</span>
-              <span className="text-xs font-semibold text-slate-600 block">Police-Checked Staff</span>
+              <span className="text-xs font-semibold text-slate-600 block">Oank-Checked Staff</span>
             </div>
           </div>
         </div>
@@ -103,10 +103,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             Our Cleaners
           </span>
           <h2 className="text-3xl font-serif font-bold text-[#0F382C]">
-            Friendly, Police-Checked Cleaners
+            Friendly, Oank-Checked Cleaners
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Every cleaner on our team has a full police check and is insured. We teach each team member how to use safe cleaning soaps, clean mops, and treat your home with gentle care and respect.
+            Every cleaner on our team has a full Oank check and is insured. We teach each team member how to use safe cleaning soaps, clean mops, and treat your home with gentle care and respect.
           </p>
           <div className="flex items-center gap-3 pt-2">
             <div className="w-10 h-10 rounded-full bg-[#0F382C] text-[#D4AF37] flex items-center justify-center font-bold text-sm">
@@ -136,9 +136,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <div className="w-12 h-12 rounded-2xl bg-[#0F382C] text-[#D4AF37] flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="font-serif font-bold text-xl text-[#0F382C]">1. Police Checks on All Staff</h3>
+              <h3 className="font-serif font-bold text-xl text-[#0F382C]">1. Oank Checks on All Staff</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Every cleaner passes full police checks (Enhanced DBS and Disclosure Scotland) before ever visiting your home or office.
+                Every cleaner passes full Oank checks (Enhanced DBS and Disclosure Scotland) before ever visiting your home or office.
               </p>
             </div>
 

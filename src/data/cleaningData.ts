@@ -4,17 +4,17 @@ export const COMPANY_WHATSAPP_NUMBER = '+44 77 3195 6727';
 export const COMPANY_WHATSAPP_LINK = 'https://wa.me/message/EJKXRLHN7TGKK1';
 
 export const IMAGE_ASSETS = {
-  hero: '/images/hero.webp',
+  hero: '/images/hero.jpg',
   heroBanner: '/images/hero-banner.jpg',
-  heroSecondary: '/images/hero.webp',
+  heroSecondary: '/images/hero.jpg',
   domestic: '/images/domestic-clean.jpg',
   commercial: '/images/office-commercial.jpg',
   tenancy: '/images/end-of-tenancy.jpg',
   group: '/images/about-hub.jpg',
   aboutTeam: '/images/about-team.jpg',
   serviceRegular: '/images/service-regular.jpg',
-  serviceDeep: '/images/service-deep.webp',
-  serviceCommercial: '/images/service-commercial.webp',
+  serviceDeep: '/images/service-deep.jpg',
+  serviceCommercial: '/images/service-commercial.jpg',
   serviceEot: '/images/service-eot.jpg',
   serviceLaundry: '/images/service-laundry.jpg',
   logo: '/images/logo-emblem.jpg',
@@ -30,12 +30,12 @@ export const CLEANING_SERVICES: CleaningService[] = [
     title: 'Regular Home Cleaning',
     tagline: 'We keep your house tidy and clean every week or two',
     category: 'domestic',
-    shortDesc: 'Friendly, police-checked cleaners who take care of your home on days that work best for you.',
+    shortDesc: 'Friendly, Oank-checked cleaners who take care of your home on days that work best for you.',
     fullDesc: 'We clean homes across Paisley and Glasgow. You get the same friendly cleaner every time. We dust surfaces, vacuum carpets, mop floors, wipe kitchen counters, and clean bathrooms until they shine.',
     features: [
       'The same friendly cleaner each visit',
       'Choose weekly or every two weeks',
-      'Police-checked and fully insured staff',
+      'Oank-checked and fully insured staff',
       'Safe, eco-friendly cleaning soaps',
       'Safe key holding if you are not home',
       'You tell us what you want cleaned'
@@ -80,7 +80,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £85 one-off',
     estimatedTime: '4 to 7 hours with our team',
-    image: '/images/service-deep.webp',
+    image: '/images/service-deep.jpg',
     popular: true,
   },
   {
@@ -139,7 +139,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
     ],
     priceStart: 'From £19.50 / hr contract',
     estimatedTime: 'Set to your office hours',
-    image: '/images/service-commercial.webp',
+    image: '/images/service-commercial.jpg',
     popular: false,
   },
   {
@@ -154,7 +154,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
       'Meets strict NHS and care home cleanliness rules',
       'Colour-coded cloths so germs never spread',
       'Careful cleaning of handrails, buzzers, and door handles',
-      'Police-checked cleaners with special care training',
+      'Oank-checked cleaners with special care training',
       'Daily cleaning for resident rooms and lounges',
       'Fast response if there is an accidental spill'
     ],
@@ -211,7 +211,7 @@ export const COMMUNITY_PROGRAMS: CommunityProgram[] = [
       'We agree on a clear cleaning plan for the home',
       'Brings back comfort, pride, and peace of mind',
       'We check to make sure the home is safe for our team',
-      'Delivered by kind, police-checked cleaners'
+      'Delivered by kind, Oank trained cleaners'
     ],
     exclusions: [
       'We do NOT give medicine or doctor care',
@@ -250,7 +250,7 @@ export const TESTIMONIALS: Testimonial[] = [
     location: 'Glasgow West End',
     service: 'Regular Home Cleaning',
     rating: 5,
-    quote: 'Having a weekly cleaner from OANK has given our family our weekends back. Our cleaner is on time, so polite, and police checked. Our home smells lovely every Friday!',
+    quote: 'Having a weekly cleaner from OANK has given our family our weekends back. Our cleaner is on time, so polite, and Oank checked. Our home smells lovely every Friday!',
     date: '02 August 2026'
   },
   {
@@ -291,11 +291,6 @@ export const FAQS: FAQItem[] = [
     category: 'general'
   },
   {
-    question: 'Are your cleaners police-checked and insured?',
-    answer: 'Yes, 100%! Every cleaner on our team has a full police check (Enhanced DBS and Disclosure Scotland) and is fully insured. We also train each cleaner thoroughly before they visit your home.',
-    category: 'staff'
-  },
-  {
     question: 'Do I need to supply soaps, vacuums, or cloths?',
     answer: 'No, you do not need to buy anything! Our cleaners bring professional vacuums, clean cloths, mops, and safe cleaning products. If you have a special soap you love, just let us know.',
     category: 'booking'
@@ -327,7 +322,7 @@ export const OHKAY_BRANDS: OhkayBrand[] = [
   {
     name: 'Ohkay Care',
     tagline: 'Kind home care and friendly help',
-    description: 'Caring, police-checked helpers who visit seniors and people at home to help with daily living and friendly company.',
+    description: 'Caring, Oank-checked helpers who visit seniors and people at home to help with daily living and friendly company.',
   },
   {
     name: 'Ohkay Staffing',

@@ -353,7 +353,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               Talk to Our Paisley Team Today
             </h2>
             <p className="text-xs sm:text-sm text-slate-200">
-              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 | +44 75 1091 1940 
+              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 | +44 20 3432 4738 
             </p>
           </div>
 
@@ -366,12 +366,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             </button>
 
             <a
-              href="tel:+447510911940"
+              href="tel:+44 20 3432 4738"
               className="bg-[#1B4332] hover:bg-[#2D6A4F] text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl border border-emerald-600 flex items-center justify-center gap-2 transition-transform hover:scale-105 whitespace-nowrap"
-              title="Call +44 75 1091 1940"
+              title="Call +44 20 3432 4738"
             >
               <Phone className="w-4 h-4 text-[#D4AF37]" />
-              <span>Call +44 75 1091 1940</span>
+              <span>Call +44 20 3432 4738</span>
             </a>
           </div>
         </div>
