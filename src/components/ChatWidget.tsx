@@ -319,11 +319,11 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
               </span>
 
               <a 
-                href="tel:+447510911940" 
+                href="tel:+447731956727" 
                 className="text-[#0F382C] hover:text-emerald-800 font-bold flex items-center gap-1 hover:underline"
               >
                 <Phone className="w-3 h-3 text-[#D4AF37]" />
-                <span>Call Paisley: +44 75 1091 1940</span>
+                <span>Call Paisley: +44 77 3195 6727</span>
               </a>
             </div>
           </div>
