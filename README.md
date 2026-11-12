@@ -124,8 +124,8 @@ The OANK Cleaning platform uses a high-performance **decoupled React SPA (Single
   ```
 - [ ] **Set WhatsApp & Support Details**:
   ```php
-  define('COMPANY_WHATSAPP_NUMBER', '+44 75 1091 1940');
-  define('COMPANY_WHATSAPP_LINK', 'https://wa.me/447510911940');
+  define('COMPANY_WHATSAPP_NUMBER', '+447731956727');
+  define('COMPANY_WHATSAPP_LINK', 'https://wa.me/message/EJKXRLHN7TGKK1');
   define('NOTIFICATION_EMAIL', 'info@oankcleaning.co.uk');
   define('BACKUP_EMAIL', 'hormotholar@yahoo.com');
   define('SUPPORT_EMAIL', 'support@oankcleaning.co.uk');

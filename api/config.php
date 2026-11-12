@@ -356,7 +356,7 @@ define(
 
 define(
     'COMPANY_PHONE_SECONDARY',
-    '+44 20 3432 4738'
+    ''
 );
 
 /*
@@ -809,7 +809,7 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
             <p style="font-size:14px;line-height:1.6;margin-top:25px;">
                 Warm regards,<br>
                 <strong>The {$companyName} Team</strong><br>
-                <em>Paisley Headquarters, Scotland</em>
+                <em>Scotland</em>
             </p>
         </div>
 

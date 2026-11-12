@@ -77,7 +77,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="space-y-4">
             <Logo variant="dark" size="lg" />
             <p className="text-xs text-slate-300 leading-relaxed pt-2">
-              A friendly community cleaning business. We clean homes, offices, and rental flats across Paisley and Glasgow.
+              A friendly community cleaning business. We clean homes, offices, and rental flats across Renfrewshire and Glasgow.
             </p>
 
             <div className="space-y-2.5 pt-2 text-xs">
@@ -89,7 +89,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0" />
                 <div className="flex flex-col">
                                   <a href="tel:+447731956727" className="hover:text-amber-300 transition-colors">+44 77 3195 6727</a>
-                 <a href="tel:+442034324738" className="hover:text-amber-300 transition-colors">+44 20 3432 4738</a>
+                
                 </div>
               </div>
               <div className="flex items-center gap-2.5 text-slate-300">
@@ -222,7 +222,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <span>Where We Clean</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed">
-                Paisley, Glasgow, Renfrew, Johnstone, Erskine, Linwood, Barrhead, and nearby towns.
+                All of Renfrewshire and Glasgow.
               </p>
             </div>
           </div>

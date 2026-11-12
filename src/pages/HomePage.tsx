@@ -46,7 +46,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
           <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 bg-[#1B4332] border border-emerald-600/60 px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300 shadow-sm">
               <HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Community Interest Company (CIC) • Paisley & Scotland</span>
+              <span>Community Interest Company (CIC) • Renfrewshire & Scotland</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight tracking-tight">
@@ -55,7 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             </h1>
 
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed max-w-2xl font-medium">
-              We clean houses, move-out flats, and workplaces across Paisley and Glasgow. All our cleaners are friendly and police checked. When you hire us, you also help fund free cleaning for local people in need!
+              We clean houses, move-out flats, and workplaces across Renfrewshire and Glasgow. All our cleaners are friendly and police checked. When you hire us, you also help fund free cleaning for local people in need!
             </p>
 
             {/* Key Trust Badges */}
@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                   <div>
                     <strong className="block text-white">Friendly Phone Help:</strong>
                    <a href="tel:+447731956727" className="hover:underline font-semibold block">+44 77 3195 6727</a>
-                    <a href="tel:+442034324738" className="hover:underline font-semibold block">+44 20 3432 4738</a>
+                 
                    
                   </div>
                  
@@ -350,10 +350,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               Want a Clean Home?
             </span>
             <h2 className="text-2xl sm:text-4xl font-serif font-bold text-white">
-              Talk to Our Paisley Team Today
+              Talk to Our Team Today
             </h2>
             <p className="text-xs sm:text-sm text-slate-200">
-              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 | +44 20 3432 4738 
+              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 
             </p>
           </div>
 
@@ -366,12 +366,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             </button>
 
             <a
-              href="tel:+44 20 3432 4738"
+              href="tel:+44 77 3195 6727"
               className="bg-[#1B4332] hover:bg-[#2D6A4F] text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl border border-emerald-600 flex items-center justify-center gap-2 transition-transform hover:scale-105 whitespace-nowrap"
-              title="Call +44 20 3432 4738"
+              title="Call +44 77 3195 6727"
             >
               <Phone className="w-4 h-4 text-[#D4AF37]" />
-              <span>Call +44 20 3432 4738</span>
+              <span>Call +447731956727</span>
             </a>
           </div>
         </div>
