@@ -1,104 +1,107 @@
 
+text/x-generic .htaccess ( ASCII text, with very long lines, with CRLF line terminators )
 # ==============================================================================
-# OANK CLEANING CIC
-# PRODUCTION APACHE CONFIGURATION
+# OanK Cleaning
+# Apache Server Configuration & Security Hardening
 # ==============================================================================
-
-Options -Indexes
 
 ServerSignature Off
 TraceEnable Off
 
-# ==============================================================================
-# REWRITE AND API ROUTING
-# ==============================================================================
-
-<IfModule mod_rewrite.c>
-
-    RewriteEngine On
-    RewriteBase /
-
-    # Preserve PHP authorization headers
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-
-    # API ROUTES
-    RewriteRule ^api/contact/?$ api/contact.php [END]
-    RewriteRule ^api/quote/?$ api/quote.php [END]
-    RewriteRule ^api/config/?$ api/config.php [END]
-    RewriteRule ^api/sitemap/?$ api/sitemap.php [END]
-    RewriteRule ^api/chat-log/?$ api/chat_log.php [END]
-    RewriteRule ^api/chat_log/?$ api/chat_log.php [END]
-
-    # Sitemap XML
-    RewriteRule ^sitemap\.xml$ api/sitemap.php [END]
-
-    # Prevent unknown API routes from loading React
-    RewriteRule ^api/ - [R=404,END]
-
-    # Allow existing files and directories
-    RewriteCond %{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^ - [END]
-
-    # React / Vite SPA fallback
-    RewriteRule ^ index.html [END]
-
-</IfModule>
-
-# ==============================================================================
-# SECURITY HEADERS
-# ==============================================================================
+# ------------------------------------------------------------------------------
+# SECURITY HEADERS (OWASP / SOC2 / ISO 27001 Hardening)
+# ------------------------------------------------------------------------------
 
 <IfModule mod_headers.c>
-
+    # Prevent MIME-type sniffing
     Header always set X-Content-Type-Options "nosniff"
 
+    # Prevent clickjacking
     Header always set X-Frame-Options "SAMEORIGIN"
 
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Strict Transport Security (HSTS - 1 year with subdomains and preload)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # Referrer Policy (prevent user tracking and info leakage)
+    Header always set Referrer-Policy "no-referrer"
 
-    Header always unset X-Powered-By
+    # Tightened Content Security Policy (CSP)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://oankcleaning.co.uk; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
 
-    # CSP REPORT-ONLY TESTING
-    # Does not block resources during testing.
-
-    Header always set Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net; script-src-attr 'none'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.googletagmanager.com https://www.facebook.com https://connect.facebook.net; img-src 'self' data: blob: https://www.google-analytics.com https://*.google-analytics.com https://www.facebook.com https://connect.facebook.net; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; frame-src 'self' https://www.googletagmanager.com https://www.facebook.com;"
-
+    # Remove server technology fingerprints
+    Header unset X-Powered-By
+    Header unset Server
 </IfModule>
 
-# ==============================================================================
-# HTTP METHOD RESTRICTIONS
-# ==============================================================================
+# ------------------------------------------------------------------------------
+# RESTRICT HTTP METHODS (Mitigates insecure OPTIONS/TRACE exposure)
+# ------------------------------------------------------------------------------
 
 <LimitExcept GET POST OPTIONS>
-    Require all denied
+    Order allow,deny
+    Deny from all
 </LimitExcept>
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
+# Authorization Header
+# ------------------------------------------------------------------------------
+
+RewriteCond %{HTTP:Authorization} .
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# ------------------------------------------------------------------------------
+# API ROUTES
+# ------------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+# API ROUTES
+# ------------------------------------------------------------------------------
+
+RewriteRule ^api/contact/?$ /api/contact.php [QSA,L]
+RewriteRule ^api/quote/?$ /api/quote.php [QSA,L]
+RewriteRule ^api/config/?$ /api/config.php [QSA,L]
+RewriteRule ^api/sitemap/?$ /api/sitemap.php [QSA,L]
+RewriteRule ^sitemap\.xml$ /api/sitemap.php [QSA,L]
+RewriteRule ^api/chat-log/?$ /api/chat_log.php [QSA,L]
+RewriteRule ^api/chat_log/?$ /api/chat_log.php [QSA,L]
+
+# ------------------------------------------------------------------------------
+# SPA CLIENT-SIDE ROUTING
+# ------------------------------------------------------------------------------
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# ------------------------------------------------------------------------------
+# SECURITY FILE ACCESS
+# ------------------------------------------------------------------------------
+
+Options -Indexes
+
+# ------------------------------------------------------------------------------
 # COMPRESSION
-# ==============================================================================
+# ------------------------------------------------------------------------------
 
 <IfModule mod_deflate.c>
 
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/css
     AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
     AddOutputFilterByType DEFLATE application/xml
     AddOutputFilterByType DEFLATE application/xhtml+xml
     AddOutputFilterByType DEFLATE application/rss+xml
     AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
     AddOutputFilterByType DEFLATE application/json
     AddOutputFilterByType DEFLATE image/svg+xml
 
 </IfModule>
 
-# ==============================================================================
+# ------------------------------------------------------------------------------
 # BROWSER CACHING
-# ==============================================================================
+# ------------------------------------------------------------------------------
 
 <IfModule mod_expires.c>
 
@@ -106,13 +109,12 @@ TraceEnable Off
 
     ExpiresByType text/css "access plus 1 year"
     ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType application/json "access plus 1 hour"
     ExpiresByType image/svg+xml "access plus 1 year"
 
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
-
-    ExpiresByType application/json "access plus 0 seconds"
 
 </IfModule>
