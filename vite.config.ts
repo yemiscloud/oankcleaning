@@ -66,12 +66,19 @@ export default defineConfig(() => {
             requestPath.replace(/^\/api\/contact$/, '/api/contact.php'),
         },
         '/api/quote': {
-  target: 'https://oankcleaning.co.uk',
-  changeOrigin: true,
-  secure: true,
-  rewrite: (requestPath) =>
-    requestPath.replace(/^\/api\/quote$/, '/api/quote.php'),
-},
+          target: 'https://oankcleaning.co.uk',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/quote$/, '/api/quote.php'),
+        },
+        '/api/job-admin': {
+          target: 'https://oankcleaning.co.uk', changeOrigin: true, secure: true,
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/job-admin$/, '/api/job_admin.php'),
+        },
+        '/api/job-track': {
+          target: 'https://oankcleaning.co.uk', changeOrigin: true, secure: true,
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/job-track$/, '/api/job_track.php'),
+        },
       },
     },
   };

@@ -46,7 +46,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
           <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 bg-[#1B4332] border border-emerald-600/60 px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300 shadow-sm">
               <HeartHandshake className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Community Interest Company (CIC) • Renfrewshire & Scotland</span>
+              <span>Community Interest Company (CIC) • Renfrewshire & Glasgow</span>
             </div>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-bold text-white leading-tight tracking-tight">
@@ -55,23 +55,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             </h1>
 
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed max-w-2xl font-medium">
-              We clean houses, move-out flats, and workplaces across Renfrewshire and Glasgow. All our cleaners are friendly and police checked. When you hire us, you also help fund free cleaning for local people in need!
+              We provide home, move-out and workplace cleaning across Renfrewshire and Glasgow. As a Community Interest Company, we also support local people through Home Reset and our Employment Pathway.
+              When you hire us, you also help fund free cleaning for local people in need!
             </p>
 
             {/* Key Trust Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2 text-xs font-medium text-emerald-100">
-              <div className="flex items-center gap-2">
+           <div className="flex flex-wrap items-center justify-between gap-3 pt-2 text-xs font-medium text-emerald-100"> 
+              <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
-                <span>Police-Checked Cleaners</span>
+                <span>Cleaning for Homes & Workplaces</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
-                <span>100% Deposit Back</span>
+                <span>Detailed Move-Out Cleaning</span>
               </div>
-              <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
+                              <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
+                              <span>Safe, Eco Soaps</span>
+                            </div>
+              <div className="flex items-center gap-1">
                 <CheckCircle2 className="w-4 h-4 text-[#D4AF37]" />
-                <span>Safe, Eco Soaps</span>
+                <span>Community-Focused CIC</span>
               </div>
+           
             </div>
 
             {/* CTAs */}
@@ -81,7 +87,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                 className="flex items-center gap-2 bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs sm:text-sm uppercase tracking-wider px-7 py-3.5 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
               >
                 <CalendarCheck className="w-4 h-4" />
-                <span>Get Instant Price</span>
+                <span>Request a Quote</span>
               </button>
 
               <button
@@ -99,7 +105,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             <div className="bg-[#1B4332]/90 backdrop-blur-md border-2 border-[#D4AF37]/40 rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-2xl">
               <div className="flex items-center justify-between border-b border-emerald-800 pb-4">
                 <div>
-                  <span className="text-amber-300 font-bold text-[10px] uppercase tracking-wider block">Paisley Office</span>
+                  <span className="text-amber-300 font-bold text-[10px] uppercase tracking-wider block">Based in Paisley</span>
                   <h3 className="text-xl font-serif font-bold text-white">Call Us Anytime</h3>
                 </div>
                 <div className="w-10 h-10 rounded-full bg-[#0F382C] flex items-center justify-center text-[#D4AF37]">
@@ -111,8 +117,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                 <div className="flex items-start gap-3 text-slate-200">
                   <MapPin className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
                   <div>
-                    <strong className="block text-white">Our Main Office:</strong>
-                    <span> 9 Inchinnan Road, Paisley, PA3 2PJ</span>
+                    <strong className="block text-white">Our Service Area:</strong>
+                    <span> Serving the whole of Renfrewshire and Glasgow</span>
                   </div>
                 </div>
 
@@ -131,9 +137,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               <div className="pt-2 border-t border-emerald-800 flex items-center justify-between text-xs text-emerald-200">
                 <span className="flex items-center gap-1">
                   <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
-                  Rated 4.9/5 by Families
+                  Cleaning for Homes and Workplaces
                 </span>
-                <span className="font-semibold text-amber-300">Mon - Sat 7am - 8pm</span>
+                <span className="font-semibold text-amber-300">Renfrewshire and Glasgow</span>
               </div>
             </div>
           </div>
@@ -142,22 +148,23 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
 
       {/* Trust Stats Bar */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+        
+        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 grid grid-cols-4 gap-6 text-center">
           <div className="space-y-1">
-            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">100%</span>
-            <span className="text-xs font-semibold text-slate-600 block">Deposit Back Guarantee</span>
+            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">CIC</span>
+            <span className="text-xs font-semibold text-slate-600 block">Community-Interest Company</span>
           </div>
-          <div className="space-y-1 border-l border-slate-200 pl-4">
+              <div className="space-y-1 border-l border-slate-200 pl-4">
             <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">5,000+</span>
             <span className="text-xs font-semibold text-slate-600 block">Clean Hours in Scotland</span>
           </div>
-          <div className="space-y-1 border-l border-slate-200 pl-4">
+           <div className="space-y-1">
             <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">100%</span>
-            <span className="text-xs font-semibold text-slate-600 block">Police-Checked Staff</span>
+            <span className="text-xs font-semibold text-slate-600 block">Reclean Guaranteed</span>
           </div>
           <div className="space-y-1 border-l border-slate-200 pl-4">
-            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">CIC</span>
-            <span className="text-xs font-semibold text-slate-600 block">Community-Interest Company</span>
+            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">2</span>
+            <span className="text-xs font-semibold text-slate-600 block">Service Areas: Renfrewshire & Glasgow</span>
           </div>
         </div>
       </section>
@@ -171,7 +178,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                 How We Help Our Town
               </span>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold">
-                 {/*Free Home Cleans & Paid Job Training */}
+                 {/* Home Reset and Employment Pathway community programmes */}
                 OANK Home Reset & Employment Pathway
               </h2>
             </div>
@@ -192,7 +199,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                 <h3 className="font-serif font-bold text-lg text-white">1. Home Reset</h3>
               </div>
               <p className="text-xs text-slate-200 leading-relaxed">
-                Free home cleaning for people who are having a hard time keeping their house tidy due to illness, age, or stress. We help them get back on track.
+                Free or subsidised cleaning support for people facing difficult circumstances. The support provided depends on each person’s needs and circumstances.
               </p>
             </div>
 
@@ -204,7 +211,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
                 <h3 className="font-serif font-bold text-lg text-white">2. Employment Pathway</h3>
               </div>
               <p className="text-xs text-slate-200 leading-relaxed">
-                We give local people friendly training on safe cleaning and health rules, and then give them real paid jobs with friendly team leaders!
+                We support local people through employment and job training opportunities connected with our cleaning work.
               </p>
             </div>
           </div>
@@ -260,10 +267,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
 
             <div className="space-y-4 pt-2">
               {[
-                { title: 'Careful Cleaner Checks', desc: 'Every cleaner passes full police background checks before they enter your home.' },
-                { title: 'Safe For Kids & Pets', desc: 'We bring gentle, eco-friendly soaps that clean deep and leave fresh air.' },
-                { title: '72-Hour Free Re-Clean', desc: 'If your landlord is not happy with a move-out clean, we come back and clean it again free.' },
-                { title: 'Extra Germ-Stopping Power', desc: 'We use colour-coded cloths so bathroom germs never touch your kitchen counters.' }
+                { title: 'Community-Focused Cleaning', desc: 'Our cleaning services sit alongside active community programmes supporting local people.' },
+                { title: 'Cleaning Planned Around Your Home', desc: 'We discuss your cleaning needs and agree the work before your appointment.' },
+                { title: 'End-of-Tenancy Cleaning', desc: 'We agree the move-out cleaning requirements before the booking.' },
+                { title: 'Cleaning Planned Around Your Needs', desc: 'We discuss the work required and agree the cleaning scope before the appointment.' }
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-3 bg-[#0F382C] p-3.5 rounded-xl border border-emerald-800">
                   <div className="w-6 h-6 rounded-full bg-[#D4AF37] text-[#0F382C] font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -292,16 +299,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#082019] via-transparent to-transparent flex items-end p-6">
                 <div className="bg-[#0F382C]/90 backdrop-blur-md border border-emerald-700/80 p-4 rounded-2xl w-full text-xs space-y-1">
-                  <span className="font-bold text-amber-300 uppercase tracking-wider block">Paisley HQ Team</span>
-                  <p className="text-slate-200">Our cleaners are trained to make your home shine.</p>
+                  <span className="font-bold text-amber-300 uppercase tracking-wider block">Our Cleaning Team</span>
+                  <p className="text-slate-200">We work with customers to agree the cleaning tasks required for each visit.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+      
 
-      {/* Testimonials */}
+      {/* Testimonials are shown only after genuine, approved reviews are added. */}
+      {TESTIMONIALS.length > 0 && (
       <section className="bg-slate-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 space-y-8">
           <div className="text-center max-w-xl mx-auto">
@@ -341,6 +350,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
           </div>
         </div>
       </section>
+      )}
 
       {/* Direct Contact Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
@@ -353,7 +363,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
               Talk to Our Team Today
             </h2>
             <p className="text-xs sm:text-sm text-slate-200">
-              Paisley, Scotland PA3 2PJ • Phone: +44 77 3195 6727 
+              Renfrewshire and Glasgow • Phone: +44 77 3195 6727 
             </p>
           </div>
 

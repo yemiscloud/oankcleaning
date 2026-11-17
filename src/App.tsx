@@ -3,13 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { PageRoute, CleaningService } from './types';
 import { CLEANING_SERVICES } from './data/cleaningData';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { ChatWidget } from './components/ChatWidget';
 import { SEOHelmet } from './components/SEOHelmet';
+import { CookieConsent } from './components/CookieConsent';
 
 // Critical Route: Statically imported for instant FCP & LCP on initial load
 import { HomePage } from './pages/HomePage';
@@ -24,6 +25,9 @@ const QuotePage = lazy(() => import('./pages/QuotePage').then(m => ({ default: m
 const FAQsPage = lazy(() => import('./pages/FAQsPage').then(m => ({ default: m.FAQsPage })));
 const ContactPage = lazy(() => import('./pages/ContactPage').then(m => ({ default: m.ContactPage })));
 const OhkayGroupPage = lazy(() => import('./pages/OhkayGroupPage').then(m => ({ default: m.OhkayGroupPage })));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then(m => ({ default: m.PrivacyPage })));
+const TrackJobPage = lazy(() => import('./pages/TrackJobPage').then(m => ({ default: m.TrackJobPage })));
+const AdminJobsPage = lazy(() => import('./pages/AdminJobsPage').then(m => ({ default: m.AdminJobsPage })));
 
 // Telemetry & Vitals: Only loaded and visible in development mode
 const DevTelemetryModal = import.meta.env.DEV
@@ -44,17 +48,62 @@ function RouteLoadingFallback() {
   );
 }
 
+const ROUTE_PATHS: Record<Exclude<PageRoute, 'service-detail'>, string> = {
+  home: '/',
+  services: '/services',
+  about: '/about',
+  community: '/community',
+  governance: '/governance',
+  quote: '/quote',
+  faqs: '/faqs',
+  contact: '/contact',
+  privacy: '/privacy-policy',
+  'track-job': '/track-job',
+  'admin-jobs': '/admin/jobs',
+  'ohkay-group': '/ohkay-group',
+};
+
+function routeFromPath(pathname: string): { route: PageRoute; service?: CleaningService } {
+  const cleanPath = pathname.replace(/\/+$/, '') || '/';
+  const service = CLEANING_SERVICES.find((item) => cleanPath === `/services/${item.slug}`);
+  if (service) return { route: 'service-detail', service };
+
+  const match = Object.entries(ROUTE_PATHS).find(([, path]) => path === cleanPath);
+  return { route: (match?.[0] as PageRoute) ?? 'home' };
+}
+
 export default function App() {
-  const [currentRoute, setCurrentRoute] = useState<PageRoute>('home');
-  const [selectedService, setSelectedService] = useState<CleaningService>(CLEANING_SERVICES[0]);
+  const initialRoute = routeFromPath(window.location.pathname);
+  const [currentRoute, setCurrentRoute] = useState<PageRoute>(initialRoute.route);
+  const [selectedService, setSelectedService] = useState<CleaningService>(
+    initialRoute.service ?? CLEANING_SERVICES[0]
+  );
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const next = routeFromPath(window.location.pathname);
+      setCurrentRoute(next.route);
+      if (next.service) setSelectedService(next.service);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigateToPath = (path: string) => {
+    if (window.location.pathname !== path) window.history.pushState({}, '', path);
+  };
 
   const handleNavigate = (route: PageRoute) => {
+    if (route !== 'service-detail') {
+      navigateToPath(ROUTE_PATHS[route]);
+    }
     setCurrentRoute(route);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectService = (service: CleaningService) => {
     setSelectedService(service);
+    navigateToPath(`/services/${service.slug}`);
     setCurrentRoute('service-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -86,6 +135,9 @@ export default function App() {
           {currentRoute === 'quote' && <QuotePage onNavigate={handleNavigate} />}
           {currentRoute === 'faqs' && <FAQsPage onNavigate={handleNavigate} />}
           {currentRoute === 'contact' && <ContactPage onNavigate={handleNavigate} />}
+          {currentRoute === 'privacy' && <PrivacyPage />}
+          {currentRoute === 'track-job' && <TrackJobPage />}
+          {currentRoute === 'admin-jobs' && <AdminJobsPage />}
           {currentRoute === 'ohkay-group' && <OhkayGroupPage onNavigate={handleNavigate} />}
         </Suspense>
       </main>
@@ -102,6 +154,9 @@ export default function App() {
 
       {/* Interactive Virtual Receptionist Clara Widget */}
       <ChatWidget onNavigate={handleNavigate} />
+
+      {/* Privacy controls and consent-gated optional analytics/advertising */}
+      <CookieConsent />
     </div>
   );
 }

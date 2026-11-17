@@ -62,7 +62,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
                 className="bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs uppercase tracking-wider px-6 py-3 rounded-xl shadow cursor-pointer flex items-center gap-2"
               >
                 <CalendarCheck className="w-4 h-4" />
-                <span>Get Instant Price</span>
+                <span>Request a Quote</span>
               </button>
             </div>
           </div>
@@ -91,6 +91,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
             <h2 className="text-2xl font-serif font-bold text-[#0F382C]">
               What We Clean in Every Room
             </h2>
+            <p>Agreed based on the property and cleaning scope</p>
           </div>
 
           <div className="space-y-3">
@@ -124,9 +125,9 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
 
             <div className="pt-4 border-t border-emerald-800 text-xs space-y-3">
               <div className="bg-[#1B4332] p-3 rounded-xl">
-                <span className="font-bold text-amber-300 block mb-1">Paisley Office Help</span>
+                <span className="font-bold text-amber-300 block mb-1">Service Area</span>
                 <p className="text-[11px] text-slate-300">Call our friendly team to book or ask questions.</p>
-                <a href="tel:+447510911940" className="text-white font-bold block mt-1 hover:underline">+44 75 1091 1940</a>
+                <a href="tel:+447731956727" className="text-white font-bold block mt-1 hover:underline">+44 77 3195 6727</a>
               </div>
 
               <button

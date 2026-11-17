@@ -54,9 +54,9 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /about\s+your\s+services/i,
     ],
     answer:
-      `We clean homes, offices, and move-out flats across Paisley and Glasgow! We are a Community Interest Company. That means any extra money we make helps fund our two community programs: Home Reset (free cleaning for people who need extra help) and Employment Pathway (paid training and jobs for local workers). When you book with us, you help your community!`,
+      `We clean homes, offices, and move-out flats across Paisley and Glasgow! We are a Community Interest Company. Our active community programmes include Home Reset, which provides free or subsidised cleaning support, and the Employment Pathway, which supports employment and job training.`,
     actions: [
-      { label: 'Check Instant Price', route: 'quote', actionType: 'navigate' },
+      { label: 'Request a Quote', route: 'quote', actionType: 'navigate' },
       { label: 'See All Services', route: 'services', actionType: 'navigate' },
       { label: 'Our Community Work', route: 'community', actionType: 'navigate' },
     ],
@@ -86,7 +86,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /social\s+enterprise/i,
     ],
     answer:
-      `OANK Cleaning CIC is an independent Community Interest Company in Scotland. We are a social business. We do high quality cleaning, and all extra profit is locked by law to help local people. We use that money to clean homes for people having a hard time, and to give local workers good training and paid jobs.`,
+      `OANK Cleaning CIC is a Community Interest Company in Scotland. We are a social business. We provide cleaning services and deliver community programmes including Home Reset and the Employment Pathway. Our community programmes include Home Reset and the Employment Pathway, which supports employment and job training.`,
     actions: [
       { label: 'About OANK', route: 'about', actionType: 'navigate' },
       { label: 'Our Rules & Promise', route: 'governance', actionType: 'navigate' },
@@ -116,7 +116,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /vulnerable\s+cleaning/i,
     ],
     answer:
-      `Home Reset is our free community project. Sometimes people have a home, but sickness or hard times make it hard to keep it clean. We send caring cleaners to help them clean up and feel proud of their home again. Note: We only do cleaning; we do not provide medical care or nursing.`,
+      `Home Reset provides free or subsidised community cleaning support for people facing difficult circumstances. The level of support depends on individual needs and circumstances. Contact OANK to ask about the current programme and whether support is available.`,
     actions: [
       { label: 'See Home Reset', route: 'community', actionType: 'navigate' },
       { label: 'Contact Help Team', route: 'contact', actionType: 'navigate' },
@@ -171,10 +171,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /who\s+is\s+eligible/i,
     ],
     answer:
-      `People usually join Home Reset when a housing officer, doctor, or local support group refers them. Our team visits first to make sure the home is safe for our cleaners and that we can truly help.`,
+      `If you or someone you support would like to ask about Home Reset, please contact our team. We can explain the current referral and assessment arrangements and whether support is available.`,
     actions: [
       { label: 'Ask About Referrals', route: 'contact', actionType: 'navigate' },
-      { label: 'Call Paisley Team', phone: '+447510911940', actionType: 'call' },
+      { label: 'Call Paisley Team', phone: '+447731956727', actionType: 'call' },
     ],
   },
 
@@ -202,7 +202,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /training\s+programme/i,
     ],
     answer:
-      `Our Employment Pathway gives local people a fresh start with real paid jobs. We teach them how to clean like professionals, how to stay safe with soaps and machines, and how to treat clients with respect. Then we give them paid work with friendly team leaders!`,
+      `Our Employment Pathway supports local people through employment and job training opportunities connected with OANK cleaning work. Contact us to ask about current opportunities.`,
     actions: [
       { label: 'See Job Training', route: 'community', actionType: 'navigate' },
       { label: 'Ask About Jobs', route: 'contact', actionType: 'navigate' },
@@ -230,14 +230,14 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /cleaning\s+products/i,
     ],
     answer:
-      `You do not need to buy anything! Our cleaners bring all the mops, clean cloths, safe soaps, and strong vacuums needed to make your home shine. If you want us to use your own special soap, just let us know!`,
+      `Please contact us before your booking to confirm what equipment and cleaning products will be provided and whether anything needs to be supplied at the property.`,
     actions: [
       { label: 'See Cleaning List', route: 'services', actionType: 'navigate' },
-      { label: 'Get Instant Price', route: 'quote', actionType: 'navigate' },
+      { label: 'Request a Quote', route: 'quote', actionType: 'navigate' },
     ],
   },
 
-  // 8. End of Tenancy Cleaning & 72-Hour Re-Clean Guarantee
+  // 8. End of Tenancy Cleaning & End-of-Tenancy Cleaning
   {
     id: 'deposit_guarantee',
     keywords: [
@@ -263,7 +263,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /inventory\s+check/i,
     ],
     answer:
-      `Our move-out clean is made to please landlords and rental agents. We give you a 72-Hour Free Re-Clean Guarantee: if your landlord finds any spot they are not happy with within 72 hours, we will come back and clean it again for free so you get your deposit back!`,
+      `Our move-out cleaning service helps tenants and landlords prepare a property for handover. We can discuss the property checklist and agree the cleaning scope before booking.`,
     actions: [
       { label: 'Move Out Price', route: 'quote', actionType: 'navigate' },
       { label: 'See Details', route: 'services', actionType: 'navigate' },
@@ -300,7 +300,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /glasgow/i,
     ],
     answer:
-      `Our office is in Paisley, Scotland (postcode PA3 2PJ). We clean homes and businesses in Paisley, Renfrew, Johnstone, Hillington, Erskine, Linwood, Barrhead, and all across Glasgow!`,
+      `We provide cleaning at customers’ homes and workplaces across the whole of Renfrewshire and Glasgow. Customers are not received at a public office.`,
     actions: [
       { label: 'Check Your Postcode', route: 'quote', actionType: 'navigate' },
       { label: 'Talk to Us', route: 'contact', actionType: 'navigate' },
@@ -332,11 +332,11 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /cost\s+of\s+cleaning/i,
     ],
     answer:
-      `Getting a price is super easy! You have three choices:\n1. Use our fast Online Price Calculator on this website\n2. Click 'Get in Touch' and send a quick message\n3. Call our friendly Paisley team at +44 75 1091 1940 or +44 75 2244 1379`,
+      `Getting a price is super easy! You have three choices:\n1. Use the Request a Quote form on this website\n2. Click 'Get in Touch' and send a quick message\n3. Call our friendly Paisley team at +44 77 3195 6727`,
     actions: [
       { label: 'Check Price Online', route: 'quote', actionType: 'navigate' },
       { label: 'Send a Message', route: 'contact', actionType: 'navigate' },
-      { label: 'Call +44 75 1091 1940', phone: '+447510911940', actionType: 'call' },
+      { label: 'Call +44 77 3195 6727', phone: '+447731956727', actionType: 'call' },
     ],
   },
 
@@ -365,7 +365,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /background\s+check/i,
     ],
     answer:
-      `You can feel completely safe with us! Every cleaner has a full police check (Enhanced DBS and Disclosure Scotland). Our staff never ask for gifts or money, and they keep your home and keys safe and private at all times.`,
+      `We take care when arranging cleaning in customers’ homes and workplaces. If you have questions about staff checks, safeguarding or access arrangements, please contact our team so we can explain the arrangements that apply to your booking.`,
     actions: [
       { label: 'Our Safety Rules', route: 'governance', actionType: 'navigate' },
       { label: 'Contact Us', route: 'contact', actionType: 'navigate' },
@@ -396,7 +396,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /health\s+and\s+safety/i,
     ],
     answer:
-      `We keep every room safe and germ-free with our 4-colour cloth rule:\n• 🔴 Red: Only for toilets and urinals\n• 🟡 Yellow: Only for bathroom sinks and tiles\n• 🔵 Blue: For bedrooms, living rooms, and desks\n• 🟢 Green: Only for kitchens and food areas\nThis makes sure toilet germs never touch your kitchen!`,
+      `Cleaning methods and any site-specific hygiene requirements should be discussed with our team before the service is arranged. For healthcare or care settings, please tell us about the organisation’s required procedures so we can discuss the scope of work.`,
     actions: [
       { label: 'Our Cleaning Standards', route: 'services', actionType: 'navigate' },
       { label: 'Safety Rules', route: 'governance', actionType: 'navigate' },
@@ -423,10 +423,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /how\s+is\s+my\s+data\s+stored/i,
     ],
     answer:
-      `We protect your private details carefully. We only keep your name, phone number, and address so we can clean your home. We never sell your details to anyone. You can ask us to see or delete your details anytime by sending us a message via our secure Contact form.`,
+      `We use the information you provide to respond to enquiries and manage cleaning requests. Please read our Privacy Policy for details about the information we collect, how we use it and your data protection rights.`,
     actions: [
       { label: 'Contact Us Safely', route: 'contact', actionType: 'navigate' },
-      { label: 'Privacy Policy', route: 'governance', actionType: 'navigate' },
+      { label: 'Privacy Policy', route: 'privacy', actionType: 'navigate' },
     ],
   },
 
@@ -452,10 +452,10 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /how\s+to\s+contact/i,
     ],
     answer:
-      `Here is how you can talk to us in Paisley:\n• Main Phone: +44 75 1091 1940\n• Second Phone: +44 75 2244 1379\n• Secure Portal: Open Contact Form in Menu\n• Direct Email: info [at] oankcleaning.co.uk\n• Office: Paisley, Scotland (PA3 2PJ)\n• Opening Hours: Monday to Saturday 7:00am - 8:00pm`,
+      `Here is how you can talk to us in Paisley:\n• Main Phone: +44 77 3195 6727\n• Secure Portal: Open Contact Form in Menu\n• Direct Email: info [at] oankcleaning.co.uk\n• Service area: Renfrewshire and Glasgow\n• Please contact us to confirm availability`,
     actions: [
       { label: 'Go to Contact Page', route: 'contact', actionType: 'navigate' },
-      { label: 'Call +44 75 1091 1940', phone: '+447510911940', actionType: 'call' },
+      { label: 'Call +44 77 3195 6727', phone: '+447731956727', actionType: 'call' },
     ],
   },
 
@@ -476,7 +476,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /company\s+structure/i,
     ],
     answer:
-      `OANK Cleaning CIC is a fully independent Community Interest Company standing on its own. We earn our own money by doing great cleaning. All extra money stays locked by law to help local families with free home cleaning and paid job training!`,
+      `OANK Cleaning CIC is a Community Interest Company. Our active community programmes include Home Reset, which provides free or subsidised cleaning support, and the Employment Pathway, which supports employment and job training.`,
     actions: [
       { label: 'About Us', route: 'about', actionType: 'navigate' },
       { label: 'Governance & Rules', route: 'governance', actionType: 'navigate' },
@@ -542,7 +542,7 @@ export function queryReceptionist(userQuery: string): ReceptionistResponse {
     text: EXACT_FALLBACK_MESSAGE,
     suggestedActions: [
       { label: 'Go to Contact Page', route: 'contact', actionType: 'navigate' },
-      { label: 'Call Paisley Office', phone: '+447510911940', actionType: 'call' },
+      { label: 'Call Paisley Office', phone: '+447731956727', actionType: 'call' },
     ],
   };
 }

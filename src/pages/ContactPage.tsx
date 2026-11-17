@@ -3,7 +3,6 @@ import {
   Phone, 
   MapPin, 
   Mail, 
-  Clock, 
   Building2, 
   MessageSquare,
   HeartHandshake
@@ -25,7 +24,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
         <div className="max-w-7xl mx-auto space-y-3 text-center">
           <div className="inline-flex items-center gap-2 bg-[#1B4332] px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300 border border-emerald-600/60 shadow-sm">
             <HeartHandshake className="w-4 h-4 text-[#D4AF37]" />
-            <span>Community Interest Company • Paisley Office</span>
+            <span>Community Interest Company • Service-area cleaning</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             Talk to OANK Cleaning
@@ -43,7 +42,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
           <div className="bg-[#0F382C] text-white p-8 rounded-3xl border-4 border-[#D4AF37] shadow-xl space-y-6">
             <div className="border-b border-emerald-800 pb-4">
               <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-                Paisley Office Details
+                Contact Details
               </span>
               <h2 className="text-2xl font-serif font-bold text-white">
                 OANK Cleaning CIC
@@ -55,28 +54,11 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#D4AF37] flex items-center justify-center flex-shrink-0 mt-0.5">
                   <MapPin className="w-4 h-4" />
                 </div>
-
-                <div className="space-y-4 min-w-0">
-                  <div>
-                    <strong className="block text-white text-sm mb-1">
-                      Main Office
-                    </strong>
-                    <address className="not-italic text-slate-200 text-xs leading-relaxed">
-                      9 Inchinnan Road, Paisley, PA3 2PJ <br />
-                      United Kingdom
-                    </address>
-                  </div>
-
-                  <div className="pt-3 border-t border-emerald-800/70">
-                    <strong className="block text-white text-sm mb-1">
-                      Glasgow Office
-                    </strong>
-                    <address className="not-italic text-slate-200 text-xs leading-relaxed">
-                      Office 1856, 3 Fitzroy Place, 1/1, Sauchiehall Street<br />
-                      Finnieston, Glasgow Central<br />
-                      Glasgow, G3 7RH
-                    </address>
-                  </div>
+                <div>
+                  <strong className="block text-white text-sm mb-1">Where We Work</strong>
+                  <p className="text-slate-200 text-xs leading-relaxed">
+                    We provide cleaning at customers' homes and workplaces across Renfrewshire and Glasgow. We do not receive customers at an office.
+                  </p>
                 </div>
               </div>
 
@@ -107,16 +89,7 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#1B4332] text-[#D4AF37] flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div>
-                  <strong className="block text-white text-sm">When We Are Open:</strong>
-                  <span className="text-slate-200 block text-xs mt-0.5">Monday to Saturday: 7:00am - 8:00pm</span>
-                  <span className="text-emerald-300 block text-[11px]">Evening and weekend cleaning available</span>
-                </div>
-              </div>
+
             </div>
 
             {/* WhatsApp Quick Action */}
@@ -137,10 +110,10 @@ export const ContactPage: React.FC<ContactPageProps> = () => {
           <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-md space-y-3">
             <div className="flex items-center gap-2 text-[#0F382C] font-bold text-sm">
               <Building2 className="w-4 h-4 text-[#D4AF37]" />
-              <span>Where We Clean in Scotland</span>
+              <span>Where We Clean</span>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              We clean in <strong>Paisley (PA1 - PA3)</strong>, Johnstone, Renfrew, Hillington, Erskine, Linwood, Barrhead, and all of Glasgow!
+              We serve the whole of <strong>Renfrewshire and Glasgow</strong>.
             </p>
           </div>
         </div>

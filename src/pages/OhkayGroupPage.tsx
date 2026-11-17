@@ -54,12 +54,12 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
             Ohkay Limited was built on a simple promise: essential services—caring for grandparents, helping hospitals with nurses, or cleaning homes and workplaces—should always be done with kindness and excellence.
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            All our brands share full police checking (DBS/PVG), high safety standards, and caring team members.
+            Each business operates according to its own services and arrangements. Please contact the relevant business for details about its staff and service standards.
           </p>
 
           <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-3 text-xs">
-            <span className="font-bold text-[#0F382C] block">Ohkay Limited Main Office</span>
-            <p className="text-slate-600">Paisley, Scotland, PA3 2PJ • Phone: +44 75 1091 1940 | +44 75 2244 1379</p>
+            <span className="font-bold text-[#0F382C] block">OANK Cleaning CIC</span>
+            <p className="text-slate-600">Renfrewshire and Glasgow • Phone: +44 77 3195 6727</p>
 
             <a
               href="https://ohkaylimited.co.uk"
@@ -106,8 +106,8 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
                 className="w-8 h-8 rounded-full border border-[#D4AF37]" 
               />
               <div>
-                <span className="font-bold text-amber-300 block">Paisley Office</span>
-                <span className="text-slate-200 text-[10px]">Serving Scotland & PA3 2PJ</span>
+                <span className="font-bold text-amber-300 block">Paisley base</span>
+                <span className="text-slate-200 text-[10px]">Serving Renfrewshire and Glasgow</span>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@ export const OhkayGroupPage: React.FC<OhkayGroupPageProps> = ({ onNavigate }) =>
               ) : (
                 <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                   <span>Questions for Ohkay Limited Office</span>
-                  <a href="tel:+447510911940" className="text-[#0F382C] font-bold hover:underline">+44 75 1091 1940</a>
+                  <a href="tel:+447731956727" className="text-[#0F382C] font-bold hover:underline">+44 77 3195 6727</a>
                 </div>
               )}
             </div>

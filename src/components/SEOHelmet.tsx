@@ -10,51 +10,51 @@ interface SEOHelmetProps {
 const SITE_URL = 'https://oankcleaning.co.uk';
 
 const PRIMARY_PHONE = '+447731956727';
-const ALTERNATIVE_PHONE = '+447510911940';
+
 
 const PAGES: Record<
   string,
   { title: string; description: string; path: string }
 > = {
   home: {
-    title: 'OANK Cleaning CIC | Cleaning Services Across Scotland',
+    title: 'OANK Cleaning CIC | Cleaning Services Across Renfrewshire and Glasgow',
     description:
-      'OANK Cleaning CIC provides domestic and commercial cleaning across Scotland, with our head office in Paisley. Our staff undergo certification training. Contact us for a quote.',
+      'OANK Cleaning CIC provides six cleaning services across Renfrewshire and Glasgow and delivers Home Reset and Employment Pathway community programmes. Call +44 77 3195 6727.',
     path: '/',
   },
 
   services: {
-    title: 'Cleaning Services Across Scotland | OANK Cleaning CIC',
+    title: 'Cleaning Services Across Renfrewshire and Glasgow | OANK Cleaning CIC',
     description:
-      'Explore domestic cleaning, deep cleaning, end-of-tenancy cleaning, carpet cleaning and commercial office cleaning across Scotland.',
+      'Explore six cleaning services from OANK Cleaning CIC, with published starting prices for domestic, deep, end-of-tenancy, office and carpet cleaning across Renfrewshire and Glasgow.',
     path: '/services',
   },
 
   community: {
-    title: 'Community Cleaning & Support | OANK Cleaning CIC',
+    title: 'Home Reset & Employment Pathway | OANK Cleaning CIC',
     description:
-      'Discover OANK Cleaning CIC, our community-focused mission, and our cleaning and employment initiatives in Scotland.',
-    path: '/ohkay-group',
+      'Discover OANK Home Reset, offering free or subsidised cleaning support, and our Employment Pathway for employment and job training support.',
+    path: '/community',
   },
 
   governance: {
     title: 'Our Policies & Standards | OANK Cleaning CIC',
     description:
-      'Learn about OANK Cleaning CIC policies, staff training, service standards and community commitments.',
+      'Learn about OANK Cleaning CIC, its community purpose, Home Reset support and Employment Pathway.',
     path: '/governance',
   },
 
   about: {
     title: 'About OANK Cleaning CIC | Paisley, Scotland',
     description:
-      'Meet OANK Cleaning CIC, a community-focused cleaning company headquartered in Paisley and serving customers across Scotland.',
+      'Learn about OANK Cleaning CIC, its cleaning services and its active community programmes across Renfrewshire and Glasgow.',
     path: '/about',
   },
 
   quote: {
     title: 'Request a Cleaning Quote | OANK Cleaning CIC',
     description:
-      'Request a cleaning quote from OANK Cleaning CIC. Explore our services and check availability across Scotland.',
+      'Request a cleaning quote from OANK Cleaning CIC. Explore our services and check availability across Renfrewshire and Glasgow.',
     path: '/quote',
   },
 
@@ -65,10 +65,24 @@ const PAGES: Record<
     path: '/faqs',
   },
 
+  'ohkay-group': {
+    title: 'OANK Cleaning CIC | About Our Group',
+    description: 'Information about OANK Cleaning CIC and its group structure.',
+    path: '/ohkay-group',
+  },
+
+  'track-job': { title: 'Track Your Cleaning Job | OANK Cleaning CIC', description: 'Check the status of your OANK Cleaning enquiry or job using your reference code.', path: '/track-job' },
+  'admin-jobs': { title: 'Admin Job Updates | OANK Cleaning CIC', description: 'Restricted OANK Cleaning job administration.', path: '/admin/jobs' },
+  privacy: {
+    title: 'Privacy Policy | OANK Cleaning CIC',
+    description: 'Read how OANK Cleaning CIC collects, uses and protects personal information, including website enquiries and cookie preferences.',
+    path: '/privacy-policy',
+  },
+
   contact: {
-    title: 'Contact OANK Cleaning CIC | Scotland-Wide Cleaning',
+    title: 'Contact OANK Cleaning CIC | Renfrewshire and Glasgow Cleaning',
     description:
-      'Contact OANK Cleaning CIC about domestic or commercial cleaning across Scotland. Call our primary or alternative business number.',
+      'Contact OANK Cleaning CIC about cleaning services across Renfrewshire and Glasgow. Call +44 77 3195 6727.',
     path: '/contact',
   },
 };
@@ -90,9 +104,9 @@ export const SEOHelmet: React.FC<SEOHelmetProps> = ({
     const page =
       currentRoute === 'service-detail' && serviceTitle
         ? {
-            title: `${serviceTitle} Across Scotland | OANK Cleaning CIC`,
+            title: `${serviceTitle} Across Renfrewshire and Glasgow | OANK Cleaning CIC`,
             description:
-              `Explore ${serviceTitle} from OANK Cleaning CIC. Our head office is in Paisley, and we serve customers across Scotland. Contact us to check availability and request a quote.`,
+              `Explore ${serviceTitle} from OANK Cleaning CIC, serving homes and workplaces across Renfrewshire and Glasgow. Contact us for availability and a quote.`,
             path: window.location.pathname,
           }
         : PAGES[currentRoute] ?? PAGES.home;
@@ -100,6 +114,9 @@ export const SEOHelmet: React.FC<SEOHelmetProps> = ({
     const canonicalUrl = new URL(page.path, SITE_URL).href;
 
     document.title = page.title;
+    let robots = document.head.querySelector('meta[name="robots"]') as HTMLMetaElement | null;
+    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots); }
+    robots.content = currentRoute === 'admin-jobs' || currentRoute === 'track-job' || currentRoute === 'ohkay-group' ? 'noindex,nofollow' : 'index,follow';
 
     const setMeta = (
       selector: string,
@@ -188,52 +205,20 @@ export const SEOHelmet: React.FC<SEOHelmetProps> = ({
 
     canonical.href = canonicalUrl;
 
-    // Structured business data.
+    // Structured business data uses confirmed public details only.
     const schema = {
       '@context': 'https://schema.org',
-      '@type': 'HouseCleaning',
+      '@type': 'CleaningService',
       '@id': `${SITE_URL}/#business`,
       name: 'OANK Cleaning CIC',
       url: SITE_URL,
       description:
-        'OANK Cleaning CIC provides domestic and commercial cleaning services across Scotland. Headquartered in Paisley, our staff undergo certification training.',
+        'OANK Cleaning CIC provides domestic, deep, end-of-tenancy, office, healthcare, and carpet and upholstery cleaning across Renfrewshire and Glasgow.',
       telephone: PRIMARY_PHONE,
-
-      contactPoint: [
-        {
-          '@type': 'ContactPoint',
-          telephone: PRIMARY_PHONE,
-          contactType: 'customer service',
-          areaServed: {
-            '@type': 'Country',
-            name: 'Scotland',
-          },
-          availableLanguage: 'English',
-        },
-        {
-          '@type': 'ContactPoint',
-          telephone: ALTERNATIVE_PHONE,
-          contactType: 'alternative customer service',
-          areaServed: {
-            '@type': 'Country',
-            name: 'Scotland',
-          },
-          availableLanguage: 'English',
-        },
+      areaServed: [
+        { '@type': 'AdministrativeArea', name: 'Renfrewshire, Scotland' },
+        { '@type': 'City', name: 'Glasgow, Scotland' },
       ],
-
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Paisley',
-        addressRegion: 'Scotland',
-        addressCountry: 'GB',
-      },
-
-      areaServed: {
-        '@type': 'AdministrativeArea',
-        name: 'Scotland',
-      },
-
       hasOfferCatalog: {
         '@type': 'OfferCatalog',
         name: 'Cleaning Services',
@@ -242,31 +227,21 @@ export const SEOHelmet: React.FC<SEOHelmetProps> = ({
           itemOffered: {
             '@type': 'Service',
             name,
-            provider: {
-              '@id': `${SITE_URL}/#business`,
-            },
-            areaServed: {
-              '@type': 'AdministrativeArea',
-              name: 'Scotland',
-            },
+            provider: { '@id': `${SITE_URL}/#business` },
           },
         })),
       },
     };
 
-    const scriptId = 'json-ld-schema';
-
     let script = document.getElementById(
-      scriptId
+      'json-ld-schema'
     ) as HTMLScriptElement | null;
-
     if (!script) {
       script = document.createElement('script');
-      script.id = scriptId;
+      script.id = 'json-ld-schema';
       script.type = 'application/ld+json';
       document.head.appendChild(script);
     }
-
     script.textContent = JSON.stringify(schema);
   }, [currentRoute, serviceTitle]);
 

@@ -24,7 +24,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
     email: '',
     phone: '',
     service: defaultService || 'General Cleaning Enquiry',
-    postcode: 'Paisley PA3 2PJ',
+    postcode: '',
     preferredDate: '',
     message: '',
   });
@@ -91,9 +91,10 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
 
       // Strict validation: Only show success when BOTH database and preferred email succeeded
       if (response.ok && payload.success && isDbSaved && isEmailSent) {
+        window.oankTrackLead?.('contact');
         setStatus({
           type: 'success',
-          message: 'Thank you! Your enquiry has been safely delivered to our team. We will respond to you within 2 hours.',
+          message: 'Thank you! Your enquiry has been safely delivered to our team. A member of our team will respond as soon as possible.',
           refNo: payload.data?.referenceNo || payload.referenceNo,
         });
         setFormData({
@@ -101,14 +102,14 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
           email: '',
           phone: '',
           service: 'General Cleaning Enquiry',
-          postcode: 'Paisley PA3 2PJ',
+          postcode: '',
           preferredDate: '',
           message: '',
         });
       } else {
         setStatus({
           type: 'error',
-          message: payload.message || 'Delivery could not be confirmed, Please call us at +44 75 1091 1940.',
+          message: payload.message || 'Delivery could not be confirmed, Please call us at +44 77 3195 6727.',
         });
       }
     } catch (error) {
@@ -124,8 +125,8 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
       setStatus({
         type: 'error',
         message: responseStatus !== null
-          ? `The server could not process your enquiry (HTTP ${responseStatus}). Please try again or call +44 75 1091 1940.`
-          : 'Could not connect to the server. Please check your connection or call +44 75 1091 1940.',
+          ? `The server could not process your enquiry (HTTP ${responseStatus}). Please try again or call +44 77 3195 6727.`
+          : 'Could not connect to the server. Please check your connection or call +44 77 3195 6727.',
       });
     } finally {
       setLoading(false);
@@ -136,13 +137,13 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
     <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200">
       <div className="mb-8">
         <span className="text-amber-700 font-bold text-xs uppercase tracking-wider block mb-1">
-          Friendly Paisley Office
+          Contact Our Team
         </span>
         <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0F382C]">
           Send Us a Quick Message
         </h3>
         <p className="text-xs sm:text-sm text-slate-600 mt-2">
-          Tell us about your home or office. Our friendly team in Paisley will reply to you within 2 hours.
+          Tell us about your home or office. A member of our team will respond as soon as possible.
         </p>
       </div>
 
@@ -195,7 +196,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
               <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               <input
                 type="tel"
-                placeholder="+44 7510 911940"
+                placeholder="Your phone number"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
@@ -216,7 +217,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
               <option value="General Cleaning Enquiry">General Cleaning Question</option>
               <option value="Regular Domestic Cleaning">Regular Home Cleaning</option>
               <option value="Deep & Spring Cleaning">Deep Spring Cleaning</option>
-              <option value="End of Tenancy Cleaning">Move Out Cleaning (100% Deposit Back)</option>
+              <option value="End of Tenancy Cleaning">Move Out Cleaning</option>
               <option value="Commercial & Office Cleaning">Office & Business Cleaning</option>
               <option value="Healthcare & Care Home Cleaning">Care Home & Health Cleaning</option>
               <option value="Carpet & Upholstery Care">Carpet & Sofa Cleaning</option>
@@ -234,7 +235,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
               <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
               <input
                 type="text"
-                placeholder="Paisley PA3 2PJ"
+                placeholder="Enter your postcode"
                 value={formData.postcode}
                 onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
                 className="w-full pl-9 pr-3 py-2.5 text-base sm:text-xs min-h-[44px] border border-slate-300 rounded-xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none transition-all"
@@ -295,12 +296,15 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
               <p className="text-xs font-bold">{status.message}</p>
               {status.refNo && (
                 <p className="text-[11px] text-slate-600 mt-1">
-                  Your Reference Code: <strong>{status.refNo}</strong>
+                  Your Reference Code: <strong>{status.refNo}</strong> · <a href="/track-job" className="font-semibold underline">Track your job</a>
                 </p>
               )}
             </div>
           </div>
         )}
+
+        {/* Privacy information */}
+        <p className="text-xs leading-5 text-slate-500">By sending this enquiry, you acknowledge that we will use your details to respond to your request. Read our <a href="/privacy-policy" className="font-semibold text-[#0F382C] underline">Privacy Policy</a>.</p>
 
         {/* Submit button */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">

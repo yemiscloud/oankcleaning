@@ -243,6 +243,21 @@ $addOns = array_values(
 
 /*
 |--------------------------------------------------------------------------
+| Room selection and customer-supplied materials discount
+|--------------------------------------------------------------------------
+*/
+
+$livingRoomDiningRoom = isset($input['livingRoomDiningRoom'])
+    && ($input['livingRoomDiningRoom'] === true || $input['livingRoomDiningRoom'] === 1 || $input['livingRoomDiningRoom'] === '1');
+
+$suppliesCleaningMaterials = isset($input['suppliesCleaningMaterials'])
+    && ($input['suppliesCleaningMaterials'] === true || $input['suppliesCleaningMaterials'] === 1 || $input['suppliesCleaningMaterials'] === '1');
+
+$livingRoomDiningRoomCharge = $livingRoomDiningRoom ? 25.00 : 0.00;
+$materialsDiscountRate = $suppliesCleaningMaterials ? 10.00 : 0.00;
+
+/*
+|--------------------------------------------------------------------------
 | Customer Information
 |--------------------------------------------------------------------------
 */
@@ -266,7 +281,7 @@ $postcode = limitQuoteInput(
     getQuoteString(
         $input,
         'postcode',
-        'PA3 2PJ'
+        ''
     ),
     50
 );
@@ -306,84 +321,34 @@ $bestDaysString = empty($bestDays) ? 'Flexible / Any' : implode(', ', $bestDays)
 
 /*
 |--------------------------------------------------------------------------
-| Quote Calculation
+| Price Guidance
 |--------------------------------------------------------------------------
 |
-| All prices are calculated server-side.
-| The browser cannot override the final price.
+| Public prices are starting prices only. The final quote depends on the
+| property and agreed scope, so this endpoint must not invent a total.
+| The legacy quote_estimate database field is stored as 0.00 until a quote
+| is reviewed and confirmed by the OANK team.
 |
 */
 
-$baseRates = [
-    'domestic-regular' => 45,
-    'deep-cleaning' => 85,
-    'end-of-tenancy' => 145,
-    'commercial-office' => 65,
-    'healthcare-carehome' => 95,
-    'carpet-upholstery' => 70,
+$priceGuidance = [
+    'domestic-regular' => 'From £18.50 per hour',
+    'deep-cleaning' => 'From £85 one-off',
+    'end-of-tenancy' => 'From £145 per package',
+    'commercial-office' => 'From £19.50 per hour on contract',
+    'healthcare-carehome' => 'Custom quote',
+    'carpet-upholstery' => 'From £45 per room',
 ];
 
-$baseRate = $baseRates[$serviceType];
-
-$bedroomCharge = $bedrooms * 18;
-
-$bathroomCharge = $bathrooms * 12;
-
-/*
-|--------------------------------------------------------------------------
-| Add-on Pricing
-|--------------------------------------------------------------------------
-*/
-
-$addOnPrices = [
-    'oven' => 35,
-    'carpet' => 45,
-    'windows' => 25,
-    'fridge' => 20,
-];
-
-$addOnsTotal = 0;
-
-foreach ($addOns as $addOn) {
-    $addOnsTotal += $addOnPrices[$addOn];
-}
-
-/*
-|--------------------------------------------------------------------------
-| Subtotal
-|--------------------------------------------------------------------------
-*/
-
-$subtotal =
-    $baseRate
-    + $bedroomCharge
-    + $bathroomCharge
-    + $addOnsTotal;
-
-/*
-|--------------------------------------------------------------------------
-| Frequency Discount
-|--------------------------------------------------------------------------
-*/
-
-$discountRates = [
-    'one-off' => 0.00,
-    'weekly' => 0.15,
-    'fortnightly' => 0.10,
-    'monthly' => 0.05,
-];
-
-$discountRate = $discountRates[$frequency];
-
-$discountAmount = round(
-    $subtotal * $discountRate,
-    2
-);
-
-$finalEstimate = round(
-    $subtotal - $discountAmount,
-    2
-);
+$priceDisplay = $priceGuidance[$serviceType];
+$finalEstimate = 0.00;
+$baseRate = 0.00;
+$bedroomCharge = 0.00;
+$bathroomCharge = 0.00;
+$addOnsTotal = 0.00;
+$subtotal = 0.00;
+$discountRate = 0.00;
+$discountAmount = 0.00;
 
 /*
 |--------------------------------------------------------------------------
@@ -391,10 +356,7 @@ $finalEstimate = round(
 |--------------------------------------------------------------------------
 */
 
-$quoteId = 'QUOTE-' . random_int(
-    100000,
-    999999
-);
+$quoteId = generateSecureJobReference();
 
 /*
 |--------------------------------------------------------------------------
@@ -470,8 +432,12 @@ if ($hasCustomerDetails) {
         . "Bathrooms: {$bathrooms}\n"
         . "Service Type: {$serviceType}\n"
         . "Frequency: {$frequency}\n"
+        . "Price guidance: {$priceDisplay}\n"
+        . "Final quote: To be confirmed by OANK after reviewing the requested scope.\n"
         . "Preferred Days: {$bestDaysString}\n"
         . "Add-ons: {$addOnDescription}\n"
+        . "Living room/dining room: " . ($livingRoomDiningRoom ? 'Yes (+£25.00)' : 'No') . "\n"
+        . "Customer supplying cleaning materials/equipment: " . ($suppliesCleaningMaterials ? 'Yes (10% discount applies)' : 'No') . "\n"
         . "Notes: " . ($notes !== '' ? $notes : 'None');
 
     $dbSaved = saveSubmissionToDb([
@@ -484,6 +450,8 @@ if ($hasCustomerDetails) {
         'preferredDate' => $preferredDate,
         'message' => $quoteMessage,
         'quoteEstimate' => $finalEstimate,
+        'livingRoomDiningRoom' => $livingRoomDiningRoom,
+        'materialsDiscountRate' => $materialsDiscountRate,
         'status' => 'Pending',
     ]);
 
@@ -525,8 +493,7 @@ if ($hasCustomerDetails) {
     $adminSubject =
         'New OanK Quote Request [' .
         safeHeaderValue($quoteId) .
-        '] - £' .
-        number_format($finalEstimate, 2);
+        '] - Quote request';
 
     $adminBody = '';
 
@@ -564,6 +531,12 @@ if ($hasCustomerDetails) {
         "Bathrooms: {$bathrooms}\n";
 
     $adminBody .=
+        'Living room/dining room: ' . ($livingRoomDiningRoom ? 'Yes (+£25.00)' : 'No') . "\n";
+
+    $adminBody .=
+        'Customer supplying cleaning materials/equipment: ' . ($suppliesCleaningMaterials ? 'Yes (10% discount applies)' : 'No') . "\n";
+
+    $adminBody .=
         "Add-ons: " .
         ($addOnDescription ?? 'None') .
         "\n";
@@ -578,14 +551,8 @@ if ($hasCustomerDetails) {
         "Preferred Date: {$preferredDate}\n";
 
     $adminBody .=
-        "Estimated Price: £" .
-        number_format($finalEstimate, 2) .
-        "\n";
-
-    $adminBody .=
-        "Discount: " .
-        number_format($discountRate * 100, 0) .
-        "%\n";
+        "Price guidance: {$priceDisplay}\n" .
+        "Final quote: To be confirmed by OANK after reviewing the requested scope.\n";
 
     $adminBody .= "\nNotes:\n";
     $adminBody .=
@@ -664,9 +631,7 @@ if ($hasCustomerDetails) {
     $userHtml = buildUserConfirmationEmailHtml(
         $name,
         $quoteId,
-        $serviceType . ' (Est. £' .
-        number_format($finalEstimate, 2) .
-        ')',
+        $serviceType . ' (' . $priceDisplay . '; final quote to be confirmed)',
         $preferredDate
     );
 
@@ -704,21 +669,16 @@ if ($hasCustomerDetails) {
 
 $responseData = [
     'quoteId' => $quoteId,
+    'referenceNo' => $quoteId,
 
-    'estimatedPrice' => $finalEstimate,
+    'estimatedPrice' => null,
+    'priceDisplay' => $priceDisplay,
 
     'currency' => 'GBP',
 
     'breakdown' => [
-        'baseRate' => $baseRate,
-        'bedroomCharge' => $bedroomCharge,
-        'bathroomCharge' => $bathroomCharge,
-        'addOnsTotal' => $addOnsTotal,
-        'subtotal' => $subtotal,
-        'discountRate' => $discountRate,
-        'discountPercentage' => $discountRate * 100,
-        'discountAmount' => $discountAmount,
-        'finalEstimate' => $finalEstimate,
+        'priceGuidance' => $priceDisplay,
+        'finalQuoteConfirmed' => false,
     ],
 
     'propertyType' => $propertyType,
@@ -727,6 +687,10 @@ $responseData = [
     'serviceType' => $serviceType,
     'frequency' => $frequency,
     'addOns' => $addOns,
+    'livingRoomDiningRoom' => $livingRoomDiningRoom,
+    'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
+    'suppliesCleaningMaterials' => $suppliesCleaningMaterials,
+    'materialsDiscountRate' => $materialsDiscountRate,
 
     'submission' => [
         'submitted' => $hasCustomerDetails,
@@ -763,9 +727,7 @@ if ($hasCustomerDetails) {
 
     sendJsonResponse(
         true,
-        "Your estimated cleaning quote is £" .
-        number_format($finalEstimate, 2) .
-        ". Your request [{quoteId}] has been successfully delivered to our team. ",
+        "Your quote request [{$quoteId}] has been successfully delivered to our team. Price guidance: {$priceDisplay}. Our team will confirm the final quote after reviewing your requirements.",
         $responseData,
         200
     );
@@ -779,9 +741,7 @@ if ($hasCustomerDetails) {
 
 sendJsonResponse(
     true,
-    "Your estimated cleaning quote is £" .
-    number_format($finalEstimate, 2) .
-    ".",
+    "Price guidance: {$priceDisplay}. The final quote will be confirmed by OANK after reviewing your requirements.",
     $responseData,
     200
 );

@@ -48,7 +48,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 OANK Cleaning CIC • Paisley, Scotland
               </h3>
               <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                We do great cleaning for homes and workplaces. Our extra profits help fund free home cleans for people in need, and provide friendly job training for local workers.
+                We provide cleaning for homes and workplaces. Our community programmes include Home Reset, with free or subsidised cleaning support, and the Employment Pathway, supporting employment and job training.
               </p>
             </div>
           </div>
@@ -83,7 +83,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <div className="space-y-2.5 pt-2 text-xs">
               <div className="flex items-start gap-2.5 text-slate-300">
                 <MapPin className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
-                <span>9 Inchinnan Road, Paisley, PA3 2PJ</span>
+                <span>Serving the whole of Renfrewshire and Glasgow</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-300">
                 <Phone className="w-4 h-4 text-[#D4AF37] flex-shrink-0" />
@@ -188,7 +188,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <button onClick={() => handleNav('about')} className="hover:text-amber-300 transition-colors cursor-pointer">About Our Team</button>
               </li>
               <li>
-                <button onClick={() => handleNav('quote')} className="hover:text-amber-300 transition-colors cursor-pointer">Instant Price Check</button>
+                <button onClick={() => handleNav('track-job')} className="hover:text-amber-300 transition-colors cursor-pointer">Track Your Job</button>
+              </li>
+              <li>
+                <button onClick={() => handleNav('quote')} className="hover:text-amber-300 transition-colors cursor-pointer">Request a Quote</button>
               </li>
               <li>
                 <button onClick={() => handleNav('faqs')} className="hover:text-amber-300 transition-colors cursor-pointer">Questions & Answers</button>
@@ -203,16 +206,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="space-y-4">
             <h4 className="font-serif font-bold text-white text-base flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-              Our Clean Guarantee
+              Our Cleaning Approach
             </h4>
             
             <div className="bg-[#1B4332]/80 border border-emerald-800/80 rounded-xl p-3.5 space-y-2 text-xs">
               <div className="flex items-center gap-2 text-amber-300 font-semibold">
                 <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
-                <span>100% Deposit Back</span>
+                <span>End-of-Tenancy Cleaning</span>
               </div>
               <p className="text-[11px] text-slate-300 leading-relaxed">
-                If your landlord finds any dirty spot within 72 hours, we will come back and clean it again for free!
+                We agree the cleaning scope and property checklist with you before the booking.
               </p>
             </div>
 
@@ -237,8 +240,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Safety Rules
             </button>
             <span className="text-emerald-700">•</span>
-            <button onClick={() => handleNav('governance')} className="hover:text-amber-300 transition-colors cursor-pointer">
-              Privacy Notice
+            <button onClick={() => handleNav('privacy')} className="hover:text-amber-300 transition-colors cursor-pointer">
+              Privacy Policy
             </button>
           </div>
         </div>

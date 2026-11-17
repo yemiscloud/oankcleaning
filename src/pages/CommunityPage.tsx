@@ -20,13 +20,13 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto space-y-3 text-center">
           <div className="inline-flex items-center gap-2 bg-[#1B4332] px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300 border border-emerald-600/60 shadow-sm">
             <HeartHandshake className="w-4 h-4 text-[#D4AF37]" />
-            <span>Community Interest Company • Paisley, Scotland</span>
+            <span>Community Interest Company • Renfrewshire & Glasgow</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             Our Community Work & Heart
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-3xl mx-auto leading-relaxed">
-            We are a social business in Paisley. We do honest, high-quality cleaning for homes and workplaces. Any extra profit we make goes directly to helping local families with free home cleaning and paid job training!
+            We are a Community Interest Company providing cleaning for homes and workplaces across Renfrewshire and Glasgow. Our community work includes Home Reset, which offers free or subsidised cleaning support, and the Employment Pathway, which supports employment and job training.
           </p>
         </div>
       </section>
@@ -56,7 +56,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
             <div className="flex items-start gap-3 p-3.5 bg-amber-50 rounded-xl border border-amber-100">
               <CheckCircle2 className="w-4 h-4 text-amber-800 flex-shrink-0 mt-0.5" />
               <div>
-                <strong className="text-amber-900 block">2. Free Home Cleans (Home Reset)</strong>
+                <strong className="text-amber-900 block">2. Home Reset (Free or Subsidised Cleaning Support)</strong>
                 <span className="text-slate-600">We send kind cleaners to help people who have a hard time keeping their house tidy due to illness or age.</span>
               </div>
             </div>
@@ -64,8 +64,8 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
             <div className="flex items-start gap-3 p-3.5 bg-slate-100 rounded-xl border border-slate-200">
               <CheckCircle2 className="w-4 h-4 text-slate-800 flex-shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 block">3. Paid Job Training (Employment Pathway)</strong>
-                <span className="text-slate-600">We teach local people cleaning and safety skills and give them real, paid jobs with friendly team leaders.</span>
+                <strong className="text-slate-900 block">3. Employment & Job Training (Employment Pathway)</strong>
+                <span className="text-slate-600">We support local people through employment and job training opportunities connected with our cleaning work.</span>
               </div>
             </div>
           </div>
@@ -77,12 +77,12 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
               Our Community Promise
             </span>
             <h3 className="text-2xl font-serif font-bold text-white">
-              All Profits Stay in the Community
+              Our Community Interest
             </h3>
           </div>
 
           <p className="text-xs text-slate-200 leading-relaxed">
-            By UK law, our money is permanently locked for the community. We cannot give profits to private owners. Everything extra we earn is put back into helping Scottish families have clean homes and good jobs.
+            As a Community Interest Company, OANK operates for community benefit. Our active community programmes include Home Reset and the Employment Pathway.
           </p>
 
           <div className="space-y-2 text-xs">
@@ -100,21 +100,21 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
                 <span className="text-[#D4AF37]">•</span> Hours of support
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="text-[#D4AF37]">•</span> Workers trained
+                <span className="text-[#D4AF37]">•</span> Employment and training support
               </li>
             </ul>
           </div>
         </div>
       </section>
 
-      {/* Planned Community Projects */}
+      {/* Our Community Programmes */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <span className="text-amber-700 font-bold text-xs uppercase tracking-wider block">
-            Our Two Big Programs
+            Our Active Community Programmes
           </span>
           <h2 className="text-3xl font-serif font-bold text-[#0F382C]">
-            Home Reset & Job Training in Paisley
+            Home Reset & Employment Pathway
           </h2>
           <p className="text-xs text-slate-600">
             Here is how our two community programs help people live happier, healthier lives.
@@ -140,7 +140,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
               </div>
 
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Free home cleaning for people who find it hard to clean their house due to illness, old age, or tough times.
+                Free or subsidised cleaning support for people facing difficult circumstances. The level of support depends on individual needs and circumstances.
               </p>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
@@ -167,13 +167,13 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
                   What we do NOT do:
                 </span>
                 <p className="text-[11px] text-amber-800 leading-relaxed">
-                  We are only cleaners. We do <strong>not</strong> give medicines, nurse patients, or help with bathing.
+                  Home Reset provides cleaning support. Please contact our team to discuss the type of help needed and whether it falls within the programme.
                 </p>
               </div>
             </div>
 
             <div className="pt-4 border-t border-slate-100 text-xs text-slate-600">
-              <strong>How to join:</strong> Housing officers, doctors, and community groups can refer people to our team.
+              <strong>How to join:</strong> Contact our team to ask about current referral arrangements and whether Home Reset support is available.
             </div>
           </div>
 
@@ -195,7 +195,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
               </div>
 
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Real paid jobs and friendly job training for local people who want to work.
+                Employment and job training support for local people who want to develop skills and access work opportunities.
               </p>
 
               <div className="space-y-2">
@@ -207,7 +207,7 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
                   </div>
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#0F382C]" />
-                    <span>Safe use of soaps and mops</span>
+                    <span>Cleaning methods and equipment</span>
                   </div>
                   <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-[#0F382C]" />
@@ -229,12 +229,12 @@ export const CommunityPage: React.FC<CommunityPageProps> = ({ onNavigate }) => {
               </div>
 
               <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-slate-700 leading-relaxed">
-                Workers get <strong>paid cleaning work with supportive team leaders</strong>. They build real skills that open doors to permanent, full-time jobs!
+                The programme supports participants to develop skills and explore employment opportunities. Contact OANK for information about current opportunities.
               </div>
             </div>
 
             <div className="pt-4 border-t border-slate-100 text-xs text-slate-600">
-              <strong>Our Goal:</strong> Giving local workers confidence, money in their pocket, and a brighter future.
+              <strong>Our Goal:</strong> Supporting local people to develop skills and access employment opportunities.
             </div>
           </div>
         </div>

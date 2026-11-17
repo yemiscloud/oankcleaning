@@ -1,42 +1,36 @@
 <?php
 /**
- * Oank Cleaning - Dynamic XML Sitemap Generator
- * Enhances Google Search Console indexing & SEO
+ * XML sitemap for OANK Cleaning CIC.
+ * Keep this list aligned with the public routes and pre-rendered service pages.
  */
-
-require_once __DIR__ . '/cors.php';
-
 header('Content-Type: application/xml; charset=utf-8');
 
 $domain = 'https://oankcleaning.co.uk';
-$currentDate = date('Y-m-d');
-
-$urls = [
-    '' => ['priority' => '1.0', 'freq' => 'daily'],
-    '/services' => ['priority' => '0.9', 'freq' => 'weekly'],
-    '/about' => ['priority' => '0.8', 'freq' => 'monthly'],
-    '/ohkay-group' => ['priority' => '0.8', 'freq' => 'monthly'],
-    '/quote' => ['priority' => '0.9', 'freq' => 'weekly'],
-    '/faqs' => ['priority' => '0.7', 'freq' => 'monthly'],
-    '/contact' => ['priority' => '0.9', 'freq' => 'weekly'],
-    '/services/domestic-cleaning' => ['priority' => '0.8', 'freq' => 'weekly'],
-    '/services/deep-cleaning' => ['priority' => '0.8', 'freq' => 'weekly'],
-    '/services/end-of-tenancy' => ['priority' => '0.8', 'freq' => 'weekly'],
-    '/services/commercial-office' => ['priority' => '0.8', 'freq' => 'weekly'],
-    '/services/healthcare-cleaning' => ['priority' => '0.8', 'freq' => 'weekly'],
-    '/services/carpet-upholstery' => ['priority' => '0.8', 'freq' => 'weekly']
+$paths = [
+    '/',
+    '/services',
+    '/about',
+    '/contact',
+    '/privacy-policy',
+    '/quote',
+    '/faqs',
+    '/community',
+    '/governance',
+    '/services/domestic-cleaning',
+    '/services/deep-cleaning',
+    '/services/end-of-tenancy',
+    '/services/commercial-office',
+    '/services/healthcare-cleaning',
+    '/services/carpet-upholstery',
 ];
 
 echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
 
-foreach ($urls as $path => $meta) {
-    echo '  <url>' . PHP_EOL;
-    echo '    <loc>' . htmlspecialchars($domain . $path) . '</loc>' . PHP_EOL;
-    echo '    <lastmod>' . $currentDate . '</lastmod>' . PHP_EOL;
-    echo '    <changefreq>' . $meta['freq'] . '</changefreq>' . PHP_EOL;
-    echo '    <priority>' . $meta['priority'] . '</priority>' . PHP_EOL;
-    echo '  </url>' . PHP_EOL;
+foreach ($paths as $path) {
+    echo "  <url>" . PHP_EOL;
+    echo '    <loc>' . htmlspecialchars($domain . $path, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</loc>' . PHP_EOL;
+    echo "  </url>" . PHP_EOL;
 }
 
 echo '</urlset>' . PHP_EOL;

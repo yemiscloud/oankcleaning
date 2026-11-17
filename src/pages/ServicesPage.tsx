@@ -23,13 +23,13 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
       <section className="bg-[#0F382C] text-white py-14 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
         <div className="max-w-7xl mx-auto space-y-3 text-center">
           <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-            Paisley & Scotland Cleaning Services
+            Renfrewshire & Glasgow Cleaning Services
           </span>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             Our Simple Cleaning Services
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
-            From regular home cleaning to move-out cleans with our 100% deposit back guarantee. All our cleaners are friendly, insured, and police checked.
+            From regular home cleaning and deep cleans to end-of-tenancy, office, healthcare, and carpet cleaning. Serving Renfrewshire and Glasgow.
           </p>
         </div>
       </section>
@@ -78,7 +78,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
             Real Cleaning Results
           </span>
           <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#0F382C]">
-            See Our Work Across Scotland
+            See Our Cleaning Work
           </h2>
           <p className="text-xs text-slate-600">
             A quick peek at our cleaning in homes, offices, and move-out flats.
@@ -97,7 +97,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex items-end">
               <div>
                 <span className="text-amber-300 text-[10px] font-bold uppercase block">Home Clean</span>
-                <p className="text-white text-xs font-semibold">Friendly, Police-Checked Cleaners</p>
+                <p className="text-white text-xs font-semibold">Cleaning Services Across Renfrewshire & Glasgow</p>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 flex items-end">
               <div>
                 <span className="text-amber-300 text-[10px] font-bold uppercase block">Move Out Clean</span>
-                <p className="text-white text-xs font-semibold">100% Deposit Back Guarantee</p>
+                <p className="text-white text-xs font-semibold">End-of-Tenancy Cleaning</p>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
         <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
             <span className="text-[#0F382C] font-bold text-xs uppercase tracking-wider block">
-              100% Happy Guarantee
+              Cleaning Plans That Fit Your Needs
             </span>
             <h3 className="text-2xl font-serif font-bold text-[#0F382C]">
               Need a Custom Cleaning Plan for Your Home?

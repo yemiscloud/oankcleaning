@@ -26,7 +26,7 @@ TraceEnable Off
     Header always set Referrer-Policy "no-referrer"
 
     # Tightened Content Security Policy (CSP)
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://oankcleaning.co.uk; frame-ancestors 'none'; object-src 'none'; base-uri 'self';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https://*.google-analytics.com https://*.googletagmanager.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net https://www.facebook.com https://connect.facebook.net https://*.fbcdn.net; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://oankcleaning.co.uk https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net https://www.facebook.com https://connect.facebook.net; frame-src https://www.googletagmanager.com https://www.google.com https://td.doubleclick.net; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
 
     # Remove server technology fingerprints
     Header unset X-Powered-By
@@ -64,8 +64,12 @@ RewriteRule ^api/sitemap/?$ /api/sitemap.php [QSA,L]
 RewriteRule ^sitemap\.xml$ /api/sitemap.php [QSA,L]
 RewriteRule ^api/chat-log/?$ /api/chat_log.php [QSA,L]
 RewriteRule ^api/chat_log/?$ /api/chat_log.php [QSA,L]
+RewriteRule ^api/job-admin/?$ /api/job_admin.php [QSA,L]
+RewriteRule ^api/job-track/?$ /api/job_track.php [QSA,L]
 
 # ------------------------------------------------------------------------------
+DirectoryIndex index.html
+
 # SPA CLIENT-SIDE ROUTING
 # ------------------------------------------------------------------------------
 
@@ -76,6 +80,12 @@ RewriteRule ^ index.html [L]
 # ------------------------------------------------------------------------------
 # SECURITY FILE ACCESS
 # ------------------------------------------------------------------------------
+
+# Chat transcripts contain visitor messages, IP addresses and browser details.
+<Files "chat_history.php">
+    Require all denied
+</Files>
+
 
 Options -Indexes
 

@@ -29,7 +29,7 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
             Frequently Asked Questions
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
-            Find quick, easy answers about our cleaning, prices, police checks, and community work in Paisley and Glasgow.
+            Find answers about our cleaning services, prices, bookings and community programmes across Renfrewshire and Glasgow.
           </p>
         </div>
       </section>
@@ -40,7 +40,7 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
           <Search className="w-5 h-5 text-slate-400 absolute left-4 top-3.5" />
           <input
             type="text"
-            placeholder="Type a word (like prices, keys, cleaners, or deposit)..."
+            placeholder="Search questions about prices, bookings or services..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-12 pr-4 py-3 text-xs sm:text-sm border border-slate-300 rounded-2xl focus:ring-2 focus:ring-[#0F382C] focus:outline-none bg-white shadow-sm"
@@ -53,7 +53,7 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
         {filteredFaqs.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
             <p className="text-sm font-semibold text-slate-700">No matching questions found.</p>
-            <p className="text-xs text-slate-500">Call our friendly Paisley office for quick answers: +44 75 1091 1940</p>
+            <p className="text-xs text-slate-500">Call our team for quick answers: +44 77 3195 6727</p>
           </div>
         ) : (
           filteredFaqs.map((faq, idx) => {
@@ -100,11 +100,11 @@ export const FAQsPage: React.FC<FAQsPageProps> = ({ onNavigate }) => {
             Send Us a Note
           </button>
           <a
-            href="tel:+447510911940"
+            href="tel:+447731956727"
             className="bg-white text-[#0F382C] border border-[#0F382C] text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl flex items-center gap-2"
           >
             <Phone className="w-4 h-4 text-[#D4AF37]" />
-            <span>Call +44 75 1091 1940</span>
+            <span>Call +44 77 3195 6727</span>
           </a>
         </div>
       </section>

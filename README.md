@@ -188,3 +188,10 @@ The `.htaccess` file is pre-configured in `/public/.htaccess` and maps `/api/*` 
 - [ ] **Email Delivery Test**: Confirm admin notification email arrives via server `mail()` and customer confirmation email is delivered.
 - [ ] **AI Chat Knowledge Test**: Ensure the chat widget answers community questions accurately from `operation.md` and provides the fallback message for unverified inquiries.
 - [ ] **CORS Verification**: Open browser DevTools Console to verify no CORS errors occur when communicating with `/api/*`.
+
+
+## Job tracking and admin updates
+
+The project now includes a customer job tracker at `/track-job` and a restricted admin page at `/admin/jobs`. New enquiry and quote references use `OANK-` followed by 24 uppercase hexadecimal characters. Existing references are retained and remain available to administrators.
+
+Before deployment, back up the production database and run `migrations/2026-11-15-job-tracking.sql` once. The PHP host must be configured to send email to `info@oankcleaning.co.uk`; test OTP delivery before enabling the workflow. See `JOB-TRACKING-IMPLEMENTATION-NOTES.md` for deployment and security notes.

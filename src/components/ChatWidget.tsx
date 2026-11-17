@@ -39,12 +39,12 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
     {
       id: 'welcome-1',
       sender: 'bot',
-      text: `Hello! Welcome to OANK Cleaning. I am Clara, your friendly assistant.\n\nI can help you check cleaning prices, book a clean, or learn how we help our community with free home cleans and paid job training.\n\nHow can I help you today?`,
+      text: `Hello! Welcome to OANK Cleaning. I am Clara, your friendly assistant.\n\nI can help you check cleaning prices, book a clean, or learn about Home Reset (free or subsidised cleaning support) and our Employment Pathway.\n\nHow can I help you today?`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       actionButtons: [
-        { label: 'Check Instant Price', action: () => { onNavigate('quote'); setIsOpen(false); } },
+        { label: 'Request a Quote', action: () => { onNavigate('quote'); setIsOpen(false); } },
         { label: 'What is Home Reset?', action: () => handleSendPrompt('What is the OANK Home Reset?') },
-        { label: 'Paid Job Training', action: () => handleSendPrompt('How does the Employment Pathway work?') }
+        { label: 'Employment & Job Training', action: () => handleSendPrompt('How does the Employment Pathway work?') }
       ]
     }
   ]);
@@ -197,7 +197,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({ onNavigate }) => {
                 <p className="text-[10px] text-emerald-200 flex items-center gap-1">
                   <span>Clara</span>
                   <span>•</span>
-                  <span>Paisley HQ (PA3 2PJ)</span>
+                  <span>Renfrewshire and Glasgow</span>
                 </p>
               </div>
             </div>

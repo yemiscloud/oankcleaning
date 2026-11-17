@@ -133,7 +133,7 @@ $postcode = limitInput(
     getInputString(
         $input,
         'postcode',
-        'Paisley PA3 2PJ'
+        ''
     ),
     50
 );
@@ -233,10 +233,7 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 |--------------------------------------------------------------------------
 */
 
-$referenceNo = 'OANK-' . random_int(
-    100000,
-    999999
-);
+$referenceNo = generateSecureJobReference();
 
 /*
 |--------------------------------------------------------------------------

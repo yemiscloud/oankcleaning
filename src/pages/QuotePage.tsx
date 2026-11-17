@@ -13,13 +13,13 @@ export const QuotePage: React.FC<QuotePageProps> = () => {
       <section className="bg-[#0F382C] text-white py-14 px-4 sm:px-8 rounded-b-3xl border-b-4 border-[#D4AF37]">
         <div className="max-w-7xl mx-auto space-y-3 text-center">
           <span className="text-amber-300 font-bold text-xs uppercase tracking-wider block">
-            Fast Online Price Check
+            Request a Cleaning Quote
           </span>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
-            Check Your Cleaning Price Instantly
+            Request a Cleaning Quote
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
-            Find out how much your clean will cost in seconds! Clear prices, no hidden fees, and fast booking with our Paisley team.
+            Explore our starting prices and request a quote for the cleaning work you need. Our team can confirm the scope and price before you book.
           </p>
         </div>
       </section>

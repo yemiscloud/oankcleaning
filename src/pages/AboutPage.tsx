@@ -20,13 +20,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
         <div className="max-w-7xl mx-auto space-y-3 text-center">
           <div className="inline-flex items-center gap-2 bg-[#1B4332] px-4 py-1.5 rounded-full text-xs font-semibold text-amber-300 border border-emerald-600/60 shadow-sm">
             <HeartHandshake className="w-4 h-4 text-[#D4AF37]" />
-            <span>Friendly Community Interest Company • Paisley & Scotland</span>
+            <span>Community Interest Company • Renfrewshire & Glasgow</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-serif font-bold">
             About OANK Cleaning
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
-            We do great cleaning for homes and workplaces across Paisley and Glasgow. All extra profits fund free home cleans for people in need, and provide friendly job training for local workers.
+            We provide cleaning for homes and workplaces across Renfrewshire and Glasgow. We also deliver Home Reset, offering free or subsidised cleaning support, and our Employment Pathway, supporting employment and job training.
           </p>
         </div>
       </section>
@@ -44,17 +44,17 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             OANK Cleaning started with a simple, caring dream: provide top-notch cleaning while helping local people in our community.
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            We are an independent Community Interest Company. That means all our extra profits are locked by law to help local people, not private shareholders. We use that money for free home resets and paid job training!
+            We are a Community Interest Company with a social purpose. Alongside our cleaning services, we deliver community programmes that provide free or subsidised cleaning support and employment/job training opportunities.
           </p>
 
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-100 space-y-1">
-              <span className="font-serif font-bold text-2xl text-[#0F382C]">PA3 2PJ</span>
-              <span className="text-xs font-semibold text-slate-600 block">Paisley Office Address</span>
+              <span className="font-serif font-bold text-2xl text-[#0F382C]">Renfrewshire & Glasgow</span>
+              <span className="text-xs font-semibold text-slate-600 block">Our Service Area</span>
             </div>
             <div className="p-4 rounded-2xl bg-amber-50 border border-amber-100 space-y-1">
-              <span className="font-serif font-bold text-2xl text-amber-800">100%</span>
-              <span className="text-xs font-semibold text-slate-600 block">Oank-Checked Staff</span>
+              <span className="font-serif font-bold text-2xl text-amber-800">Care</span>
+              <span className="text-xs font-semibold text-slate-600 block">Customer-Focused Service</span>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#082019] via-transparent to-transparent flex items-end p-6">
               <div className="bg-[#0F382C]/90 text-white p-4 rounded-2xl border border-emerald-700/80 w-full text-xs">
                 <span className="font-bold text-amber-300 block">Community Help & Good Jobs</span>
-                <p className="text-slate-200">Extra profits go right back to free home cleaning and paid worker training across Scotland.</p>
+                <p className="text-slate-200">Our community work includes free or subsidised Home Reset support and employment/job training opportunities.</p>
               </div>
             </div>
           </div>
@@ -93,7 +93,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             />
             <div className="absolute top-4 right-4 w-16 h-16 rounded-full border-2 border-[#D4AF37] shadow-lg bg-[#0F382C] flex flex-col items-center justify-center text-center p-1 text-white">
               <ShieldCheck className="w-5 h-5 text-[#D4AF37]" />
-              <span className="text-[9px] font-bold text-amber-200 uppercase tracking-tighter">Vetted</span>
+              <span className="text-[9px] font-bold text-amber-200 uppercase tracking-tighter">Our Team</span>
             </div>
           </div>
         </div>
@@ -103,17 +103,14 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
             Our Cleaners
           </span>
           <h2 className="text-3xl font-serif font-bold text-[#0F382C]">
-            Friendly, Oank-Checked Cleaners
+            A Friendly, Respectful Cleaning Team
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Every cleaner on our team has a full Oank check and is insured. We teach each team member how to use safe cleaning soaps, clean mops, and treat your home with gentle care and respect.
+            Good cleaning starts with care and respect. We aim to treat every customer's home and workplace with attention and professionalism.
           </p>
           <div className="flex items-center gap-3 pt-2">
-            <div className="w-10 h-10 rounded-full bg-[#0F382C] text-[#D4AF37] flex items-center justify-center font-bold text-sm">
-              100%
-            </div>
             <p className="text-xs text-slate-700 font-semibold">
-              Background checked, uniformed, and friendly for complete peace of mind.
+              We discuss your cleaning requirements and agree the service before work begins.
             </p>
           </div>
         </div>
@@ -136,9 +133,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               <div className="w-12 h-12 rounded-2xl bg-[#0F382C] text-[#D4AF37] flex items-center justify-center">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="font-serif font-bold text-xl text-[#0F382C]">1. Oank Checks on All Staff</h3>
+              <h3 className="font-serif font-bold text-xl text-[#0F382C]">1. Care and Respect</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Every cleaner passes full Oank checks (Enhanced DBS and Disclosure Scotland) before ever visiting your home or office.
+                We aim to treat customers, their homes and workplaces with care, respect and consideration.
               </p>
             </div>
 
@@ -148,7 +145,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               </div>
               <h3 className="font-serif font-bold text-xl text-[#0F382C]">2. Helping Our Community</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                Extra profits fund our free Home Reset program for people who need extra help, and provide paid jobs for local workers.
+                Home Reset provides free or subsidised cleaning support for people facing difficult circumstances. Our Employment Pathway supports local people through employment and job training opportunities.
               </p>
             </div>
 
@@ -158,7 +155,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate }) => {
               </div>
               <h3 className="font-serif font-bold text-xl text-[#0F382C]">3. Safe, Eco Soaps</h3>
               <p className="text-xs text-slate-600 leading-relaxed">
-                We use safe, eco-friendly cleaning soaps that are gentle for children, pets, and the air you breathe.
+                We use safe, eco-friendly cleaning soaps that are gentle for children, pets, and the air you breathe
               </p>
             </div>
           </div>

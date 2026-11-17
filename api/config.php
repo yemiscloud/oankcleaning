@@ -3,8 +3,6 @@
  * OanK Cleaning
  * Global PHP Configuration
  *
- * Subsidiary of Ohkay Limited.
- *
  * Private environment file:
  * /home/oankxyju/.env_variables/oank.env
  */
@@ -341,7 +339,6 @@ oankLog(
 */
 
 define('COMPANY_NAME', 'OanK Cleaning');
-define('PARENT_GROUP', 'Ohkay Limited');
 define('COMPANY_DOMAIN', 'oankcleaning.co.uk');
 
 define(
@@ -615,7 +612,6 @@ if (!function_exists('sendJsonResponse')) {
             'message' => $message,
             'timestamp' => date('c'),
             'company' => COMPANY_NAME,
-            'parentGroup' => PARENT_GROUP,
             'data' => $data,
         ];
 
@@ -736,12 +732,6 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
             'UTF-8'
         );
 
-        $address = htmlspecialchars(
-            COMPANY_ADDRESS,
-            ENT_QUOTES,
-            'UTF-8'
-        );
-
         $year = date('Y');
 
         return <<<HTML
@@ -759,7 +749,7 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
                 {$companyName}
             </h1>
             <p style="color:#D4AF37;margin:6px 0 0;font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;">
-                A Proud Subsidiary of Ohkay Limited
+                Cleaning Services & Community Support
             </p>
         </div>
 
@@ -806,6 +796,18 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
                 </a>.
             </p>
 
+            <div style="margin:24px 0;padding:18px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+                <p style="margin:0 0 12px;font-size:14px;line-height:1.5;">
+                    You can check the latest status of your enquiry using your reference code:
+                </p>
+                <a href="https://oankcleaning.co.uk/track-job" style="display:inline-block;background:#0F382C;color:#ffffff;padding:12px 18px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:14px;">
+                    Track your job
+                </a>
+                <p style="margin:12px 0 0;font-size:12px;color:#64748b;">
+                    Keep your reference code private. Anyone with the code may be able to view the limited job details shown on the tracking page.
+                </p>
+            </div>
+
             <p style="font-size:14px;line-height:1.6;margin-top:25px;">
                 Warm regards,<br>
                 <strong>The {$companyName} Team</strong><br>
@@ -815,10 +817,10 @@ if (!function_exists('buildUserConfirmationEmailHtml')) {
 
         <div style="background:#f1f5f9;padding:20px;text-align:center;border-top:1px solid #e2e8f0;font-size:12px;color:#64748b;">
             <p style="margin:0 0 5px;">
-                {$companyName} &bull; {$address}
+                {$companyName} &bull; Renfrewshire and Glasgow
             </p>
             <p style="margin:0;">
-                &copy; {$year} Ohkay Limited. All rights reserved.
+                &copy; {$year} OANK Cleaning CIC. All rights reserved.
             </p>
         </div>
     </div>

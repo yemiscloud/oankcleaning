@@ -8,6 +8,9 @@ export type PageRoute =
   | 'quote' 
   | 'faqs' 
   | 'contact'
+  | 'privacy'
+  | 'track-job'
+  | 'admin-jobs'
   | 'ohkay-group';
 
 export interface CleaningService {
@@ -33,6 +36,8 @@ export interface QuoteFormData {
   serviceType: string;
   frequency: 'one-off' | 'weekly' | 'fortnightly' | 'monthly';
   addOns: string[];
+  livingRoomDiningRoom: boolean;
+  suppliesCleaningMaterials: boolean;
   bestDays: string[];
   postcode: string;
   preferredDate: string;

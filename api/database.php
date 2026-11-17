@@ -60,6 +60,13 @@ function getDbConnection(): PDO
     }
 }
 
+
+/** Generate a 96-bit random public job reference for new submissions. */
+function generateSecureJobReference(): string
+{
+    return 'OANK-' . strtoupper(bin2hex(random_bytes(12)));
+}
+
 /**
  * Insert enquiry into the existing enquiries table.
  *
@@ -93,6 +100,8 @@ function saveSubmissionToDb(array $data): bool
                 preferred_date,
                 message,
                 quote_estimate,
+                living_room_dining_room,
+                materials_discount_rate,
                 status
             )
             VALUES (
@@ -105,6 +114,8 @@ function saveSubmissionToDb(array $data): bool
                 :preferred_date,
                 :message,
                 :quote_estimate,
+                :living_room_dining_room,
+                :materials_discount_rate,
                 :status
             )
         ";
@@ -121,6 +132,8 @@ function saveSubmissionToDb(array $data): bool
             ':preferred_date' => $data['preferredDate'] ?? 'Flexible',
             ':message' => $data['message'] ?? '',
             ':quote_estimate' => $data['quoteEstimate'] ?? null,
+            ':living_room_dining_room' => !empty($data['livingRoomDiningRoom']) ? 1 : 0,
+            ':materials_discount_rate' => $data['materialsDiscountRate'] ?? 0,
             ':status' => $data['status'] ?? 'Pending',
         ]);
 
