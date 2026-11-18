@@ -1,4 +1,6 @@
 # OANK Cleaning CIC - Full-Stack Web Portal & Social Enterprise System
+
+> **Current project reference:** See [`MASTER-KNOWLEDGE-BASE.md`](./MASTER-KNOWLEDGE-BASE.md) for the current production architecture, tracking/consent decisions, CSP baseline, deployment workflow and known verification gaps. Where older sections in this README conflict with that document or the current source code, review and update the older instructions before following them.
 > **Legal Form:** Standalone Community Interest Company (CIC)  
 > **HQ Location:** Paisley PA3 2PJ, Renfrewshire, Scotland  
 > **Official Website:** [oankcleaning.co.uk](https://oankcleaning.co.uk, https://www.oankcleaning.co.uk)

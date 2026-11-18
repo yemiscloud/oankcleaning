@@ -6,10 +6,10 @@ Date: 17 November 2026
 
 ### `index.html`
 
-- Added the Google Consent Mode v2 default state in the document head, before the GTM loader.
-- Set `analytics_storage`, `ad_storage`, `ad_user_data`, and `ad_personalization` to `denied` by default.
+- Added a synchronous same-origin bootstrap script in the document head. It sets Google Consent Mode v2 defaults before requesting GTM.
+- Set `analytics_storage`, `ad_storage`, `ad_user_data`, `ad_personalization`, and `personalization_storage` to `denied` by default.
 - Set necessary functionality/security storage to `granted`; personalization storage remains denied.
-- Installed GTM container `GTM-MHHNSVRF` directly in the page head.
+- Installed GTM container `GTM-MHHNSVRF` with its external script directly in `index.html`, after the synchronous same-origin consent-default script.
 - Deliberately omitted the GTM `noscript` iframe fallback because it cannot reliably honour the JavaScript cookie preference and could bypass the consent controls.
 
 ### `src/components/CookieConsent.tsx`
@@ -39,3 +39,13 @@ Detailed sample tags and test steps are in `GOOGLE-TRACKING-SETUP.md`. GTM accou
 - The GTM container has not been edited or published from this project delivery.
 - The website has not been deployed.
 - Live browser/network, Tag Assistant, GA4 DebugView and Meta Events Manager tests remain to be completed after GTM configuration and deployment.
+
+
+## CSP compatibility hardening
+
+- Replaced inline Consent Mode v2 and GTM bootstrap blocks in `index.html` with a synchronous same-origin `/js/oank-tracking-bootstrap.js` for consent defaults, followed by the direct external GTM script in `index.html`.
+- The external bootstrap sets all Consent Mode v2 defaults and queues the GTM start event before the direct GTM script in `index.html` loads `GTM-MHHNSVRF`.
+- Meta Pixel GTM tags now use same-origin external loader files: `oank-meta-pixel-base.js`, `oank-meta-pixel-lead.js`, and `oank-meta-pixel-revoke.js`. GTM Custom HTML must contain only a script `src` reference to these files, not inline JavaScript.
+- The CSP deliberately does not allow `'unsafe-inline'` or `'unsafe-eval'` for scripts.
+
+- The chat typing indicator's three inline animation-delay styles were replaced with CSS classes so the CSP can block inline style attributes too.

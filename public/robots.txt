@@ -1,6 +1,38 @@
+# ==================================================
+# OANK CLEANING CIC
+# Website: https://oankcleaning.co.uk/
+# Search Engine & AI Crawler Access Policy
+# ==================================================
+
 User-agent: *
 Allow: /
+
+# Restricted application and administrative areas
 Disallow: /api/
 Disallow: /admin/
+Disallow: /private/
 
+# AI crawler access
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# Official XML Sitemap
 Sitemap: https://oankcleaning.co.uk/sitemap.xml

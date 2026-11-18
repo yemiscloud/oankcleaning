@@ -26,6 +26,10 @@ header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-i
 $allowedOrigins = [
     'https://oankcleaning.co.uk',
     'https://www.oankcleaning.co.uk',
+    'https://facebook.com',
+    'https://connect.facebook.net',
+    'https://graph.facebook.com',
+    'https://*.fbcdn.net',
 
     // Development
     'http://localhost:3000',

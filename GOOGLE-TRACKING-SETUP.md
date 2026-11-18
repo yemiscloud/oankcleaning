@@ -12,7 +12,7 @@ Do not put the Meta Pixel base-code snippet in `index.html`, `CookieConsent.tsx`
 
 ## Consent Mode v2 behaviour
 
-The GTM bootstrap is in the document head in `index.html`. Before the GTM script is requested, the page initialises `dataLayer` and sets these defaults:
+The synchronous same-origin `/js/oank-tracking-bootstrap.js` runs first in the document head and sets the defaults. The external GTM script (`https://www.googletagmanager.com/gtm.js?id=GTM-MHHNSVRF`) is then loaded directly by `index.html`:
 
 - `analytics_storage`: denied
 - `ad_storage`: denied
@@ -31,73 +31,40 @@ Create the following tags in container `GTM-MHHNSVRF`. Publish the container aft
 
 ### 1. Meta Pixel base tag
 
-- Tag type: Custom HTML (or a trusted Meta Pixel template if your GTM workspace provides one).
+- Tag type: Custom HTML containing only an external same-origin script reference:
+  ```html
+  <script src="/js/oank-meta-pixel-base.js"></script>
+  ```
 - Trigger: Custom Event, event name `oank_consent_updated`, with condition `marketing_consent` equals `true`.
 - Consent settings: require additional consent `ad_storage`.
-- Pixel ID: `1801963148593783`.
-- Initialise the pixel once, then send one `PageView`. Guard initialisation so later consent updates do not initialise it or send duplicate PageViews.
-- On a later consent withdrawal, the revoke tag below must revoke the existing pixel consent.
+- Pixel ID: `1801963148593783` (already configured in the first-party loader).
+- The loader initialises the Pixel once, grants consent, and sends one PageView per page load. Repeated consent updates do not create duplicate initialisations or PageViews.
 
-Example Custom HTML for the base tag (use only in GTM, not in the site source):
-
-```html
-<script>
-(function() {
-  if (typeof window.fbq !== 'function') {
-    !function(f,b,e,v,n,t,s) {
-      if (f.fbq) return; n=f.fbq=function() {
-        n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments);
-      };
-      if (!f._fbq) f._fbq=n; n.push=n; n.loaded=true; n.version='2.0'; n.queue=[];
-      t=b.createElement(e); t.async=true; t.src=v;
-      s=b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t,s);
-    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-  }
-  if (!window.__oankMetaPixelInitialised) {
-    window.fbq('init','1801963148593783');
-    window.fbq('track','PageView');
-    window.__oankMetaPixelInitialised=true;
-  }
-  window.fbq('consent','grant');
-})();
-</script>
-```
-
-If your GTM Custom HTML tag is checked by a strict Content Security Policy, confirm the deployed policy permits GTM and Meta endpoints. The project `.htaccess` policies already list the required Google and Meta hosts; the hosting/CDN may apply additional headers.
+Do not paste the standard inline Meta Pixel bootstrap into a Custom HTML tag. The production CSP intentionally blocks inline JavaScript. The same-origin external loader is permitted by `script-src 'self'` and then loads `fbevents.js` from the explicitly allowed Meta host.
 
 ### 2. Meta Pixel consent-revocation tag
 
-- Tag type: Custom HTML.
+- Tag type: Custom HTML containing only:
+  ```html
+  <script src="/js/oank-meta-pixel-revoke.js"></script>
+  ```
 - Trigger: Custom Event `oank_consent_updated`, with condition `marketing_consent` equals `false`.
-- This tag must be allowed to run for the consent-update event even when `ad_storage` is denied, because its job is to revoke permission. Do not give it permission to send marketing events.
-- Code:
-
-```html
-<script>
-if (typeof window.fbq === 'function') {
-  window.fbq('consent','revoke');
-}
-</script>
-```
+- Do not require `ad_storage` for this revocation tag: it must be allowed to run when consent is withdrawn.
+- The local script calls `fbq('consent', 'revoke')` when the Pixel is already present. The website also clears accessible `_fbp` / `_fbc` cookies when Marketing consent is off.
 
 ### 3. Meta Lead event tag
 
-- Tag type: Custom HTML (or Meta template event tag).
+- Tag type: Custom HTML containing only:
+  ```html
+  <script src="/js/oank-meta-pixel-lead.js"></script>
+  ```
 - Trigger: Custom Event `oank_lead_submitted`.
 - Consent settings: require additional consent `ad_storage`.
-- Event: `Lead`.
+- The local script sends the `Lead` event only when `window.fbq` is available.
 - Fire once per lead event. Do not add names, email addresses, phone numbers, addresses, or other personal information to the event.
 - The site only pushes this event after the server confirms a contact enquiry or quote request and only when Marketing consent is currently granted.
 
-Example event code:
-
-```html
-<script>
-if (typeof window.fbq === 'function') {
-  window.fbq('track','Lead');
-}
-</script>
-```
+All three GTM Custom HTML tags must contain only the external `<script src="..."></script>` reference shown above. Do not put inline JavaScript into GTM Custom HTML because the CSP blocks it.
 
 ## Google Analytics and Google Ads
 
@@ -118,3 +85,13 @@ if (typeof window.fbq === 'function') {
 9. Check Tag Assistant, GA4 DebugView, Meta Events Manager Test Events, browser network requests, and the live response CSP.
 
 GTM loading is not proof that optional tracking is permitted. Every optional tag must enforce the relevant consent state.
+
+
+## Content Security Policy compatibility
+
+- The site loads Consent Mode defaults from `/js/oank-tracking-bootstrap.js`, synchronously in the document head, then loads the GTM script directly from `index.html`.
+- `script-src` does not include `'unsafe-inline'` or `'unsafe-eval'`.
+- GTM Meta tags must load the same-origin external files under `/js/`; those files load the Meta library from `https://connect.facebook.net`.
+- Do not use inline Custom HTML snippets, `eval`, or tag templates that require unsafe inline script execution.
+- The policy blocks inline style attributes (`style-src-attr 'none'`) and inline script attributes (`script-src-attr 'none'`). The chat typing animation now uses CSS classes.
+- Both root and `public/.htaccess` carry the same header policy. Verify which file is active at the hosting document root and check the actual response headers after deployment.

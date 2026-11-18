@@ -27,7 +27,7 @@ This delivery contains the complete updated OANK Cleaning website project, not j
 - Kept Google Ads conversion ID and label as placeholders because the correct conversion details have not yet been provided.
 - Updated `GOOGLE-TRACKING-SETUP.md` with GTM tag setup instructions, consent requirements and test cases.
 - Added `GTM-INSTALLATION-UPDATE-NOTES.md`.
-- Existing root and public `.htaccess` CSP directives already include the required Google Tag Manager and Meta endpoints; live host/CDN headers still need verification.
+- Hardened both root and public `.htaccess` CSP policies. Inline scripts and inline event handlers are blocked; Consent Mode defaults and Meta Pixel code use same-origin external JavaScript files, while the GTM container script is loaded directly from `index.html`. Live host/CDN headers still need verification.
 
 ## Required GTM workspace configuration
 
@@ -54,3 +54,12 @@ The marketer's original ZIP was reviewed, but its files were not blindly copied 
 - The GTM container ID is installed in source. The Google Ads conversion ID and label remain placeholders. Meta tags still need to be created and published in the GTM workspace before live tracking can be verified.
 
 This is a source-code delivery. It does not deploy changes to the live website.
+
+
+## CSP hardening included
+
+- Updated both `.htaccess` files with the stricter CSP and aligned `X-Frame-Options: DENY` with `frame-ancestors 'none'`.
+- Removed the inline font `onload` handler, moved Consent Mode v2 defaults into a same-origin external script, and loaded GTM directly as an external script from `index.html`.
+- Added first-party external Meta Pixel loader, Lead and revoke scripts for GTM Custom HTML tags that contain only external script references.
+- Added `CSP-HARDENING-UPDATE-NOTES.md` with the policy changes and deployment test checklist.
+- The CSP does not allow `'unsafe-inline'` or `'unsafe-eval'` in any directive. Inline style attributes are also blocked; the chat typing animation delays were moved into CSS classes.
