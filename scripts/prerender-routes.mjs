@@ -5,11 +5,43 @@ const dist = path.resolve('dist');
 const indexPath = path.join(dist, 'index.html');
 if (!fs.existsSync(indexPath)) throw new Error('Vite build output dist/index.html was not found.');
 const template = fs.readFileSync(indexPath, 'utf8');
+
+// Fail-safe: Vite normally copies public/ into dist/. Explicitly verify and
+// restore the consent/tracking scripts before prerendering so a successful
+// build can never silently omit a script referenced by index.html or GTM.
+const trackingAssets = [
+  'js/oank-tracking-bootstrap.js',
+  'js/oank-meta-pixel-base.js',
+  'js/oank-meta-pixel-lead.js',
+  'js/oank-meta-pixel-revoke.js',
+];
+for (const asset of trackingAssets) {
+  const source = path.resolve('public', asset);
+  const destination = path.join(dist, asset);
+  if (!fs.existsSync(source)) {
+    throw new Error(`Required public tracking asset is missing: ${source}`);
+  }
+  fs.mkdirSync(path.dirname(destination), { recursive: true });
+  fs.copyFileSync(source, destination);
+  if (!fs.existsSync(destination) || fs.statSync(destination).size === 0) {
+    throw new Error(`Tracking asset was not copied into the production build: ${destination}`);
+  }
+}
 const privacyPolicyBody = fs.readFileSync(path.resolve('scripts/privacy-policy-prerender.html'), 'utf8');
 const scripts = [...template.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"[^>]*><\/script>/g)].map(m => m[0]);
 const styles = [...template.matchAll(/<link[^>]+rel="stylesheet"[^>]+>/g)].map(m => m[0]);
 const scriptTags = scripts.join('\n');
 const styleTags = styles.join('\n');
+
+// Keep consent defaults and the directly-installed GTM container on every
+// prerendered route, not only the root index.html. The bootstrap must remain
+// before GTM so Consent Mode v2 defaults enter dataLayer before GTM executes.
+const consentBootstrapTag = template.match(/<script src="\/js\/oank-tracking-bootstrap\.js"><\/script>/)?.[0];
+const gtmContainerTag = template.match(/<script async src="https:\/\/www\.googletagmanager\.com\/gtm\.js\?id=GTM-MHHNSVRF"><\/script>/)?.[0];
+if (!consentBootstrapTag || !gtmContainerTag) {
+  throw new Error('Consent bootstrap or GTM container script is missing from index.html. Refusing to generate routes without tracking consent initialization.');
+}
+const trackingHeadScripts = `${consentBootstrapTag}\n${gtmContainerTag}`;
 
 const services = [
   { slug: 'domestic-cleaning', title: 'Regular Home Cleaning', price: 'From £18.50 per hour', description: 'Regular home cleaning for customers who want help keeping their homes tidy. The existing service information describes dusting, vacuuming, mopping, kitchen cleaning and bathroom cleaning.' },
@@ -107,6 +139,7 @@ for (const page of pages) {
 <meta property="og:description" content="${page.description}">
 <meta property="og:url" content="${page.canonical}">
 ${styleTags}
+${trackingHeadScripts}
 </head>
 <body>
 <div id="root">${page.body}</div>

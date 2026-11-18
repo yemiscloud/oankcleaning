@@ -7,6 +7,9 @@ export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
 
+    // Explicitly publish public/ assets at the root of dist/.
+    publicDir: path.resolve(__dirname, 'public'),
+
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

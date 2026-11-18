@@ -1,108 +1,194 @@
+
 # ==============================================================================
-# OANK Cleaning CIC — Apache production security and routing
-# Keep this file identical to public/.htaccess (Vite copies the public version
-# into dist/ for deployment). Requires Apache 2.4, mod_rewrite, mod_headers.
+# OANK Cleaning CIC — Production Apache Configuration
+# Frontend: React / Vite / index.html
+# Backend: PHP API endpoints
+# Requires Apache 2.4, mod_rewrite, mod_headers
+# Optional: mod_deflate, mod_expires
+#
+# Keep root .htaccess and public/.htaccess IDENTICAL.
+# Vite copies public/.htaccess into dist/.
 # ==============================================================================
 
 Options -Indexes
 
 # ------------------------------------------------------------------------------
-# Security response headers
+# 1. SECURITY HEADERS
 # ------------------------------------------------------------------------------
+
 <IfModule mod_headers.c>
+
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "DENY"
-    # HSTS is limited to this host until every subdomain is confirmed HTTPS-only.
     Header always set Strict-Transport-Security "max-age=31536000"
     Header always set Referrer-Policy "no-referrer"
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
     Header always set X-Permitted-Cross-Domain-Policies "none"
-    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' 'sha256-SRPAR7x8qqZrhrNe2T8ULWNuk+d16RlPluXr9pwPL0U=' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-elem 'self' 'sha256-SRPAR7x8qqZrhrNe2T8ULWNuk+d16RlPluXr9pwPL0U=' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-elem 'self' https://fonts.googleapis.com; style-src-attr 'none'; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://connect.facebook.net https://*.fbcdn.net; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://ad.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://connect.facebook.net; frame-src https://www.googletagmanager.com https://www.google.com https://td.doubleclick.net; manifest-src 'self'; media-src 'self'; worker-src 'self'; upgrade-insecure-requests"
+
     Header always unset X-Powered-By
+
+    # Content Security Policy
+    # No unsafe-inline or unsafe-eval for JavaScript.
+    # JSON-LD does not require a script hash.
+    # Verify all third-party GTM tags against this policy.
+
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-elem 'self' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-elem 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://*.fbcdn.net; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://ad.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://*.facebook.com https://connect.facebook.net; frame-src https://www.googletagmanager.com https://www.google.com https://td.doubleclick.net; manifest-src 'self'; media-src 'self'; worker-src 'self'; upgrade-insecure-requests"
+
 </IfModule>
 
+
 # ------------------------------------------------------------------------------
-# Allow only methods used by this site and its form/API endpoints.
+# 2. HTTP METHOD RESTRICTIONS
 # ------------------------------------------------------------------------------
+
 <LimitExcept GET POST HEAD OPTIONS>
     Require all denied
 </LimitExcept>
 
+
 # ------------------------------------------------------------------------------
-# Rewrite and application routing — index.html is the only document entrypoint.
+# 3. URL REWRITING AND APPLICATION ROUTING
 # ------------------------------------------------------------------------------
+
 <IfModule mod_rewrite.c>
+
     RewriteEngine On
 
-    # Preserve bearer tokens for PHP endpoints when supplied by clients.
+    # Preserve Authorization headers for PHP endpoints.
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Deny direct access to the sitemap generator; expose it only as /sitemap.xml.
+
+    # Deny direct access to the internal sitemap generator.
     RewriteCond %{THE_REQUEST} \s/+api/sitemap\.php(?:[?\s]) [NC]
     RewriteRule ^api/sitemap\.php$ - [F,L]
+
 
     # Canonical public API routes.
     RewriteRule ^api/contact/?$ api/contact.php [QSA,L]
     RewriteRule ^api/quote/?$ api/quote.php [QSA,L]
     RewriteRule ^api/config/?$ api/config.php [QSA,L]
-    RewriteRule ^sitemap\.xml$ api/sitemap.php [QSA,L]
     RewriteRule ^api/chat-log/?$ api/chat_log.php [QSA,L]
     RewriteRule ^api/job-admin/?$ api/job_admin.php [QSA,L]
     RewriteRule ^api/job-track/?$ api/job_track.php [QSA,L]
 
-    # Unknown/missing API paths must not fall through to the React HTML shell.
+    # Public sitemap.
+    RewriteRule ^sitemap\.xml$ api/sitemap.php [QSA,L]
+
+
+    # Unknown API routes must never load the React application.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^api(?:/|$) - [R=404,L]
 
-    # Deny repository metadata and hidden files, while allowing ACME well-known paths.
+
+    # Block hidden files and repository metadata.
+    # Permit .well-known for legitimate verification/ACME use.
     RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L,NC]
 
-    # React routes resolve through index.html; real files and directories pass through.
+
+    # Missing static files must return genuine 404 responses.
+    # This prevents missing JS files returning index.html as text/html.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule \.(?:js|mjs|cjs|css|map|json|webmanifest|png|jpe?g|gif|webp|avif|svg|ico|woff2?|ttf|otf|eot|pdf|xml|txt|mp4|webm)$ - [R=404,L,NC]
+
+
+    # React/Vite frontend fallback.
+    # Real files and directories are served normally.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.html [L]
+
 </IfModule>
+
+
+# ------------------------------------------------------------------------------
+# 4. FRONTEND ENTRY POINT
+# ------------------------------------------------------------------------------
 
 DirectoryIndex index.html
 
+
 # ------------------------------------------------------------------------------
-# Protect private chat transcripts and hidden environment/repository files.
+# 5. PROTECT PRIVATE FILES
 # ------------------------------------------------------------------------------
+
 <FilesMatch "^(?:chat_history\.php|\.env(?:\..*)?|\.gitignore|\.htaccess|\.htpasswd)$">
     Require all denied
 </FilesMatch>
 
-# ------------------------------------------------------------------------------
-# Compression
-# ------------------------------------------------------------------------------
-<IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css
-    AddOutputFilterByType DEFLATE application/xml application/xhtml+xml
-    AddOutputFilterByType DEFLATE application/rss+xml application/javascript
-    AddOutputFilterByType DEFLATE application/json image/svg+xml
-</IfModule>
 
 # ------------------------------------------------------------------------------
-# Browser caching — avoid long-lived caching of HTML and API responses.
+# 6. COMPRESSION
 # ------------------------------------------------------------------------------
+
+<IfModule mod_deflate.c>
+
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/json
+
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+</IfModule>
+
+
+# ------------------------------------------------------------------------------
+# 7. BROWSER CACHE CONTROL
+# ------------------------------------------------------------------------------
+
 <IfModule mod_expires.c>
+
     ExpiresActive On
+
+    # HTML and JSON should be revalidated.
     ExpiresByType text/html "access plus 0 seconds"
     ExpiresByType application/json "access plus 0 seconds"
-    # Non-fingerprinted public scripts (including consent bootstrap) must refresh.
+
+    # Ordinary CSS and JavaScript.
     ExpiresByType text/css "access plus 1 day"
     ExpiresByType application/javascript "access plus 1 day"
+
+    # Images and other static media.
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+
 </IfModule>
 
-# Vite fingerprinted assets are immutable; public hand-written scripts are not.
+
+# ------------------------------------------------------------------------------
+# 8. EXPLICIT CACHE POLICIES
+# ------------------------------------------------------------------------------
+
 <IfModule mod_headers.c>
-    <FilesMatch "\.[a-f0-9]{8,}\.(?:js|css)$">
+
+    # HTML and JSON: always revalidate.
+    <FilesMatch "\.(?:html|json)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+
+    # Consent defaults should be revalidated when changed.
+    <FilesMatch "^oank-tracking-bootstrap\.js$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Vite fingerprinted JavaScript and CSS.
+    <FilesMatch "-[a-f0-9]{8,}\.(?:js|css)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
+
 </IfModule>
+
+
+# ==============================================================================
+# END OANK PRODUCTION CONFIGURATION
+# ==============================================================================
