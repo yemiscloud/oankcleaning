@@ -253,6 +253,7 @@ $dbSaved = saveSubmissionToDb([
     'service' => $service,
     'postcode' => $postcode,
     'preferredDate' => $preferredDate,
+    'preferredDays' => $preferredDays !== '' ? $preferredDays : null,
     'message' => $dbMessage,
     'quoteEstimate' => $quoteEstimate,
     'status' => 'Pending',
@@ -271,7 +272,7 @@ $dbSaved = saveSubmissionToDb([
 if (!$dbSaved) {
 
     error_log(
-        "OanK Cleaning contact enquiry could not be saved to database. Attempting email fallback. "
+        "OanK Cleaning contact enquiry could not be saved, Attempting email fallback. "
         . "Reference: {$referenceNo}"
     );
 

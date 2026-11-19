@@ -87,6 +87,7 @@ const initialFormData: QuoteFormData = {
   bathrooms: 1,
   serviceType: 'domestic-regular',
   frequency: 'one-off',
+  frequencyCount: 4,
   addOns: [],
   livingRoomDiningRoom: false,
   suppliesCleaningMaterials: false,
@@ -113,8 +114,7 @@ export const QuoteCalculator: React.FC = () => {
   const [feedback, setFeedback] = useState<Feedback | null>(null);
 
   // Calculate the estimate whenever a selection changes.
-  // Existing pricing rules are retained.
-  const estimatedPrice = useMemo(() => {
+  const priceCalculation = useMemo(() => {
     const basePrices: Record<string, number> = {
       'domestic-regular': 45,
       'deep-cleaning': 85,
@@ -161,8 +161,39 @@ export const QuoteCalculator: React.FC = () => {
       total *= 0.9;
     }
 
-    return Math.round((total + Number.EPSILON) * 100) / 100;
+    const pricePerVisit = Math.round((total + Number.EPSILON) * 100) / 100;
+    const numberOfTimes = formData.frequency === 'one-off' ? 1 : (formData.frequencyCount || 4);
+    const totalPrice = Math.round((pricePerVisit * numberOfTimes + Number.EPSILON) * 100) / 100;
+
+    // Calculate undiscounted total
+    let undiscountedTotal =
+      (basePrices[formData.serviceType] ?? 45) +
+      formData.bedrooms * 18 +
+      formData.bathrooms * 12;
+
+    undiscountedTotal += formData.addOns.reduce(
+      (sum, addon) => sum + (addOnPrices[addon] ?? 0),
+      0
+    );
+
+    if (formData.livingRoomDiningRoom) {
+      undiscountedTotal += 25;
+    }
+
+    const originalPerVisit = Math.round((undiscountedTotal + Number.EPSILON) * 100) / 100;
+    const originalTotal = Math.round((originalPerVisit * numberOfTimes + Number.EPSILON) * 100) / 100;
+    const savings = Math.max(0, Math.round((originalTotal - totalPrice + Number.EPSILON) * 100) / 100);
+
+    return {
+      pricePerVisit,
+      numberOfTimes,
+      totalPrice,
+      originalTotal,
+      savings,
+    };
   }, [formData]);
+
+  const estimatedPrice = priceCalculation.totalPrice;
 
   const updateField = <K extends keyof QuoteFormData>(
     field: K,
@@ -257,6 +288,11 @@ export const QuoteCalculator: React.FC = () => {
         },
         body: JSON.stringify({
           ...formData,
+          frequencyCount: priceCalculation.numberOfTimes,
+          estimatedPrice: priceCalculation.totalPrice,
+          originalTotal: priceCalculation.originalTotal,
+          savings: priceCalculation.savings,
+          pricePerVisit: priceCalculation.pricePerVisit,
           name,
           email,
           phone,
@@ -391,22 +427,24 @@ export const QuoteCalculator: React.FC = () => {
 
           {/* SINGLE PRICE DISPLAY */}
           <div
-            className="w-full rounded-2xl border border-emerald-700 bg-[#1B4332] p-5 sm:w-64"
+            className="w-full rounded-2xl border border-emerald-700 bg-[#1B4332] p-5 sm:w-72"
             aria-live="polite"
             aria-atomic="true"
           >
             <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
-              Your Estimated Total
+              {formData.frequency === 'one-off' ? 'Your estimated total' : 'Total price to pay'}
             </p>
 
             <div className="mt-2 flex items-baseline gap-1">
-              <span className="text-4xl font-bold tracking-tight">
-                £{estimatedPrice.toFixed(2)}
+              <span className="text-4xl font-bold tracking-tight text-white">
+                £{priceCalculation.totalPrice.toFixed(2)}
               </span>
             </div>
 
             <p className="mt-2 text-xs leading-relaxed text-emerald-100">
-              Based on your selected services and discounts.
+              {formData.frequency === 'one-off'
+                ? 'Based on your selected services and discounts.'
+                : `£${priceCalculation.pricePerVisit.toFixed(2)} per visit × ${priceCalculation.numberOfTimes} ${formData.frequency} visits.`}
             </p>
           </div>
         </div>
@@ -619,6 +657,36 @@ export const QuoteCalculator: React.FC = () => {
                 );
               })}
             </div>
+
+            {formData.frequency !== 'one-off' && (
+              <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4">
+                <label className="block text-xs font-bold text-[#0F382C] mb-2">
+                  Number of {formData.frequency === 'weekly' ? 'weeks / visits' : formData.frequency === 'fortnightly' ? 'bi-weekly visits' : 'monthly visits'}
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {[2, 4, 6, 8, 12, 24, 52].map((count) => {
+                    const selected = (formData.frequencyCount || 4) === count;
+                    return (
+                      <button
+                        key={count}
+                        type="button"
+                        onClick={() => updateField('frequencyCount', count)}
+                        className={`rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                          selected
+                            ? 'border-[#0F382C] bg-[#0F382C] text-white'
+                            : 'border-slate-300 bg-white text-slate-700 hover:border-slate-400'
+                        }`}
+                      >
+                        {count} {count === 1 ? 'visit' : 'visits'}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-[11px] text-slate-600">
+                  Select how many scheduled times you want. The total price to pay is calculated automatically.
+                </p>
+              </div>
+            )}
           </fieldset>
 
           <fieldset>
@@ -1008,21 +1076,47 @@ export const QuoteCalculator: React.FC = () => {
         </p>
 
         {/* FINAL ESTIMATE SUMMARY */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-xs font-semibold text-slate-600">
+        <div className="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              {priceCalculation.originalTotal > priceCalculation.totalPrice && (
+                <p
+                  className="text-xs font-semibold text-slate-400 line-through tabular-nums"
+                  aria-label={`Standard price before discount £${priceCalculation.originalTotal.toFixed(2)}`}
+                >
+                  £{priceCalculation.originalTotal.toFixed(2)}
+                </p>
+              )}
+
+              <p className="mt-0.5 text-xs font-bold uppercase tracking-wider text-slate-600">
                 Your estimated total
               </p>
-              <p className="mt-1 text-2xl font-bold text-[#0F382C]">
-                £{estimatedPrice.toFixed(2)}
-              </p>
+
+              <div className="mt-1 flex flex-wrap items-center gap-2.5">
+                <span className="text-3xl font-extrabold tracking-tight text-[#0F382C] tabular-nums">
+                  £{priceCalculation.totalPrice.toFixed(2)}
+                </span>
+
+                {priceCalculation.savings > 0 && (
+                  <span className="inline-flex items-center rounded-md border border-emerald-200 bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-800 tabular-nums">
+                    You save £{priceCalculation.savings.toFixed(2)}
+                  </span>
+                )}
+              </div>
+
+              {formData.frequency !== 'one-off' && (
+                <p className="mt-1 text-xs font-medium text-slate-600">
+                  £{priceCalculation.pricePerVisit.toFixed(2)} per visit × {priceCalculation.numberOfTimes} {formData.frequency} visits
+                </p>
+              )}
             </div>
 
-            <Calculator className="h-7 w-7 text-emerald-700" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-[#0F382C]">
+              <Calculator className="h-5 w-5" />
+            </div>
           </div>
 
-          <p className="mt-2 text-xs leading-relaxed text-slate-600">
+          <p className="mt-3 border-t border-emerald-100 pt-3 text-xs leading-relaxed text-slate-600">
             Please review your selections before submitting.
             Our team will contact you to confirm the details and
             agree the final price before booking.
@@ -1051,7 +1145,7 @@ export const QuoteCalculator: React.FC = () => {
 
           <div className="flex items-center justify-center gap-2 text-center text-xs text-slate-500">
             <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-700" />
-            <span>No booking is confirmed until your details and price are agreed.</span>
+            <span>Thank You For Trusting Us with your cleaning Needs  </span>
           </div>
 
           <p className="text-center text-xs text-slate-500">

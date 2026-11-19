@@ -158,13 +158,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">5,000+</span>
             <span className="text-xs font-semibold text-slate-600 block">Clean Hours in Scotland</span>
           </div>
-           <div className="space-y-1">
-            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">100%</span>
-            <span className="text-xs font-semibold text-slate-600 block">Reclean Guaranteed</span>
-          </div>
-          <div className="space-y-1 border-l border-slate-200 pl-4">
+                   <div className="space-y-1 border-l border-slate-200 pl-4">
             <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">2</span>
             <span className="text-xs font-semibold text-slate-600 block">Service Areas: Renfrewshire & Glasgow</span>
+          </div>
+
+            <div className="space-y-1">
+            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">100%</span>
+            <span className="text-xs font-semibold text-slate-600 block">Reclean Guaranteed</span>
           </div>
         </div>
       </section>

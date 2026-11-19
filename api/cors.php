@@ -16,25 +16,24 @@ if (function_exists('header_remove')) {
     header_remove('Server');
 }
 
-// Security Headers (OWASP Hardening)
+// API response security headers (non-competing; frontend CSP, HSTS, and framing remain in root .htaccess)
 header('X-Content-Type-Options: nosniff');
-header('X-Frame-Options: SAMEORIGIN');
-header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
 header('Referrer-Policy: no-referrer');
-header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://oankcleaning.co.uk; frame-ancestors 'none'; object-src 'none'; base-uri 'self';");
+header('Vary: Origin');
+
+if (!defined('APP_ENV') && is_file(__DIR__ . '/config.php')) {
+    require_once __DIR__ . '/config.php';
+}
 
 $allowedOrigins = [
     'https://oankcleaning.co.uk',
     'https://www.oankcleaning.co.uk',
-    'https://facebook.com',
-    'https://connect.facebook.net',
-    'https://graph.facebook.com',
-    'https://*.fbcdn.net',
-
-    // Development
-    'http://localhost:3000',
-    'http://localhost:5173',
 ];
+
+if (defined('APP_ENV') && APP_ENV === 'development') {
+    $allowedOrigins[] = 'http://localhost:3000';
+    $allowedOrigins[] = 'http://localhost:5173';
+}
 
 $requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
@@ -44,10 +43,6 @@ if ($requestOrigin !== '') {
 
         header(
             'Access-Control-Allow-Origin: ' . $requestOrigin
-        );
-
-        header(
-            'Vary: Origin'
         );
 
         header(
@@ -85,7 +80,7 @@ header(
 |--------------------------------------------------------------------------
 */
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
 
     http_response_code(204);
 

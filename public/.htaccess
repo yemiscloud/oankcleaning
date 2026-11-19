@@ -24,15 +24,16 @@ Options -Indexes
     Header always set Referrer-Policy "no-referrer"
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
     Header always set X-Permitted-Cross-Domain-Policies "none"
+    Header always set Reporting-Endpoints "csp-endpoint=\"https://oankcleaning.co.uk/api/csp-report\""
 
     Header always unset X-Powered-By
 
     # Content Security Policy
     # No unsafe-inline or unsafe-eval for JavaScript.
     # JSON-LD does not require a script hash.
-    # Verify all third-party GTM tags against this policy.
+    # Explicit Google/Meta baseline endpoints (no wildcard domains).
 
-    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-elem 'self' https://www.googletagmanager.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://www.google.co.uk; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-elem 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://*.facebook.com https://connect.facebook.net https://*.fbcdn.net; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com https://*.google.com https://www.google.co.uk https://*.google.co.uk https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://ad.doubleclick.net https://pagead2.googlesyndication.com https://www.facebook.com https://*.facebook.com https://connect.facebook.net; frame-src https://www.googletagmanager.com https://www.google.com https://td.doubleclick.net; manifest-src 'self'; media-src 'self'; worker-src 'self'; upgrade-insecure-requests"
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://connect.facebook.net; script-src-elem 'self' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://www.google.com https://connect.facebook.net; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-elem 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com https://stats.g.doubleclick.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com https://www.google.com https://www.google.co.uk https://www.facebook.com https://connect.facebook.net; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://region1.analytics.google.com https://stats.g.doubleclick.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://ad.doubleclick.net https://pagead2.googlesyndication.com https://www.google.com https://www.google.co.uk https://www.facebook.com https://connect.facebook.net; frame-src 'self' https://www.googletagmanager.com https://td.doubleclick.net https://www.google.com; manifest-src 'self'; media-src 'self'; worker-src 'self'; upgrade-insecure-requests; report-to csp-endpoint; report-uri /api/csp-report"
 
 </IfModule>
 
@@ -71,6 +72,7 @@ Options -Indexes
     RewriteRule ^api/chat-log/?$ api/chat_log.php [QSA,L]
     RewriteRule ^api/job-admin/?$ api/job_admin.php [QSA,L]
     RewriteRule ^api/job-track/?$ api/job_track.php [QSA,L]
+    RewriteRule ^api/csp-report/?$ api/csp_report.php [QSA,L]
 
     # Public sitemap.
     RewriteRule ^sitemap\.xml$ api/sitemap.php [QSA,L]

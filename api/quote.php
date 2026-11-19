@@ -209,6 +209,14 @@ if (!in_array($frequency, $allowedFrequencies, true)) {
     );
 }
 
+$frequencyCount = 1;
+if ($frequency !== 'one-off') {
+    $rawCount = isset($input['frequencyCount']) && is_numeric($input['frequencyCount'])
+        ? (int) $input['frequencyCount']
+        : 4;
+    $frequencyCount = max(1, min($rawCount, 104));
+}
+
 /*
 |--------------------------------------------------------------------------
 | Add-ons
@@ -321,14 +329,8 @@ $bestDaysString = empty($bestDays) ? 'Flexible / Any' : implode(', ', $bestDays)
 
 /*
 |--------------------------------------------------------------------------
-| Price Guidance
+| Authoritative Quote Calculation (Aligned with Frontend QuoteCalculator)
 |--------------------------------------------------------------------------
-|
-| Public prices are starting prices only. The final quote depends on the
-| property and agreed scope, so this endpoint must not invent a total.
-| The legacy quote_estimate database field is stored as 0.00 until a quote
-| is reviewed and confirmed by the OANK team.
-|
 */
 
 $priceGuidance = [
@@ -340,15 +342,61 @@ $priceGuidance = [
     'carpet-upholstery' => 'From £45 per room',
 ];
 
+$basePrices = [
+    'domestic-regular' => 45.00,
+    'deep-cleaning' => 85.00,
+    'end-of-tenancy' => 145.00,
+    'commercial-office' => 65.00,
+    'healthcare-carehome' => 95.00,
+    'carpet-upholstery' => 70.00,
+];
+
+$frequencyDiscounts = [
+    'one-off' => 0.00,
+    'weekly' => 0.15,
+    'fortnightly' => 0.10,
+    'monthly' => 0.05,
+];
+
+$addOnPrices = [
+    'oven' => 35.00,
+    'carpet' => 45.00,
+    'windows' => 25.00,
+    'fridge' => 20.00,
+];
+
 $priceDisplay = $priceGuidance[$serviceType];
-$finalEstimate = 0.00;
-$baseRate = 0.00;
-$bedroomCharge = 0.00;
-$bathroomCharge = 0.00;
+$baseRate = $basePrices[$serviceType] ?? 45.00;
+$bedroomCharge = $bedrooms * 18.00;
+$bathroomCharge = $bathrooms * 12.00;
+
 $addOnsTotal = 0.00;
-$subtotal = 0.00;
-$discountRate = 0.00;
-$discountAmount = 0.00;
+foreach ($addOns as $addOn) {
+    $addOnsTotal += $addOnPrices[$addOn] ?? 0.00;
+}
+
+$undiscountedPerVisit = round(
+    $baseRate + $bedroomCharge + $bathroomCharge + $addOnsTotal + $livingRoomDiningRoomCharge,
+    2
+);
+
+$frequencyDiscountFraction = $frequencyDiscounts[$frequency] ?? 0.00;
+$frequencyDiscountRate = round($frequencyDiscountFraction * 100, 2);
+
+$discountedPerVisit = $undiscountedPerVisit * (1 - $frequencyDiscountFraction);
+if ($suppliesCleaningMaterials) {
+    $discountedPerVisit *= 0.90;
+}
+
+$pricePerVisit = round($discountedPerVisit, 2);
+$numberOfTimes = $frequency === 'one-off' ? 1 : $frequencyCount;
+
+$finalEstimate = round($pricePerVisit * $numberOfTimes, 2);
+$originalEstimate = round($undiscountedPerVisit * $numberOfTimes, 2);
+$savingsAmount = round(max(0.00, $originalEstimate - $finalEstimate), 2);
+$subtotal = $originalEstimate;
+$discountRate = $frequencyDiscountRate;
+$discountAmount = $savingsAmount;
 
 /*
 |--------------------------------------------------------------------------
@@ -426,13 +474,24 @@ if ($hasCustomerDetails) {
         ? 'None'
         : implode(', ', $addOns);
 
+    $frequencyLabel = $frequency === 'one-off'
+        ? 'one-off'
+        : "{$frequency} ({$frequencyCount} visits)";
+
     $quoteMessage =
         "Property Type: {$propertyType}\n"
         . "Bedrooms: {$bedrooms}\n"
         . "Bathrooms: {$bathrooms}\n"
         . "Service Type: {$serviceType}\n"
-        . "Frequency: {$frequency}\n"
+        . "Frequency: {$frequencyLabel}\n"
         . "Price guidance: {$priceDisplay}\n"
+        . "Standard Total (before discount): £" . number_format($originalEstimate, 2) . "\n"
+        . "Frequency Discount: {$frequencyDiscountRate}%\n"
+        . "Materials Discount: {$materialsDiscountRate}%\n"
+        . "Price Per Visit: £" . number_format($pricePerVisit, 2) . "\n"
+        . "Number of Visits: {$numberOfTimes}\n"
+        . "Estimated Total to Pay: £" . number_format($finalEstimate, 2) . "\n"
+        . "Total Savings: £" . number_format($savingsAmount, 2) . "\n"
         . "Final quote: To be confirmed by OANK after reviewing the requested scope.\n"
         . "Preferred Days: {$bestDaysString}\n"
         . "Add-ons: {$addOnDescription}\n"
@@ -445,11 +504,22 @@ if ($hasCustomerDetails) {
         'name' => $name,
         'email' => $email,
         'phone' => $phone !== '' ? $phone : null,
-        'service' => "Quote: {$serviceType} ({$frequency})",
+        'service' => "Quote: {$serviceType} ({$frequencyLabel})",
         'postcode' => $postcode,
         'preferredDate' => $preferredDate,
         'message' => $quoteMessage,
         'quoteEstimate' => $finalEstimate,
+        'originalEstimate' => $originalEstimate,
+        'savingsAmount' => $savingsAmount,
+        'pricePerVisit' => $pricePerVisit,
+        'propertyType' => $propertyType,
+        'bedrooms' => $bedrooms,
+        'bathrooms' => $bathrooms,
+        'frequency' => $frequency,
+        'frequencyCount' => $numberOfTimes,
+        'frequencyDiscountRate' => $frequencyDiscountRate,
+        'addOns' => $addOnDescription,
+        'preferredDays' => $bestDaysString,
         'livingRoomDiningRoom' => $livingRoomDiningRoom,
         'materialsDiscountRate' => $materialsDiscountRate,
         'status' => 'Pending',
@@ -522,7 +592,7 @@ if ($hasCustomerDetails) {
         "Service: {$serviceType}\n";
 
     $adminBody .=
-        "Frequency: {$frequency}\n";
+        "Frequency: {$frequencyLabel}\n";
 
     $adminBody .=
         "Bedrooms: {$bedrooms}\n";
@@ -531,7 +601,7 @@ if ($hasCustomerDetails) {
         "Bathrooms: {$bathrooms}\n";
 
     $adminBody .=
-        'Living room/dining room: ' . ($livingRoomDiningRoom ? 'Yes (+£25.00)' : 'No') . "\n";
+        'Living room/dining room: ' . ($livingRoomDiningRoom ? 'Yes' : 'No') . "\n";
 
     $adminBody .=
         'Customer supplying cleaning materials/equipment: ' . ($suppliesCleaningMaterials ? 'Yes (10% discount applies)' : 'No') . "\n";
@@ -551,8 +621,15 @@ if ($hasCustomerDetails) {
         "Preferred Date: {$preferredDate}\n";
 
     $adminBody .=
-        "Price guidance: {$priceDisplay}\n" .
-        "Final quote: To be confirmed by OANK after reviewing the requested scope.\n";
+        "Price guidance: {$priceDisplay}\n"
+        . "Standard Total (before discount): £" . number_format($originalEstimate, 2) . "\n"
+        . "Frequency Discount: {$frequencyDiscountRate}%\n"
+        . "Materials Discount: {$materialsDiscountRate}%\n"
+        . "Price Per Visit: £" . number_format($pricePerVisit, 2) . "\n"
+        . "Number of Visits: {$numberOfTimes}\n"
+        . "Estimated Total to Pay: £" . number_format($finalEstimate, 2) . "\n"
+        . "Total Savings: £" . number_format($savingsAmount, 2) . "\n"
+        . "<b>Final quote: To be confirmed by OANK after reviewing the requested scope.\n"</b>;
 
     $adminBody .= "\nNotes:\n";
     $adminBody .=
@@ -581,7 +658,7 @@ if ($hasCustomerDetails) {
     $adminHeaders = [];
 
     $adminHeaders[] =
-        'From: OanK Web Portal <no-reply@' .
+        'From: OanK Cleaning Team <no-reply@' .
         COMPANY_DOMAIN .
         '>';
 
@@ -631,7 +708,7 @@ if ($hasCustomerDetails) {
     $userHtml = buildUserConfirmationEmailHtml(
         $name,
         $quoteId,
-        $serviceType . ' (' . $priceDisplay . '; final quote to be confirmed)',
+        $serviceType . ' — ' . $frequencyLabel . ' (estimated £' . number_format($finalEstimate, 2) . '; ' . $priceDisplay . ', final quote to be confirmed)',
         $preferredDate
     );
 
@@ -671,12 +748,28 @@ $responseData = [
     'quoteId' => $quoteId,
     'referenceNo' => $quoteId,
 
-    'estimatedPrice' => null,
+    'estimatedPrice' => $finalEstimate,
+    'originalTotal' => $originalEstimate,
+    'savings' => $savingsAmount,
+    'pricePerVisit' => $pricePerVisit,
     'priceDisplay' => $priceDisplay,
 
     'currency' => 'GBP',
 
     'breakdown' => [
+        'baseRate' => $baseRate,
+        'bedroomCharge' => $bedroomCharge,
+        'bathroomCharge' => $bathroomCharge,
+        'addOnsTotal' => $addOnsTotal,
+        'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
+        'undiscountedPerVisit' => $undiscountedPerVisit,
+        'frequencyDiscountRate' => $frequencyDiscountRate,
+        'materialsDiscountRate' => $materialsDiscountRate,
+        'pricePerVisit' => $pricePerVisit,
+        'numberOfTimes' => $numberOfTimes,
+        'originalTotal' => $originalEstimate,
+        'totalPrice' => $finalEstimate,
+        'savings' => $savingsAmount,
         'priceGuidance' => $priceDisplay,
         'finalQuoteConfirmed' => false,
     ],
@@ -686,6 +779,8 @@ $responseData = [
     'bathrooms' => $bathrooms,
     'serviceType' => $serviceType,
     'frequency' => $frequency,
+    'frequencyCount' => $numberOfTimes,
+    'frequencyDiscountRate' => $frequencyDiscountRate,
     'addOns' => $addOns,
     'livingRoomDiningRoom' => $livingRoomDiningRoom,
     'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
@@ -727,7 +822,7 @@ if ($hasCustomerDetails) {
 
     sendJsonResponse(
         true,
-        "Your quote request [{$quoteId}] has been successfully delivered to our team. Price guidance: {$priceDisplay}. Our team will confirm the final quote after reviewing your requirements.",
+        "Your quote request [{$quoteId}] has been successfully delivered to our team. ",
         $responseData,
         200
     );

@@ -68,74 +68,110 @@ function generateSecureJobReference(): string
 }
 
 /**
+ * Get existing column names on the enquiries table (cached per request).
+ */
+function getEnquiriesTableColumns(PDO $pdo): array
+{
+    static $columns = null;
+
+    if (is_array($columns)) {
+        return $columns;
+    }
+
+    try {
+        $stmt = $pdo->query('SHOW COLUMNS FROM enquiries');
+        $rows = $stmt ? $stmt->fetchAll(PDO::FETCH_ASSOC) : [];
+        $columns = array_map(
+            static fn (array $row): string => (string) ($row['Field'] ?? ''),
+            $rows
+        );
+    } catch (Throwable $e) {
+        $columns = [
+            'reference_no',
+            'name',
+            'email',
+            'phone',
+            'service',
+            'postcode',
+            'preferred_date',
+            'message',
+            'quote_estimate',
+            'original_estimate',
+            'savings_amount',
+            'price_per_visit',
+            'property_type',
+            'bedrooms',
+            'bathrooms',
+            'frequency',
+            'frequency_count',
+            'frequency_discount_rate',
+            'add_ons',
+            'preferred_days',
+            'living_room_dining_room',
+            'materials_discount_rate',
+            'status',
+        ];
+    }
+
+    return $columns;
+}
+
+/**
  * Insert enquiry into the existing enquiries table.
- *
- * Expected database columns:
- *
- * reference_no
- * name
- * email
- * phone
- * service
- * postcode
- * preferred_date
- * message
- * quote_estimate
- * status
  */
 function saveSubmissionToDb(array $data): bool
 {
     try {
-
         $pdo = getDbConnection();
+        $availableColumns = getEnquiriesTableColumns($pdo);
 
-        $sql = "
-            INSERT INTO enquiries (
-                reference_no,
-                name,
-                email,
-                phone,
-                service,
-                postcode,
-                preferred_date,
-                message,
-                quote_estimate,
-                living_room_dining_room,
-                materials_discount_rate,
-                status
-            )
-            VALUES (
-                :reference_no,
-                :name,
-                :email,
-                :phone,
-                :service,
-                :postcode,
-                :preferred_date,
-                :message,
-                :quote_estimate,
-                :living_room_dining_room,
-                :materials_discount_rate,
-                :status
-            )
-        ";
+        $columnValues = [
+            'reference_no' => $data['referenceNo'] ?? '',
+            'name' => $data['name'] ?? '',
+            'email' => $data['email'] ?? '',
+            'phone' => $data['phone'] ?? null,
+            'service' => $data['service'] ?? 'General Enquiry',
+            'postcode' => $data['postcode'] ?? null,
+            'preferred_date' => $data['preferredDate'] ?? 'Flexible',
+            'message' => $data['message'] ?? '',
+            'quote_estimate' => $data['quoteEstimate'] ?? null,
+            'original_estimate' => $data['originalEstimate'] ?? null,
+            'savings_amount' => $data['savingsAmount'] ?? 0.00,
+            'price_per_visit' => $data['pricePerVisit'] ?? null,
+            'property_type' => $data['propertyType'] ?? null,
+            'bedrooms' => $data['bedrooms'] ?? null,
+            'bathrooms' => $data['bathrooms'] ?? null,
+            'frequency' => $data['frequency'] ?? null,
+            'frequency_count' => $data['frequencyCount'] ?? 1,
+            'frequency_discount_rate' => $data['frequencyDiscountRate'] ?? 0.00,
+            'add_ons' => $data['addOns'] ?? null,
+            'preferred_days' => $data['preferredDays'] ?? null,
+            'living_room_dining_room' => !empty($data['livingRoomDiningRoom']) ? 1 : 0,
+            'materials_discount_rate' => $data['materialsDiscountRate'] ?? 0.00,
+            'status' => $data['status'] ?? 'Pending',
+        ];
+
+        $insertColumns = [];
+        $placeholders = [];
+        $params = [];
+
+        foreach ($columnValues as $col => $val) {
+            if (in_array($col, $availableColumns, true)) {
+                $insertColumns[] = $col;
+                $placeholders[] = ':' . $col;
+                $params[':' . $col] = $val;
+            }
+        }
+
+        $sql = sprintf(
+            'INSERT INTO enquiries (%s) VALUES (%s)',
+            implode(', ', $insertColumns),
+            implode(', ', $placeholders)
+        );
 
         $statement = $pdo->prepare($sql);
 
-        return $statement->execute([
-            ':reference_no' => $data['referenceNo'] ?? '',
-            ':name' => $data['name'] ?? '',
-            ':email' => $data['email'] ?? '',
-            ':phone' => $data['phone'] ?? null,
-            ':service' => $data['service'] ?? 'General Enquiry',
-            ':postcode' => $data['postcode'] ?? null,
-            ':preferred_date' => $data['preferredDate'] ?? 'Flexible',
-            ':message' => $data['message'] ?? '',
-            ':quote_estimate' => $data['quoteEstimate'] ?? null,
-            ':living_room_dining_room' => !empty($data['livingRoomDiningRoom']) ? 1 : 0,
-            ':materials_discount_rate' => $data['materialsDiscountRate'] ?? 0,
-            ':status' => $data['status'] ?? 'Pending',
-        ]);
+        return $statement->execute($params);
 
     } catch (Throwable $e) {
 

@@ -35,6 +35,7 @@ export interface QuoteFormData {
   bathrooms: number;
   serviceType: string;
   frequency: 'one-off' | 'weekly' | 'fortnightly' | 'monthly';
+  frequencyCount?: number;
   addOns: string[];
   livingRoomDiningRoom: boolean;
   suppliesCleaningMaterials: boolean;
@@ -64,6 +65,10 @@ export interface ApiResponse<T = any> {
   referenceNo?: string;
   quoteId?: string;
   estimatedPrice?: number;
+  originalTotal?: number;
+  savings?: number;
+  pricePerVisit?: number;
+  frequencyCount?: number;
   breakdown?: any;
   databaseDelivered?: boolean;
   emailDelivered?: boolean;

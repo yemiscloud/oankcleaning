@@ -36,8 +36,8 @@ const styleTags = styles.join('\n');
 // Keep consent defaults and the directly-installed GTM container on every
 // prerendered route, not only the root index.html. The bootstrap must remain
 // before GTM so Consent Mode v2 defaults enter dataLayer before GTM executes.
-const consentBootstrapTag = template.match(/<script src="\/js\/oank-tracking-bootstrap\.js"><\/script>/)?.[0];
-const gtmContainerTag = template.match(/<script async src="https:\/\/www\.googletagmanager\.com\/gtm\.js\?id=GTM-MHHNSVRF"><\/script>/)?.[0];
+const consentBootstrapTag = template.match(/<script\b[^>]*src="\/js\/oank-tracking-bootstrap\.js"[^>]*><\/script>/)?.[0];
+const gtmContainerTag = template.match(/<script\b[^>]*src="https:\/\/www\.googletagmanager\.com\/gtm\.js\?id=GTM-MHHNSVRF"[^>]*><\/script>/)?.[0];
 if (!consentBootstrapTag || !gtmContainerTag) {
   throw new Error('Consent bootstrap or GTM container script is missing from index.html. Refusing to generate routes without tracking consent initialization.');
 }

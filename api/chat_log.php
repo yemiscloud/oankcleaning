@@ -111,6 +111,10 @@ $logEntry .= "==================================================================
 
 $logFilePath = dirname(__DIR__) . '/chat_history.php';
 
+if (!file_exists($logFilePath)) {
+    $logEntry = "<?php http_response_code(403); exit('Access denied.'); ?>\n" . $logEntry;
+}
+
 $writeSuccess = @file_put_contents(
     $logFilePath,
     $logEntry,

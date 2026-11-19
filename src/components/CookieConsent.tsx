@@ -9,9 +9,7 @@ type Consent = {
 
 const STORAGE_KEY = 'oank_cookie_consent_v1';
 const GA_ID = 'G-LQB16ZXJEC';
-const META_PIXEL_ID = '1801963148593783';
-// Replace these placeholders before production. Keep the quotes.
-const GTM_ID = 'ENTER_GTM_ID_HERE';
+// Replace these placeholders before production if Google Ads direct conversion tracking is enabled. Keep the quotes.
 const GOOGLE_ADS_ID = 'ENTER_GOOGLE_ADS_CONVERSION_ID_HERE';
 const GOOGLE_ADS_CONVERSION_LABEL = 'ENTER_GOOGLE_ADS_CONVERSION_LABEL_HERE';
 const isConfigured = (value: string, prefix: string) => value.startsWith(prefix) && !value.includes('ENTER_');
@@ -20,9 +18,8 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
-    fbq?: ((...args: unknown[]) => void) & { queue?: unknown[]; push?: (...args: unknown[]) => void; loaded?: boolean; version?: string; callMethod?: (...args: unknown[]) => void };
-    _fbq?: ((...args: unknown[]) => void) & { queue?: unknown[]; push?: (...args: unknown[]) => void; loaded?: boolean; version?: string; callMethod?: (...args: unknown[]) => void };
     oankTrackLead?: (source: 'contact' | 'quote') => void;
+    __oankGaConfigured?: boolean;
   }
 }
 
@@ -51,12 +48,10 @@ function removeCookies(prefixes: string[]) {
 }
 
 function applyTracking(consent: Consent) {
-  const gtmConfigured = isConfigured(GTM_ID, 'GTM-');
   const adsConfigured = isConfigured(GOOGLE_ADS_ID, 'AW-') && isConfigured(GOOGLE_ADS_CONVERSION_LABEL, '');
-  const optionalConsent = consent.analytics || consent.marketing;
 
-  // Consent Mode v2 defaults are pushed before GTM is downloaded. GTM is not
-  // loaded at all until the visitor has opted into at least one optional category.
+  // Consent Mode v2 defaults are set synchronously in index.html before GTM loads.
+  // Update Consent Mode v2 and notify GTM so consent-gated tags (such as Meta Pixel) react cleanly.
   window.dataLayer = window.dataLayer || [];
   window.gtag = window.gtag || function (...args: unknown[]) { window.dataLayer?.push(args); };
   const gtag = window.gtag as NonNullable<Window['gtag']>;
@@ -65,18 +60,16 @@ function applyTracking(consent: Consent) {
     ad_storage: consent.marketing ? 'granted' : 'denied',
     ad_user_data: consent.marketing ? 'granted' : 'denied',
     ad_personalization: consent.marketing ? 'granted' : 'denied',
+    personalization_storage: consent.analytics ? 'granted' : 'denied',
     functionality_storage: 'granted',
     security_storage: 'granted',
   });
 
-  if (optionalConsent && gtmConfigured && !document.getElementById('oank-google-tag-manager')) {
-    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
-    const script = document.createElement('script');
-    script.id = 'oank-google-tag-manager';
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`;
-    document.head.appendChild(script);
-  }
+  window.dataLayer.push({
+    event: 'oank_consent_updated',
+    analytics_consent: consent.analytics,
+    marketing_consent: consent.marketing,
+  });
 
   // Retain the existing direct GA4 integration. Do not add a second GA4
   // configuration tag in GTM unless this direct integration is removed.
@@ -89,10 +82,14 @@ function applyTracking(consent: Consent) {
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
       document.head.appendChild(script);
     }
-    gtag('js', new Date());
-    gtag('config', GA_ID, { anonymize_ip: true });
+    if (!window.__oankGaConfigured) {
+      gtag('js', new Date());
+      gtag('config', GA_ID, { anonymize_ip: true });
+      window.__oankGaConfigured = true;
+    }
   } else {
     (window as unknown as Record<string, unknown>)[`ga-disable-${GA_ID}`] = true;
+    window.__oankGaConfigured = false;
     document.getElementById('oank-google-analytics')?.remove();
     removeCookies(['_ga', '_gid', '_gat']);
   }
@@ -109,8 +106,14 @@ function applyTracking(consent: Consent) {
     gtag('config', GOOGLE_ADS_ID);
   }
 
+  // Meta Pixel is managed inside GTM via consent-gated tags on oank_consent_updated
+  // and oank_lead_submitted. When Marketing consent is off, clear accessible Meta cookies.
+  if (!consent.marketing) {
+    removeCookies(['_fbp', '_fbc']);
+  }
+
   // Public lead conversion hook; called only after the server confirms a saved
-  // enquiry/quote. The actual Ads conversion action is completed after IDs are added.
+  // enquiry/quote. GTM triggers Meta Lead tag from oank_lead_submitted when Marketing consent is granted.
   window.oankTrackLead = (source: 'contact' | 'quote') => {
     if (!consent.marketing) return;
     window.dataLayer?.push({ event: 'oank_lead_submitted', lead_source: source });
@@ -122,35 +125,6 @@ function applyTracking(consent: Consent) {
       });
     }
   };
-
-  // Meta Pixel is used for advertising measurement and only runs after marketing consent.
-  if (consent.marketing) {
-    if (!window.fbq) {
-      const fbq = ((...args: unknown[]) => {
-        if (fbq.callMethod) fbq.callMethod(...args);
-        else fbq.queue?.push(args);
-      }) as NonNullable<Window['fbq']>;
-      fbq.queue = [];
-      fbq.push = fbq;
-      fbq.loaded = true;
-      fbq.version = '2.0';
-      window.fbq = fbq;
-      window._fbq = fbq;
-      const script = document.createElement('script');
-      script.id = 'oank-meta-pixel';
-      script.async = true;
-      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
-      document.head.appendChild(script);
-      window.fbq('init', META_PIXEL_ID);
-      window.fbq('track', 'PageView');
-    }
-  } else {
-    if (window.fbq) window.fbq('consent', 'revoke');
-    document.getElementById('oank-meta-pixel')?.remove();
-    window.fbq = undefined;
-    window._fbq = undefined;
-    removeCookies(['_fbp', '_fbc']);
-  }
 }
 
 
@@ -184,16 +158,7 @@ export const CookieConsent: React.FC = () => {
 
   return (
     <>
-      {consent ? (
-        <button
-          type="button"
-          onClick={openSettings}
-          className="fixed bottom-3 left-3 z-[90] rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-lg hover:bg-slate-50"
-          aria-label="Open cookie settings"
-        >
-          Cookie settings
-        </button>
-      ) : (
+      {!consent && (
         <section className="fixed inset-x-0 bottom-0 z-[100] border-t border-slate-200 bg-white p-4 shadow-[0_-8px_30px_rgba(0,0,0,0.12)] sm:p-6" aria-label="Cookie preferences">
           <div className="mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="max-w-3xl">

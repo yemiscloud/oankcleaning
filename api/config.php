@@ -390,7 +390,7 @@ define(
 
 define(
     'SUPPORT_EMAIL',
-    'support@ohkaylimited.co.uk'
+    'support@oankcleaning.co.uk'
 );
 
 /*
