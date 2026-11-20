@@ -113,15 +113,22 @@ $allowedPropertyTypes = [
     'residential',
 ];
 
-$propertyType = getQuoteString(
+$rawPropertyType = getQuoteString(
     $input,
     'propertyType',
-    'house'
+    ''
 );
 
-if (!in_array($propertyType, $allowedPropertyTypes, true)) {
-    $propertyType = 'house';
+if ($rawPropertyType !== '' && !in_array($rawPropertyType, $allowedPropertyTypes, true)) {
+    sendJsonResponse(
+        false,
+        'Please select a valid property type (House, Flat, Office, or Business).',
+        [],
+        400
+    );
 }
+
+$propertyType = $rawPropertyType !== '' ? $rawPropertyType : 'house';
 
 /*
 |--------------------------------------------------------------------------
@@ -132,7 +139,7 @@ if (!in_array($propertyType, $allowedPropertyTypes, true)) {
 $bedrooms = isset($input['bedrooms'])
     && is_numeric($input['bedrooms'])
     ? (int) $input['bedrooms']
-    : 2;
+    : 0;
 
 $bedrooms = max(0, min($bedrooms, 20));
 
@@ -145,7 +152,7 @@ $bedrooms = max(0, min($bedrooms, 20));
 $bathrooms = isset($input['bathrooms'])
     && is_numeric($input['bathrooms'])
     ? (int) $input['bathrooms']
-    : 1;
+    : 0;
 
 $bathrooms = max(0, min($bathrooms, 20));
 
@@ -213,7 +220,7 @@ $frequencyCount = 1;
 if ($frequency !== 'one-off') {
     $rawCount = isset($input['frequencyCount']) && is_numeric($input['frequencyCount'])
         ? (int) $input['frequencyCount']
-        : 4;
+        : 1;
     $frequencyCount = max(1, min($rawCount, 104));
 }
 
@@ -303,6 +310,10 @@ $preferredDate = limitQuoteInput(
     100
 );
 
+if ($preferredDate === '') {
+    $preferredDate = 'As soon as possible';
+}
+
 $notes = limitQuoteInput(
     getQuoteString($input, 'notes'),
     5000
@@ -367,7 +378,8 @@ $addOnPrices = [
 
 $priceDisplay = $priceGuidance[$serviceType];
 $baseRate = $basePrices[$serviceType] ?? 45.00;
-$bedroomCharge = $bedrooms * 18.00;
+$bedroomRate = in_array($propertyType, ['office', 'commercial'], true) ? 22.00 : 18.50;
+$bedroomCharge = $bedrooms * $bedroomRate;
 $bathroomCharge = $bathrooms * 12.00;
 
 $addOnsTotal = 0.00;
@@ -431,6 +443,16 @@ $hasCustomerDetails = (
 
 if ($hasCustomerDetails) {
 
+    if ($rawPropertyType === '') {
+
+        sendJsonResponse(
+            false,
+            'Please select a property type (House, Flat, Office, or Business).',
+            [],
+            400
+        );
+    }
+
     if ($name === '' || $email === '') {
 
         sendJsonResponse(
@@ -474,9 +496,7 @@ if ($hasCustomerDetails) {
         ? 'None'
         : implode(', ', $addOns);
 
-    $frequencyLabel = $frequency === 'one-off'
-        ? 'one-off'
-        : "{$frequency} ({$frequencyCount} visits)";
+    $frequencyLabel = $frequency;
 
     $quoteMessage =
         "Property Type: {$propertyType}\n"
@@ -629,7 +649,7 @@ if ($hasCustomerDetails) {
         . "Number of Visits: {$numberOfTimes}\n"
         . "Estimated Total to Pay: £" . number_format($finalEstimate, 2) . "\n"
         . "Total Savings: £" . number_format($savingsAmount, 2) . "\n"
-        . "<b>Final quote: To be confirmed by OANK after reviewing the requested scope.\n"</b>;
+        . "Final quote: To be confirmed by OANK after reviewing the requested scope.\n";
 
     $adminBody .= "\nNotes:\n";
     $adminBody .=
@@ -705,10 +725,11 @@ if ($hasCustomerDetails) {
         safeHeaderValue($quoteId) .
         ']';
 
+    $perVisitSuffix = $frequency === 'one-off' ? '' : ' per visit';
     $userHtml = buildUserConfirmationEmailHtml(
         $name,
         $quoteId,
-        $serviceType . ' — ' . $frequencyLabel . ' (estimated £' . number_format($finalEstimate, 2) . '; ' . $priceDisplay . ', final quote to be confirmed)',
+        $serviceType . ' — ' . $frequencyLabel . ' (estimated £' . number_format($pricePerVisit, 2) . $perVisitSuffix . '; ' . $priceDisplay . ', final quote to be confirmed)',
         $preferredDate
     );
 

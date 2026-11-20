@@ -30,15 +30,15 @@ export interface CleaningService {
 }
 
 export interface QuoteFormData {
-  propertyType: 'house' | 'flat' | 'office' | 'commercial';
-  bedrooms: number;
-  bathrooms: number;
-  serviceType: string;
-  frequency: 'one-off' | 'weekly' | 'fortnightly' | 'monthly';
-  frequencyCount?: number;
+  propertyType: 'house' | 'flat' | 'office' | 'commercial' | null;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  serviceType: string | null;
+  frequency: 'one-off' | 'weekly' | 'fortnightly' | 'monthly' | null;
+  frequencyCount?: number | null;
   addOns: string[];
   livingRoomDiningRoom: boolean;
-  suppliesCleaningMaterials: boolean;
+  suppliesCleaningMaterials: boolean | null;
   bestDays: string[];
   postcode: string;
   preferredDate: string;

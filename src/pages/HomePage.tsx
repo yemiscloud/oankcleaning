@@ -155,7 +155,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectService 
             <span className="text-xs font-semibold text-slate-600 block">Community-Interest Company</span>
           </div>
               <div className="space-y-1 border-l border-slate-200 pl-4">
-            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">5,000+</span>
+            <span className="text-3xl sm:text-4xl font-serif font-bold text-[#0F382C]">950+</span>
             <span className="text-xs font-semibold text-slate-600 block">Clean Hours in Scotland</span>
           </div>
                    <div className="space-y-1 border-l border-slate-200 pl-4">
