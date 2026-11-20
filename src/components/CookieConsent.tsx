@@ -10,8 +10,8 @@ type Consent = {
 const STORAGE_KEY = 'oank_cookie_consent_v1';
 const GA_ID = 'G-LQB16ZXJEC';
 // Replace these placeholders before production if Google Ads direct conversion tracking is enabled. Keep the quotes.
-const GOOGLE_ADS_ID = 'ENTER_GOOGLE_ADS_CONVERSION_ID_HERE';
-const GOOGLE_ADS_CONVERSION_LABEL = 'ENTER_GOOGLE_ADS_CONVERSION_LABEL_HERE';
+const GOOGLE_ADS_ID = 'AW-18535494055';
+const GOOGLE_ADS_CONVERSION_LABEL = 'Leads-Search-Build';
 const isConfigured = (value: string, prefix: string) => value.startsWith(prefix) && !value.includes('ENTER_');
 
 declare global {
