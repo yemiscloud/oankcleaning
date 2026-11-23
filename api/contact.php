@@ -16,6 +16,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/email_templates.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -229,11 +230,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 /*
 |--------------------------------------------------------------------------
-| Generate Reference Number
+| Internal Database Key (not exposed as a contact reference code)
 |--------------------------------------------------------------------------
 */
 
-$referenceNo = generateSecureJobReference();
+$internalRecordKey = generateSecureJobReference();
 
 /*
 |--------------------------------------------------------------------------
@@ -246,7 +247,7 @@ $dbMessage = $preferredDays !== ''
     : $message;
 
 $dbSaved = saveSubmissionToDb([
-    'referenceNo' => $referenceNo,
+    'referenceNo' => $internalRecordKey,
     'name' => $name,
     'email' => $email,
     'phone' => $phone !== '' ? $phone : null,
@@ -272,14 +273,13 @@ $dbSaved = saveSubmissionToDb([
 if (!$dbSaved) {
 
     error_log(
-        "OanK Cleaning contact enquiry could not be saved, Attempting email fallback. "
-        . "Reference: {$referenceNo}"
+        "OanK Cleaning contact enquiry could not be saved; attempting email fallback for {$email}."
     );
 
     $emailBody = "Name: {$name}\nEmail: {$email}\nPhone: {$phone}\nService: {$service}\nMessage: {$message}";
-    
+
     sendDatabaseFailureEmail(
-        "Contact Enquiry Failure - Reference: {$referenceNo}",
+        "Contact Enquiry Failure - {$name}",
         $emailBody
     );
 
@@ -293,157 +293,24 @@ if (!$dbSaved) {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Notification Email
+| Build & Send Emails via Centralized Templates
 |--------------------------------------------------------------------------
 */
 
-$adminSubject =
-    'New OanK Cleaning Enquiry [' .
-    safeHeaderValue($referenceNo) .
-    '] - ' .
-    safeHeaderValue($service);
+$contactEmailPayload = [
+    'name' => $name,
+    'email' => $email,
+    'phone' => $phone,
+    'service' => $service,
+    'postcode' => $postcode,
+    'preferredDate' => $preferredDate,
+    'preferredDays' => $preferredDays,
+    'quoteEstimate' => $quoteEstimate,
+    'message' => $message,
+];
 
-$adminEmailBody = '';
-$adminEmailBody .= "==========================================\n";
-$adminEmailBody .= " OANK CLEANING - CLIENT ENQUIRY FORM\n";
-$adminEmailBody .= "==========================================\n\n";
-
-$adminEmailBody .=
-    "Reference ID: {$referenceNo}\n";
-
-$adminEmailBody .=
-    "Full Name: {$name}\n";
-
-$adminEmailBody .=
-    "Email: {$email}\n";
-
-$adminEmailBody .=
-    "Phone: " .
-    ($phone !== '' ? $phone : 'Not provided') .
-    "\n";
-
-$adminEmailBody .=
-    "Service Requested: {$service}\n";
-
-$adminEmailBody .=
-    "Postcode / Location: {$postcode}\n";
-
-$adminEmailBody .=
-    "Preferred Date: {$preferredDate}\n";
-
-if ($preferredDays !== '') {
-    $adminEmailBody .=
-        "Preferred Days: {$preferredDays}\n";
-}
-
-if ($quoteEstimate !== null) {
-
-    $adminEmailBody .=
-        'Estimated Quote: £' .
-        number_format($quoteEstimate, 2) .
-        "\n";
-}
-
-$adminEmailBody .= "\nClient Message:\n";
-$adminEmailBody .= $message . "\n\n";
-
-$adminEmailBody .= "------------------------------------------\n";
-
-$adminEmailBody .=
-    'Location: ' .
-    COMPANY_ADDRESS .
-    "\n";
-
-$adminEmailBody .=
-    'Phone Support: ' .
-    COMPANY_PHONE_PRIMARY .
-    ' / ' .
-    COMPANY_PHONE_SECONDARY .
-    "\n";
-
-$adminEmailBody .=
-    'WhatsApp: ' .
-    COMPANY_WHATSAPP_LINK .
-    "\n";
-
-/*
-|--------------------------------------------------------------------------
-| Admin Headers
-|--------------------------------------------------------------------------
-*/
-
-$adminHeaders = [];
-
-$adminHeaders[] =
-    'From: OanK Web Portal <no-reply@' .
-    COMPANY_DOMAIN .
-    '>';
-
-$adminHeaders[] =
-    'Reply-To: ' .
-    safeHeaderValue($name) .
-    ' <' .
-    safeHeaderValue($email) .
-    '>';
-
-$adminHeaders[] =
-    'Bcc: ' .
-    BACKUP_EMAIL;
-
-$adminHeaders[] =
-    'X-Mailer: PHP/' .
-    phpversion();
-
-$adminHeadersString =
-    implode("\r\n", $adminHeaders);
-
-/*
-|--------------------------------------------------------------------------
-| Client Confirmation Email
-|--------------------------------------------------------------------------
-*/
-
-$userSubject =
-    'Enquiry Received [' .
-    safeHeaderValue($referenceNo) .
-    '] - OanK Cleaning Team';
-
-$userHtml = buildUserConfirmationEmailHtml(
-    $name,
-    $referenceNo,
-    $service,
-    $preferredDate
-);
-
-$userHeaders = [];
-
-$userHeaders[] =
-    'MIME-Version: 1.0';
-
-$userHeaders[] =
-    'Content-Type: text/html; charset=UTF-8';
-
-$userHeaders[] =
-    'From: OanK Cleaning Team <info@' .
-    COMPANY_DOMAIN .
-    '>';
-
-$userHeaders[] =
-    'Reply-To: info@' .
-    COMPANY_DOMAIN;
-
-$userHeaders[] =
-    'X-Mailer: PHP/' .
-    phpversion();
-
-$userHeadersString =
-    implode("\r\n", $userHeaders);
-
-/*
-|--------------------------------------------------------------------------
-| Send Emails
-|--------------------------------------------------------------------------
-*/
+$adminEmail = buildContactAdminEmail($contactEmailPayload);
+$clientEmail = buildContactClientEmail($contactEmailPayload);
 
 $adminMailSent = false;
 $userMailSent = false;
@@ -452,9 +319,9 @@ try {
 
     $adminMailSent = @mail(
         NOTIFICATION_EMAIL,
-        $adminSubject,
-        $adminEmailBody,
-        $adminHeadersString
+        $adminEmail['subject'],
+        $adminEmail['body'],
+        $adminEmail['headers']
     );
 
 } catch (Throwable $e) {
@@ -469,9 +336,9 @@ try {
 
     $userMailSent = @mail(
         $email,
-        $userSubject,
-        $userHtml,
-        $userHeadersString
+        $clientEmail['subject'],
+        $clientEmail['html'],
+        $clientEmail['headers']
     );
 
 } catch (Throwable $e) {
@@ -502,7 +369,7 @@ if (!$dbSaved || !$adminMailSent) {
     }
 
     error_log(
-        "OanK Cleaning delivery incomplete [{$referenceNo}]: " .
+        'OanK Cleaning contact delivery incomplete: ' .
         implode(', ', $deliveryFailures)
     );
 
@@ -510,7 +377,6 @@ if (!$dbSaved || !$adminMailSent) {
         false,
         'Enquiry could not be fully delivered (' . implode(' and ', $deliveryFailures) . '). Please call our team directly at ' . COMPANY_PHONE_PRIMARY . '.',
         [
-            'referenceNo' => $referenceNo,
             'database' => [
                 'saved' => $dbSaved,
             ],
@@ -525,9 +391,8 @@ if (!$dbSaved || !$adminMailSent) {
 
 sendJsonResponse(
     true,
-    "Thank you, {$name}! Your enquiry [{$referenceNo}] has been successfully delivered to our team ",
+    "Thank you, {$name}! Your enquiry has been successfully delivered to our team.",
     [
-        'referenceNo' => $referenceNo,
         'name' => $name,
         'email' => $email,
         'phone' => $phone,

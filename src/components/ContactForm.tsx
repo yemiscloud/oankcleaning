@@ -33,7 +33,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
   const [status, setStatus] = useState<{
     type: 'success' | 'error';
     message: string;
-    refNo?: string;
   } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -95,7 +94,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
         setStatus({
           type: 'success',
           message: 'Thank you! Your enquiry has been safely delivered to our team. A member of our team will respond as soon as possible.',
-          refNo: payload.data?.referenceNo || payload.referenceNo,
         });
         setFormData({
           name: '',
@@ -294,11 +292,6 @@ export const ContactForm: React.FC<ContactFormProps> = ({ defaultService }) => {
             )}
             <div>
               <p className="text-xs font-bold">{status.message}</p>
-              {status.refNo && (
-                <p className="text-[11px] text-slate-600 mt-1">
-                  Your Reference Code: <strong>{status.refNo}</strong> · <a href="/track-job" className="font-semibold underline">Track your job</a>
-                </p>
-              )}
             </div>
           </div>
         )}

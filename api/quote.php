@@ -16,6 +16,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/email_templates.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +129,7 @@ if ($rawPropertyType !== '' && !in_array($rawPropertyType, $allowedPropertyTypes
     );
 }
 
-$propertyType = $rawPropertyType !== '' ? $rawPropertyType : 'house';
+$propertyType = $rawPropertyType;
 
 /*
 |--------------------------------------------------------------------------
@@ -268,7 +269,7 @@ $livingRoomDiningRoom = isset($input['livingRoomDiningRoom'])
 $suppliesCleaningMaterials = isset($input['suppliesCleaningMaterials'])
     && ($input['suppliesCleaningMaterials'] === true || $input['suppliesCleaningMaterials'] === 1 || $input['suppliesCleaningMaterials'] === '1');
 
-$livingRoomDiningRoomCharge = $livingRoomDiningRoom ? 25.00 : 0.00;
+$livingRoomDiningRoomCharge = $livingRoomDiningRoom ? 26.00 : 0.00;
 $materialsDiscountRate = $suppliesCleaningMaterials ? 10.00 : 0.00;
 
 /*
@@ -347,19 +348,19 @@ $bestDaysString = empty($bestDays) ? 'Flexible / Any' : implode(', ', $bestDays)
 $priceGuidance = [
     'domestic-regular' => 'From £18.50 per hour',
     'deep-cleaning' => 'From £85 one-off',
-    'end-of-tenancy' => 'From £145 per package',
+    'end-of-tenancy' => 'From £125 per package',
     'commercial-office' => 'From £19.50 per hour on contract',
     'healthcare-carehome' => 'Custom quote',
     'carpet-upholstery' => 'From £45 per room',
 ];
 
 $basePrices = [
-    'domestic-regular' => 45.00,
+    'domestic-regular' => ($propertyType === 'house' ? 10.00 : 0.00),
     'deep-cleaning' => 85.00,
-    'end-of-tenancy' => 145.00,
-    'commercial-office' => 65.00,
+    'end-of-tenancy' => 125.00,
+    'commercial-office' => 50.00,
     'healthcare-carehome' => 95.00,
-    'carpet-upholstery' => 70.00,
+    'carpet-upholstery' => 50.00,
 ];
 
 $frequencyDiscounts = [
@@ -370,14 +371,14 @@ $frequencyDiscounts = [
 ];
 
 $addOnPrices = [
-    'oven' => 35.00,
-    'carpet' => 45.00,
+    'oven' => 30.00,
+    'carpet' => 35.00,
     'windows' => 25.00,
     'fridge' => 20.00,
 ];
 
 $priceDisplay = $priceGuidance[$serviceType];
-$baseRate = $basePrices[$serviceType] ?? 45.00;
+$baseRate = $basePrices[$serviceType] ?? 0.00;
 $bedroomRate = in_array($propertyType, ['office', 'commercial'], true) ? 22.00 : 18.50;
 $bedroomCharge = $bedrooms * $bedroomRate;
 $bathroomCharge = $bathrooms * 12.00;
@@ -515,7 +516,7 @@ if ($hasCustomerDetails) {
         . "Final quote: To be confirmed by OANK after reviewing the requested scope.\n"
         . "Preferred Days: {$bestDaysString}\n"
         . "Add-ons: {$addOnDescription}\n"
-        . "Living room/dining room: " . ($livingRoomDiningRoom ? 'Yes (+£25.00)' : 'No') . "\n"
+        . "Living room/dining room: " . ($livingRoomDiningRoom ? 'Yes (+£26.00)' : 'No') . "\n"
         . "Customer supplying cleaning materials/equipment: " . ($suppliesCleaningMaterials ? 'Yes (10% discount applies)' : 'No') . "\n"
         . "Notes: " . ($notes !== '' ? $notes : 'None');
 
@@ -576,134 +577,43 @@ if ($hasCustomerDetails) {
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Email
+    | Build & Send Quote Emails via Centralized Templates
     |--------------------------------------------------------------------------
     */
 
-    $adminSubject =
-        'New OanK Quote Request [' .
-        safeHeaderValue($quoteId) .
-        '] - Quote request';
+    $quoteEmailPayload = [
+        'quoteId' => $quoteId,
+        'name' => $name,
+        'email' => $email,
+        'phone' => $phone,
+        'postcode' => $postcode,
+        'propertyType' => $propertyType,
+        'serviceType' => $serviceType,
+        'frequency' => $frequency,
+        'bedrooms' => $bedrooms,
+        'bathrooms' => $bathrooms,
+        'livingRoomDiningRoom' => $livingRoomDiningRoom,
+        'addOns' => $addOns,
+        'suppliesCleaningMaterials' => $suppliesCleaningMaterials,
+        'preferredDate' => $preferredDate,
+        'bestDays' => $bestDaysString,
+        'undiscountedPerVisit' => $undiscountedPerVisit,
+        'pricePerVisit' => $pricePerVisit,
+        'frequencyDiscountRate' => $frequencyDiscountRate,
+        'materialsDiscountRate' => $materialsDiscountRate,
+        'notes' => $notes,
+    ];
 
-    $adminBody = '';
-
-    $adminBody .= "==========================================\n";
-    $adminBody .= " OANK CLEANING - QUOTE REQUEST\n";
-    $adminBody .= "==========================================\n\n";
-
-    $adminBody .=
-        "Quote ID: {$quoteId}\n";
-
-    $adminBody .=
-        "Client: {$name}\n";
-
-    $adminBody .=
-        "Email: {$email}\n";
-
-    $adminBody .=
-        "Phone: " .
-        ($phone !== '' ? $phone : 'Not provided') .
-        "\n";
-
-    $adminBody .=
-        "Property Type: {$propertyType}\n";
-
-    $adminBody .=
-        "Service: {$serviceType}\n";
-
-    $adminBody .=
-        "Frequency: {$frequencyLabel}\n";
-
-    $adminBody .=
-        "Bedrooms: {$bedrooms}\n";
-
-    $adminBody .=
-        "Bathrooms: {$bathrooms}\n";
-
-    $adminBody .=
-        'Living room/dining room: ' . ($livingRoomDiningRoom ? 'Yes' : 'No') . "\n";
-
-    $adminBody .=
-        'Customer supplying cleaning materials/equipment: ' . ($suppliesCleaningMaterials ? 'Yes (10% discount applies)' : 'No') . "\n";
-
-    $adminBody .=
-        "Add-ons: " .
-        ($addOnDescription ?? 'None') .
-        "\n";
-
-    $adminBody .=
-        "Postcode: {$postcode}\n";
-
-    $adminBody .=
-        "Preferred Days: {$bestDaysString}\n";
-
-    $adminBody .=
-        "Preferred Date: {$preferredDate}\n";
-
-    $adminBody .=
-        "Price guidance: {$priceDisplay}\n"
-        . "Standard Total (before discount): £" . number_format($originalEstimate, 2) . "\n"
-        . "Frequency Discount: {$frequencyDiscountRate}%\n"
-        . "Materials Discount: {$materialsDiscountRate}%\n"
-        . "Price Per Visit: £" . number_format($pricePerVisit, 2) . "\n"
-        . "Number of Visits: {$numberOfTimes}\n"
-        . "Estimated Total to Pay: £" . number_format($finalEstimate, 2) . "\n"
-        . "Total Savings: £" . number_format($savingsAmount, 2) . "\n"
-        . "Final quote: To be confirmed by OANK after reviewing the requested scope.\n";
-
-    $adminBody .= "\nNotes:\n";
-    $adminBody .=
-        ($notes !== '' ? $notes : 'None') .
-        "\n\n";
-
-    $adminBody .= "------------------------------------------\n";
-
-    $adminBody .=
-        'Location: ' .
-        COMPANY_ADDRESS .
-        "\n";
-
-    $adminBody .=
-        'Phone Support: ' .
-        COMPANY_PHONE_PRIMARY .
-        ' / ' .
-        COMPANY_PHONE_SECONDARY .
-        "\n";
-
-    $adminBody .=
-        'WhatsApp: ' .
-        COMPANY_WHATSAPP_LINK .
-        "\n";
-
-    $adminHeaders = [];
-
-    $adminHeaders[] =
-        'From: OanK Cleaning Team <no-reply@' .
-        COMPANY_DOMAIN .
-        '>';
-
-    $adminHeaders[] =
-        'Reply-To: ' .
-        safeHeaderValue($name) .
-        ' <' .
-        safeHeaderValue($email) .
-        '>';
-
-    $adminHeaders[] =
-        'Bcc: ' .
-        BACKUP_EMAIL;
-
-    $adminHeaders[] =
-        'X-Mailer: PHP/' .
-        phpversion();
+    $adminEmail = buildQuoteAdminEmail($quoteEmailPayload);
+    $clientEmail = buildQuoteClientEmail($quoteEmailPayload);
 
     try {
 
         $adminMailSent = @mail(
             NOTIFICATION_EMAIL,
-            $adminSubject,
-            $adminBody,
-            implode("\r\n", $adminHeaders)
+            $adminEmail['subject'],
+            $adminEmail['body'],
+            $adminEmail['headers']
         );
 
     } catch (Throwable $e) {
@@ -714,40 +624,13 @@ if ($hasCustomerDetails) {
         );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Customer Confirmation Email
-    |--------------------------------------------------------------------------
-    */
-
-    $userSubject =
-        'Your OanK Cleaning Quote Estimate [' .
-        safeHeaderValue($quoteId) .
-        ']';
-
-    $perVisitSuffix = $frequency === 'one-off' ? '' : ' per visit';
-    $userHtml = buildUserConfirmationEmailHtml(
-        $name,
-        $quoteId,
-        $serviceType . ' — ' . $frequencyLabel . ' (estimated £' . number_format($pricePerVisit, 2) . $perVisitSuffix . '; ' . $priceDisplay . ', final quote to be confirmed)',
-        $preferredDate
-    );
-
-    $userHeaders = [
-        'MIME-Version: 1.0',
-        'Content-Type: text/html; charset=UTF-8',
-        'From: OanK Cleaning Team <info@' . COMPANY_DOMAIN . '>',
-        'Reply-To: info@' . COMPANY_DOMAIN,
-        'X-Mailer: PHP/' . phpversion(),
-    ];
-
     try {
 
         $userMailSent = @mail(
             $email,
-            $userSubject,
-            $userHtml,
-            implode("\r\n", $userHeaders)
+            $clientEmail['subject'],
+            $clientEmail['html'],
+            $clientEmail['headers']
         );
 
     } catch (Throwable $e) {

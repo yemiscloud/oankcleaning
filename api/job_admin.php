@@ -3,6 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/cors.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/database.php';
+require_once __DIR__ . '/email_templates.php';
 header('Cache-Control: no-store, private');
 header('Pragma: no-cache');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') sendJsonResponse(false, 'Only POST requests are accepted.', [], 405);
@@ -25,9 +26,8 @@ function jaIssue(PDO $pdo,string $purpose,?int $jobId=null): void {
   if ((int)$q->fetchColumn()>=3) sendJsonResponse(false,'Too many code requests. Wait 15 minutes before trying again.',[],429);
   $code=(string)random_int(100000,999999); $hash=password_hash($code,PASSWORD_DEFAULT); $expiry=gmdate('Y-m-d H:i:s',time()+600);
   $q=$pdo->prepare('INSERT INTO job_admin_otp (ip_hash,purpose,enquiry_id,otp_hash,expires_at) VALUES (?,?,?,?,?)'); $q->execute([$ip,$purpose,$jobId,$hash,$expiry]);
-  $subject=$purpose==='login'?'OANK Cleaning admin sign-in code':'OANK Cleaning delivery confirmation code';
-  $body="Your OANK Cleaning one-time code is: {$code}\n\nIt expires in 10 minutes and can only be used once. If you did not request it, ignore this email.\n";
-  if (!@mail(NOTIFICATION_EMAIL,$subject,$body,'From: OANK Cleaning <'.NOTIFICATION_EMAIL.">\r\nContent-Type: text/plain; charset=UTF-8")) { oankLog('Job OTP email dispatch failed.','ERROR',['purpose'=>$purpose]); sendJsonResponse(false,'We could not send the security code. Please try again later.',[],503); }
+  $otpEmail = buildAdminOtpEmail($purpose, $code);
+  if (!@mail(NOTIFICATION_EMAIL,$otpEmail['subject'],$otpEmail['body'],$otpEmail['headers'])) { oankLog('Job OTP email dispatch failed.','ERROR',['purpose'=>$purpose]); sendJsonResponse(false,'We could not send the security code. Please try again later.',[],503); }
 }
 function jaVerify(PDO $pdo,string $purpose,string $code,?int $jobId=null): bool {
   if (!preg_match('/^\d{6}$/',$code)) return false;

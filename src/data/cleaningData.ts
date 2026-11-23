@@ -100,7 +100,7 @@ export const CLEANING_SERVICES: CleaningService[] = [
       'Removing cobwebs from ceilings and corners',
       'Deep vacuuming and mopping every floor'
     ],
-    priceStart: 'From £145 package',
+    priceStart: 'From £125 package',
     estimatedTime: '5 to 8 hours full property clean',
     image: '/images/service-eot.jpg',
     popular: true,

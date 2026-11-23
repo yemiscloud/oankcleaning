@@ -33,12 +33,12 @@ const PROPERTY_TYPES = [
 ] as const;
 
 const SERVICES = [
-  { id: 'domestic-regular', title: 'Regular Home Clean', sub: 'Every week or two', base: 45 },
+  { id: 'domestic-regular', title: 'Regular Home Clean', sub: 'Every week or two', base: 0 }, // £10 when House is selected, £0 otherwise
   { id: 'deep-cleaning', title: 'Deep Spring Clean', sub: 'Top-to-bottom fresh clean', base: 85 },
-  { id: 'end-of-tenancy', title: 'Move Out Clean', sub: '100% Deposit Back Guarantee', base: 145 },
-  { id: 'commercial-office', title: 'Office & Business Clean', sub: 'For shops, desks and offices', base: 65 },
+  { id: 'end-of-tenancy', title: 'Move Out Clean', sub: '100% Deposit Back Guarantee', base: 125 },
+  { id: 'commercial-office', title: 'Office & Business Clean', sub: 'For shops, desks and offices', base: 50 },
   { id: 'healthcare-carehome', title: 'Care Home & Health Clean', sub: 'Extra careful, germ-free clean', base: 95 },
-  { id: 'carpet-upholstery', title: 'Carpet & Sofa Clean', sub: 'Hot water steam cleaning', base: 70 },
+  { id: 'carpet-upholstery', title: 'Carpet & Sofa Clean', sub: 'Hot water steam cleaning', base: 50 },
 ] as const;
 
 const FREQUENCIES = [
@@ -49,13 +49,13 @@ const FREQUENCIES = [
 ] as const;
 
 const ADD_ONS = [
-  { id: 'oven', label: 'Oven Deep Clean', price: 35 },
-  { id: 'carpet', label: 'Carpet Steam', price: 45 },
+  { id: 'oven', label: 'Oven Deep Clean', price: 30 },
+  { id: 'carpet', label: 'Carpet Steam', price: 35 },
   { id: 'windows', label: 'Inside Windows', price: 25 },
   { id: 'fridge', label: 'Fridge Clean', price: 20 },
 ] as const;
 
-const LIVING_ROOM_PRICE = 25;
+const LIVING_ROOM_PRICE = 26;
 const BATHROOM_RATE = 12;
 const OWN_MATERIALS_DISCOUNT = 0.1;
 
@@ -151,7 +151,12 @@ export const QuoteCalculator: React.FC = () => {
 
   const priceCalculation = useMemo(() => {
     const service = SERVICES.find((s) => s.id === formData.serviceType);
-    const base = service?.base ?? 0;
+    const base =
+      formData.serviceType === 'domestic-regular'
+        ? formData.propertyType === 'house'
+          ? 10
+          : 0
+        : (service?.base ?? 0);
 
     const isBusiness = formData.propertyType === 'office' || formData.propertyType === 'commercial';
     const roomRate = isBusiness ? 22 : 18.5;
@@ -862,11 +867,13 @@ export const QuoteCalculator: React.FC = () => {
                 )}
               </div>
               <p className="text-xs text-slate-500">
-                {priceCalculation.pricePerVisit === 0
+                {!formData.serviceType
                   ? 'Choose a service to see your price.'
-                  : priceCalculation.appliedDiscounts.length > 0
-                    ? `Applied: ${priceCalculation.appliedDiscounts.join(' + ')}`
-                    : 'No hidden fees.'}
+                  : priceCalculation.pricePerVisit === 0
+                    ? 'Add rooms or extras to calculate your price.'
+                    : priceCalculation.appliedDiscounts.length > 0
+                      ? `Applied: ${priceCalculation.appliedDiscounts.join(' + ')}`
+                      : 'No hidden fees.'}
               </p>
             </div>
 
