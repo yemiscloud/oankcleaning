@@ -20,6 +20,7 @@ declare global {
     gtag?: (...args: unknown[]) => void;
     oankTrackLead?: (source: 'contact' | 'quote') => void;
     __oankGaConfigured?: boolean;
+    __oankAdsConfigured?: boolean;
   }
 }
 
@@ -47,13 +48,27 @@ function removeCookies(prefixes: string[]) {
   });
 }
 
+function hasDataLayerJsInit(dataLayer: unknown[]): boolean {
+  return dataLayer.some((entry) => {
+    if (!entry || typeof entry !== 'object') return false;
+    const item = entry as ArrayLike<unknown>;
+    return item[0] === 'js';
+  });
+}
+
 function applyTracking(consent: Consent) {
   const adsConfigured = isConfigured(GOOGLE_ADS_ID, 'AW-') && isConfigured(GOOGLE_ADS_CONVERSION_LABEL, '');
 
   // Consent Mode v2 defaults are set synchronously in index.html before GTM loads.
-  // Update Consent Mode v2 and notify GTM so consent-gated tags (such as Meta Pixel) react cleanly.
+  // Update Consent Mode v2 first, then push oank_consent_updated so GTM consent-gated tags react cleanly.
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function (...args: unknown[]) { window.dataLayer?.push(args); };
+  if (typeof window.gtag !== 'function') {
+    window.gtag = function () {
+      // Google tags expect Arguments objects in dataLayer, not plain rest Arrays.
+      // eslint-disable-next-line prefer-rest-params
+      window.dataLayer?.push(arguments);
+    };
+  }
   const gtag = window.gtag as NonNullable<Window['gtag']>;
   gtag('consent', 'update', {
     analytics_storage: consent.analytics ? 'granted' : 'denied',
@@ -71,6 +86,10 @@ function applyTracking(consent: Consent) {
     marketing_consent: consent.marketing,
   });
 
+  if ((consent.analytics || (consent.marketing && adsConfigured)) && !hasDataLayerJsInit(window.dataLayer)) {
+    gtag('js', new Date());
+  }
+
   // Retain the existing direct GA4 integration. Do not add a second GA4
   // configuration tag in GTM unless this direct integration is removed.
   if (consent.analytics) {
@@ -83,7 +102,6 @@ function applyTracking(consent: Consent) {
       document.head.appendChild(script);
     }
     if (!window.__oankGaConfigured) {
-      gtag('js', new Date());
       gtag('config', GA_ID, { anonymize_ip: true });
       window.__oankGaConfigured = true;
     }
@@ -96,6 +114,7 @@ function applyTracking(consent: Consent) {
 
   // Google Ads config and conversion events are marketing-consent gated.
   if (consent.marketing && adsConfigured) {
+    (window as unknown as Record<string, unknown>)[`ga-disable-${GOOGLE_ADS_ID}`] = false;
     if (!document.getElementById('oank-google-ads-library') && !document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
       const script = document.createElement('script');
       script.id = 'oank-google-ads-library';
@@ -103,13 +122,20 @@ function applyTracking(consent: Consent) {
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`;
       document.head.appendChild(script);
     }
-    gtag('config', GOOGLE_ADS_ID);
+    if (!window.__oankAdsConfigured) {
+      gtag('config', GOOGLE_ADS_ID);
+      window.__oankAdsConfigured = true;
+    }
+  } else {
+    (window as unknown as Record<string, unknown>)[`ga-disable-${GOOGLE_ADS_ID}`] = true;
+    window.__oankAdsConfigured = false;
+    document.getElementById('oank-google-ads-library')?.remove();
   }
 
   // Meta Pixel is managed inside GTM via consent-gated tags on oank_consent_updated
-  // and oank_lead_submitted. When Marketing consent is off, clear accessible Meta cookies.
+  // and oank_lead_submitted. When Marketing consent is off, clear accessible Meta and Google Ads cookies.
   if (!consent.marketing) {
-    removeCookies(['_fbp', '_fbc']);
+    removeCookies(['_fbp', '_fbc', '_gcl_au', '_gcl_aw', '_gcl_dc']);
   }
 
   // Public lead conversion hook; called only after the server confirms a saved
@@ -127,7 +153,6 @@ function applyTracking(consent: Consent) {
   };
 }
 
-
 export const CookieConsent: React.FC = () => {
   const [consent, setConsent] = useState<Consent | null>(() => readConsent());
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -137,6 +162,21 @@ export const CookieConsent: React.FC = () => {
   useEffect(() => {
     if (consent) applyTracking(consent);
   }, [consent]);
+
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSettingsOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [settingsOpen]);
+
+  const openSettings = () => {
+    setAnalytics(consent?.analytics ?? false);
+    setMarketing(consent?.marketing ?? false);
+    setSettingsOpen(true);
+  };
 
   const saveConsent = (analyticsChoice: boolean, marketingChoice: boolean) => {
     const next: Consent = {
@@ -148,12 +188,6 @@ export const CookieConsent: React.FC = () => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* Consent controls still work for this visit. */ }
     setConsent(next);
     setSettingsOpen(false);
-  };
-
-  const openSettings = () => {
-    setAnalytics(consent?.analytics ?? false);
-    setMarketing(consent?.marketing ?? false);
-    setSettingsOpen(true);
   };
 
   return (
@@ -169,9 +203,9 @@ export const CookieConsent: React.FC = () => {
               <a href="/privacy-policy" className="mt-2 inline-block text-xs font-semibold text-[#0F382C] underline">Read our Privacy Policy</a>
             </div>
             <div className="flex flex-wrap gap-2 md:justify-end">
-              <button type="button" onClick={() => saveConsent(true, true)} className="rounded-lg bg-[#0F382C] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1B4332]">Accept all</button>
-              <button type="button" onClick={() => saveConsent(false, false)} className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">Reject optional cookies</button>
-              <button type="button" onClick={openSettings} className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50">Cookie settings</button>
+              <button type="button" onClick={() => saveConsent(true, true)} className="rounded-lg bg-[#0F382C] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1B4332] cursor-pointer">Accept all</button>
+              <button type="button" onClick={() => saveConsent(false, false)} className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 cursor-pointer">Reject optional cookies</button>
+              <button type="button" onClick={openSettings} className="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 hover:bg-slate-50 cursor-pointer">Cookie settings</button>
             </div>
           </div>
         </section>
@@ -185,7 +219,7 @@ export const CookieConsent: React.FC = () => {
                 <h2 id="cookie-settings-title" className="text-lg font-bold text-slate-900">Cookie settings</h2>
                 <p className="mt-1 text-sm text-slate-600">Choose which optional technologies OANK Cleaning may use.</p>
               </div>
-              <button type="button" onClick={() => setSettingsOpen(false)} className="rounded-md px-2 py-1 text-xl text-slate-500 hover:bg-slate-100" aria-label="Close cookie settings">×</button>
+              <button type="button" onClick={() => setSettingsOpen(false)} className="rounded-md px-2 py-1 text-xl text-slate-500 hover:bg-slate-100 cursor-pointer" aria-label="Close cookie settings">×</button>
             </div>
             <div className="mt-5 divide-y divide-slate-200">
               <div className="flex items-center justify-between gap-4 py-4">
@@ -202,8 +236,8 @@ export const CookieConsent: React.FC = () => {
               </label>
             </div>
             <div className="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-              <button type="button" onClick={() => saveConsent(false, false)} className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800">Reject optional</button>
-              <button type="button" onClick={() => saveConsent(analytics, marketing)} className="rounded-lg bg-[#0F382C] px-4 py-2.5 text-sm font-semibold text-white">Save my choices</button>
+              <button type="button" onClick={() => saveConsent(false, false)} className="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-800 cursor-pointer">Reject optional</button>
+              <button type="button" onClick={() => saveConsent(analytics, marketing)} className="rounded-lg bg-[#0F382C] px-4 py-2.5 text-sm font-semibold text-white cursor-pointer">Save my choices</button>
             </div>
           </section>
         </div>
