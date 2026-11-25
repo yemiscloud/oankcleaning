@@ -59,7 +59,7 @@ export const PrivacyPage: React.FC = () => (
             <li><strong>Steps before a contract and contract:</strong> handling a quote or service request you make and providing an agreed cleaning service.</li>
             <li><strong>Legitimate interests:</strong> responding to general enquiries, maintaining appropriate business records, operating and securing the website, reviewing chat interactions and preventing misuse. We consider the impact on individuals and use this basis only where their interests and rights do not override ours.</li>
             <li><strong>Legal obligation:</strong> keeping or disclosing records where the law requires us to do so.</li>
-            <li><strong>Consent:</strong> using optional analytics and advertising technologies. You can withdraw or change this consent at any time through Cookie settings. Withdrawing consent does not affect processing that took place before withdrawal.</li>
+            <li><strong>Consent:</strong> using optional analytics and advertising technologies. You can choose your preferences before saving, or withdraw consent later by clearing cookies and site storage for this website in your browser and reloading the page. Withdrawing consent does not affect processing that took place before withdrawal.</li>
           </ul>
         </Section>
 
@@ -69,7 +69,7 @@ export const PrivacyPage: React.FC = () => (
             <li><strong>Analytics:</strong> Google Analytics (measurement ID G-LQB16ZXJEC) helps us understand how visitors use the website. It is enabled only if you accept Analytics.</li>
             <li><strong>Marketing:</strong> Meta Pixel (ID 1801963148593783), connected to OANK Cleaning's Meta Business account, helps measure advertising and campaign performance. It is enabled only if you accept Marketing.</li>
           </ul>
-          <p>Select <strong>Accept all</strong>, <strong>Reject optional cookies</strong> or <strong>Cookie settings</strong> in the website consent panel. After making a choice, use the Cookie settings control shown on the website to change it. Rejecting optional technologies does not prevent you from using the website.</p>
+          <p>Select <strong>Accept all</strong>, <strong>Reject optional cookies</strong> or <strong>Cookie settings</strong> in the website consent panel. To change or withdraw your saved choice later, clear cookies and site storage for this website in your browser settings and reload the page. Rejecting optional technologies does not prevent you from using the website.</p>
         </Section>
 
         <Section title="6. Who we share information with">
