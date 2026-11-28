@@ -421,59 +421,42 @@ $quoteId = generateSecureJobReference();
 
 /*
 |--------------------------------------------------------------------------
-| Customer Submission
+| Customer Submission Validation
 |--------------------------------------------------------------------------
 |
-| Customer details are optional for calculating the quote.
-| They become mandatory when the customer wants the quote
-| submitted/booked.
+| Customer details are mandatory for quote requests. Pricing is calculated
+| internally for Admin review only and is never returned to the client.
 |
 */
 
-$hasCustomerDetails = (
-    $name !== ''
-    || $email !== ''
-    || $phone !== ''
-);
-
-/*
-|--------------------------------------------------------------------------
-| Validate Customer Information When Provided
-|--------------------------------------------------------------------------
-*/
-
-if ($hasCustomerDetails) {
-
-    if ($rawPropertyType === '') {
-
-        sendJsonResponse(
-            false,
-            'Please select a property type (House, Flat, Office, or Business).',
-            [],
-            400
-        );
-    }
-
-    if ($name === '' || $email === '') {
-
-        sendJsonResponse(
-            false,
-            'Please provide your full name and email address to submit your quote request.',
-            [],
-            400
-        );
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-
-        sendJsonResponse(
-            false,
-            'Please provide a valid email address.',
-            [],
-            400
-        );
-    }
+if ($rawPropertyType === '') {
+    sendJsonResponse(
+        false,
+        'Please select a property type (House, Flat, Office, or Business).',
+        [],
+        400
+    );
 }
+
+if ($name === '' || $email === '') {
+    sendJsonResponse(
+        false,
+        'Please provide your full name and email address to submit your quote request.',
+        [],
+        400
+    );
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    sendJsonResponse(
+        false,
+        'Please provide a valid email address.',
+        [],
+        400
+    );
+}
+
+$hasCustomerDetails = true;
 
 /*
 |--------------------------------------------------------------------------
@@ -590,6 +573,7 @@ if ($hasCustomerDetails) {
         'propertyType' => $propertyType,
         'serviceType' => $serviceType,
         'frequency' => $frequency,
+        'numberOfTimes' => $numberOfTimes,
         'bedrooms' => $bedrooms,
         'bathrooms' => $bathrooms,
         'livingRoomDiningRoom' => $livingRoomDiningRoom,
@@ -597,8 +581,15 @@ if ($hasCustomerDetails) {
         'suppliesCleaningMaterials' => $suppliesCleaningMaterials,
         'preferredDate' => $preferredDate,
         'bestDays' => $bestDaysString,
+        'baseRate' => $baseRate,
+        'bedroomCharge' => $bedroomCharge,
+        'bathroomCharge' => $bathroomCharge,
+        'addOnsTotal' => $addOnsTotal,
+        'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
         'undiscountedPerVisit' => $undiscountedPerVisit,
         'pricePerVisit' => $pricePerVisit,
+        'finalEstimate' => $finalEstimate,
+        'savingsAmount' => $savingsAmount,
         'frequencyDiscountRate' => $frequencyDiscountRate,
         'materialsDiscountRate' => $materialsDiscountRate,
         'notes' => $notes,
@@ -652,47 +643,18 @@ $responseData = [
     'quoteId' => $quoteId,
     'referenceNo' => $quoteId,
 
-    'estimatedPrice' => $finalEstimate,
-    'originalTotal' => $originalEstimate,
-    'savings' => $savingsAmount,
-    'pricePerVisit' => $pricePerVisit,
-    'priceDisplay' => $priceDisplay,
-
-    'currency' => 'GBP',
-
-    'breakdown' => [
-        'baseRate' => $baseRate,
-        'bedroomCharge' => $bedroomCharge,
-        'bathroomCharge' => $bathroomCharge,
-        'addOnsTotal' => $addOnsTotal,
-        'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
-        'undiscountedPerVisit' => $undiscountedPerVisit,
-        'frequencyDiscountRate' => $frequencyDiscountRate,
-        'materialsDiscountRate' => $materialsDiscountRate,
-        'pricePerVisit' => $pricePerVisit,
-        'numberOfTimes' => $numberOfTimes,
-        'originalTotal' => $originalEstimate,
-        'totalPrice' => $finalEstimate,
-        'savings' => $savingsAmount,
-        'priceGuidance' => $priceDisplay,
-        'finalQuoteConfirmed' => false,
-    ],
-
     'propertyType' => $propertyType,
     'bedrooms' => $bedrooms,
     'bathrooms' => $bathrooms,
     'serviceType' => $serviceType,
     'frequency' => $frequency,
     'frequencyCount' => $numberOfTimes,
-    'frequencyDiscountRate' => $frequencyDiscountRate,
     'addOns' => $addOns,
     'livingRoomDiningRoom' => $livingRoomDiningRoom,
-    'livingRoomDiningRoomCharge' => $livingRoomDiningRoomCharge,
     'suppliesCleaningMaterials' => $suppliesCleaningMaterials,
-    'materialsDiscountRate' => $materialsDiscountRate,
 
     'submission' => [
-        'submitted' => $hasCustomerDetails,
+        'submitted' => true,
         'databaseSaved' => $dbSaved,
         'mail' => [
             'adminSent' => $adminMailSent,
@@ -701,46 +663,31 @@ $responseData = [
     ],
 ];
 
-if ($hasCustomerDetails) {
-    if (!$dbSaved || !$adminMailSent) {
-        $deliveryFailures = [];
-        if (!$dbSaved) {
-            $deliveryFailures[] = 'Database table insertion failed';
-        }
-        if (!$adminMailSent) {
-            $deliveryFailures[] = 'Notification email delivery failed';
-        }
-
-        error_log(
-            "OanK Cleaning quote delivery incomplete [{$quoteId}]: " .
-            implode(', ', $deliveryFailures)
-        );
-
-        sendJsonResponse(
-            false,
-            'Quote request could not be fully delivered (' . implode(' and ', $deliveryFailures) . '). Please call our team directly at ' . COMPANY_PHONE_PRIMARY . '.',
-            $responseData,
-            500
-        );
+if (!$dbSaved || !$adminMailSent) {
+    $deliveryFailures = [];
+    if (!$dbSaved) {
+        $deliveryFailures[] = 'Database table insertion failed';
+    }
+    if (!$adminMailSent) {
+        $deliveryFailures[] = 'Notification email delivery failed';
     }
 
+    error_log(
+        "OanK Cleaning quote delivery incomplete [{$quoteId}]: " .
+        implode(', ', $deliveryFailures)
+    );
+
     sendJsonResponse(
-        true,
-        "Your quote request [{$quoteId}] has been successfully delivered to our team. ",
+        false,
+        'Quote request could not be fully delivered (' . implode(' and ', $deliveryFailures) . '). Please call our team directly at ' . COMPANY_PHONE_PRIMARY . '.',
         $responseData,
-        200
+        500
     );
 }
 
-/*
-|--------------------------------------------------------------------------
-| Quote Calculation Only
-|--------------------------------------------------------------------------
-*/
-
 sendJsonResponse(
     true,
-    "Price guidance: {$priceDisplay}. The final quote will be confirmed by OANK after reviewing your requirements.",
+    "Your quote request [{$quoteId}] has been successfully received by our team. We will review your requirements and send you a tailored quote shortly.",
     $responseData,
     200
 );

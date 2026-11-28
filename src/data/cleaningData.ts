@@ -262,7 +262,7 @@ export const FAQS: FAQItem[] = [
   },
   {
     question: 'Do I need to supply soaps, vacuums, or cloths?',
-    answer: 'No, you do not need to buy anything! Our cleaners bring professional vacuums, clean cloths, mops, and safe cleaning products. But If you have a preferred cleaning product or equipment that you would love to provide, you should indicate during booking to get a 10% discount on the service.',
+    answer: 'No, you do not need to buy anything! Our cleaners bring professional vacuums, clean cloths, mops, and safe cleaning products. If you have preferred cleaning products or equipment you would like us to use, you can let us know on the quote request form.',
   category: 'booking'
   },
   {
@@ -271,8 +271,8 @@ export const FAQS: FAQItem[] = [
     category: 'pricing'
   },
   {
-    question: 'How can I get an instant price estimate or book a clean?',
-    answer: 'You can use the simple Instant Quote Calculator on this website, send us a quick note on the Contact page, or call our friendly Paisley team at +44 77 3195 6727.',
+    question: 'How can I request a quote or book a clean?',
+    answer: 'You can submit your details using the Request a Quote form on this website, send us a quick note on the Contact page, or call our friendly Paisley team at +44 77 3195 6727. Our team will review your requirements and confirm your tailored quote.',
     category: 'booking'
   }
 ];

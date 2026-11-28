@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  Calculator,
+  ClipboardList,
   Home,
   Building,
   Sparkles,
@@ -13,7 +13,7 @@ import {
   Phone,
   Send,
   ShieldCheck,
-  Percent,
+  Repeat,
   Info,
 } from 'lucide-react';
 import { QuoteFormData } from '../types';
@@ -33,31 +33,27 @@ const PROPERTY_TYPES = [
 ] as const;
 
 const SERVICES = [
-  { id: 'domestic-regular', title: 'Regular Home Clean', sub: 'Every week or two', base: 0 }, // £10 when House is selected, £0 otherwise
-  { id: 'deep-cleaning', title: 'Deep Spring Clean', sub: 'Top-to-bottom fresh clean', base: 85 },
-  { id: 'end-of-tenancy', title: 'Move Out Clean', sub: '100% Deposit Back Guarantee', base: 125 },
-  { id: 'commercial-office', title: 'Office & Business Clean', sub: 'For shops, desks and offices', base: 50 },
-  { id: 'healthcare-carehome', title: 'Care Home & Health Clean', sub: 'Extra careful, germ-free clean', base: 95 },
-  { id: 'carpet-upholstery', title: 'Carpet & Sofa Clean', sub: 'Hot water steam cleaning', base: 50 },
+  { id: 'domestic-regular', title: 'Regular Home Clean', sub: 'Every week or two' },
+  { id: 'deep-cleaning', title: 'Deep Spring Clean', sub: 'Top-to-bottom fresh clean' },
+  { id: 'end-of-tenancy', title: 'Move Out Clean', sub: '100% Deposit Back Guarantee' },
+  { id: 'commercial-office', title: 'Office & Business Clean', sub: 'For shops, desks and offices' },
+  { id: 'healthcare-carehome', title: 'Care Home & Health Clean', sub: 'Extra careful, germ-free clean' },
+  { id: 'carpet-upholstery', title: 'Carpet & Sofa Clean', sub: 'Hot water steam cleaning' },
 ] as const;
 
 const FREQUENCIES = [
-  { id: 'one-off', label: 'One Time', note: 'Standard price', discount: 0 },
-  { id: 'weekly', label: 'Every Week', note: 'Save 15%', discount: 0.15 },
-  { id: 'fortnightly', label: 'Every 2 Weeks', note: 'Save 10%', discount: 0.1 },
-  { id: 'monthly', label: 'Once a Month', note: 'Save 5%', discount: 0.05 },
+  { id: 'one-off', label: 'One Time', note: 'Single visit' },
+  { id: 'weekly', label: 'Every Week', note: 'Weekly clean' },
+  { id: 'fortnightly', label: 'Every 2 Weeks', note: 'Fortnightly clean' },
+  { id: 'monthly', label: 'Once a Month', note: 'Monthly clean' },
 ] as const;
 
 const ADD_ONS = [
-  { id: 'oven', label: 'Oven Deep Clean', price: 30 },
-  { id: 'carpet', label: 'Carpet Steam', price: 35 },
-  { id: 'windows', label: 'Inside Windows', price: 25 },
-  { id: 'fridge', label: 'Fridge Clean', price: 20 },
+  { id: 'oven', label: 'Oven Deep Clean' },
+  { id: 'carpet', label: 'Carpet Steam' },
+  { id: 'windows', label: 'Inside Windows' },
+  { id: 'fridge', label: 'Fridge Clean' },
 ] as const;
-
-const LIVING_ROOM_PRICE = 26;
-const BATHROOM_RATE = 12;
-const OWN_MATERIALS_DISCOUNT = 0.1;
 
 const DAYS = [
   { value: 'Monday', label: 'Mon' },
@@ -69,9 +65,6 @@ const DAYS = [
   { value: 'Sunday', label: 'Sun' },
   { value: 'Any.', label: 'Any day' }, // value kept as 'Any.' for the API
 ] as const;
-
-const round2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100;
-const money = (n: number) => `£${n.toFixed(2)}`;
 
 /* ------------------------------------------------------------------ */
 /* Shared styles                                                       */
@@ -147,56 +140,21 @@ export const QuoteCalculator: React.FC = () => {
     );
   };
 
-  /* ---------------------------- Pricing ---------------------------- */
+  const selectionSummary = useMemo(() => {
+    const selectedProperty = PROPERTY_TYPES.find((p) => p.id === formData.propertyType);
+    const selectedService = SERVICES.find((s) => s.id === formData.serviceType);
+    const selectedFrequency = FREQUENCIES.find((f) => f.id === formData.frequency);
 
-  const priceCalculation = useMemo(() => {
-    const service = SERVICES.find((s) => s.id === formData.serviceType);
-    const base =
-      formData.serviceType === 'domestic-regular'
-        ? formData.propertyType === 'house'
-          ? 10
-          : 0
-        : (service?.base ?? 0);
-
-    const isBusiness = formData.propertyType === 'office' || formData.propertyType === 'commercial';
-    const roomRate = isBusiness ? 22 : 18.5;
-
-    const addOnsTotal = ADD_ONS.filter((a) => formData.addOns.includes(a.id)).reduce(
-      (sum, a) => sum + a.price,
-      0
-    );
-
-    const undiscounted =
-      base +
-      (formData.bedrooms ?? 0) * roomRate +
-      (formData.bathrooms ?? 0) * BATHROOM_RATE +
-      addOnsTotal +
-      (formData.livingRoomDiningRoom ? LIVING_ROOM_PRICE : 0);
-
-    const frequency = FREQUENCIES.find((f) => f.id === formData.frequency);
-    const frequencyDiscount = frequency?.discount ?? 0;
-
-    let discounted = undiscounted * (1 - frequencyDiscount);
-    if (formData.suppliesCleaningMaterials === true) {
-      discounted *= 1 - OWN_MATERIALS_DISCOUNT;
+    if (!selectedProperty || !selectedService) {
+      return 'Select your property and service details above.';
     }
 
-    const originalPerVisit = round2(undiscounted);
-    const pricePerVisit = round2(discounted);
-    const savingsPerVisit = Math.max(0, round2(originalPerVisit - pricePerVisit));
-
-    const appliedDiscounts: string[] = [];
-    if (frequencyDiscount > 0) {
-      appliedDiscounts.push(`${Math.round(frequencyDiscount * 100)}% ${frequency?.id} discount`);
+    const parts: string[] = [selectedProperty.label, selectedService.title];
+    if (selectedFrequency) {
+      parts.push(selectedFrequency.label);
     }
-    if (formData.suppliesCleaningMaterials === true) {
-      appliedDiscounts.push('10% own materials discount');
-    }
-
-    return { pricePerVisit, originalPerVisit, savingsPerVisit, appliedDiscounts };
-  }, [formData]);
-
-  const isOneOff = formData.frequency === 'one-off';
+    return parts.join(' · ');
+  }, [formData.propertyType, formData.serviceType, formData.frequency]);
 
   /* --------------------------- Handlers ---------------------------- */
 
@@ -276,7 +234,7 @@ export const QuoteCalculator: React.FC = () => {
       setFieldErrors(errors);
       showFeedback({
         type: 'error',
-        message: 'Please check your contact details so we can call you to confirm.',
+        message: 'Please check your contact details so we can send you your tailored quote.',
       });
       return;
     }
@@ -301,12 +259,6 @@ export const QuoteCalculator: React.FC = () => {
           email,
           phone,
           notes,
-          pricePerVisit: priceCalculation.pricePerVisit,
-          originalPerVisit: priceCalculation.originalPerVisit,
-          savingsPerVisit: priceCalculation.savingsPerVisit,
-          estimatedPrice: priceCalculation.pricePerVisit,
-          originalTotal: priceCalculation.originalPerVisit,
-          savings: priceCalculation.savingsPerVisit,
         }),
       });
 
@@ -341,7 +293,7 @@ export const QuoteCalculator: React.FC = () => {
         const referenceNo = payload.data?.referenceNo || payload.referenceNo;
         showFeedback({
           type: 'success',
-          message: `Thank you, ${name}! Your request has been received. One of our team will call you shortly.`,
+          message: `Thank you, ${name}! Your quote request has been received. Our team will review your requirements and contact you shortly.`,
           referenceNo,
         });
         setFormData(initialForm);
@@ -389,17 +341,17 @@ export const QuoteCalculator: React.FC = () => {
       {/* Banner */}
       <div className="rounded-t-3xl bg-[#0F382C] p-5 text-white sm:p-8">
         <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300">
-          <Calculator className="h-4 w-4" aria-hidden="true" />
-          <span>Cleaning Quote</span>
+          <ClipboardList className="h-4 w-4" aria-hidden="true" />
+          <span>Cleaning Quote Request</span>
         </div>
-        <h2 className="text-2xl font-bold sm:text-3xl">Get Your Cleaning Estimate</h2>
+        <h2 className="text-2xl font-bold sm:text-3xl">Tell Us About Your Clean</h2>
         <p className="mt-2 max-w-xl text-sm leading-relaxed text-emerald-100">
-          Choose your requirements and see your price update as you go.
+          Share your property details and cleaning requirements so our team can prepare a tailored quote for you.
         </p>
 
         <div className="mt-5 flex items-start gap-2 border-t border-emerald-800 pt-4 text-xs leading-relaxed text-emerald-100">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" aria-hidden="true" />
-          <p>We will confirm your selections and the final price with you before booking.</p>
+          <p>Our team will review your selections and send your confirmed quote</p>
         </div>
       </div>
 
@@ -516,8 +468,8 @@ export const QuoteCalculator: React.FC = () => {
 
           <fieldset>
             <legend className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-slate-700">
-              <Percent className="h-3.5 w-3.5 text-[#D4AF37]" aria-hidden="true" />
-              How often? Regular visits cost less.
+              <Repeat className="h-3.5 w-3.5 text-[#D4AF37]" aria-hidden="true" />
+              How often do you need cleaning?
             </legend>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" role="radiogroup">
               {FREQUENCIES.map((f) => {
@@ -533,8 +485,8 @@ export const QuoteCalculator: React.FC = () => {
                   >
                     <span>{f.label}</span>
                     <span
-                      className={`text-xs font-semibold ${
-                        selected ? 'text-amber-300' : 'text-emerald-700'
+                      className={`text-xs font-medium ${
+                        selected ? 'text-amber-300' : 'text-slate-500'
                       }`}
                     >
                       {f.note}
@@ -593,14 +545,12 @@ export const QuoteCalculator: React.FC = () => {
                 ...ADD_ONS.map((a) => ({
                   id: a.id as string,
                   label: a.label,
-                  price: a.price,
                   checked: formData.addOns.includes(a.id),
                   onToggle: () => handleToggleAddOn(a.id),
                 })),
                 {
                   id: 'living-dining',
                   label: 'Living / Dining room',
-                  price: LIVING_ROOM_PRICE,
                   checked: formData.livingRoomDiningRoom,
                   onToggle: () => updateField('livingRoomDiningRoom', !formData.livingRoomDiningRoom),
                 },
@@ -611,7 +561,7 @@ export const QuoteCalculator: React.FC = () => {
                   role="checkbox"
                   aria-checked={item.checked}
                   onClick={item.onToggle}
-                  className={`flex min-h-[60px] items-center justify-between gap-3 rounded-xl border-2 p-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 ${
+                  className={`flex min-h-[56px] items-center justify-between gap-3 rounded-xl border-2 p-3.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 ${
                     item.checked
                       ? 'border-[#0F382C] bg-emerald-50 text-[#0F382C]'
                       : 'border-slate-200 text-slate-700 hover:border-slate-400'
@@ -619,7 +569,6 @@ export const QuoteCalculator: React.FC = () => {
                 >
                   <span className="min-w-0">
                     <span className="block text-sm font-semibold leading-snug">{item.label}</span>
-                    <span className="mt-0.5 block text-xs font-bold text-amber-700">+£{item.price}</span>
                   </span>
                   <span
                     aria-hidden="true"
@@ -639,11 +588,13 @@ export const QuoteCalculator: React.FC = () => {
             <p className="text-sm font-bold text-[#0F382C]">
               Will you supply the cleaning materials and equipment?
             </p>
-            <p className="mt-0.5 text-xs text-slate-500">If yes, you get 10% off your estimate.</p>
+            <p className="mt-0.5 text-xs text-slate-500">
+              Let us know if you would prefer our cleaners to use your own products and equipment.
+            </p>
 
             <div className="mt-3 grid grid-cols-2 gap-2.5 sm:max-w-xs" role="radiogroup">
               {[
-                { value: true, label: 'Yes (10% off)' },
+                { value: true, label: 'Yes' },
                 { value: false, label: 'No' },
               ].map((option) => {
                 const selected = formData.suppliesCleaningMaterials === option.value;
@@ -770,7 +721,7 @@ export const QuoteCalculator: React.FC = () => {
                   id="qc-postcode"
                   type="text"
                   autoComplete="postal-code"
-                  placeholder="e.g. M1 1AE"
+                  placeholder="e.g. PA1 1AA"
                   maxLength={50}
                   value={formData.postcode}
                   onChange={(e) => updateField('postcode', e.target.value)}
@@ -844,37 +795,17 @@ export const QuoteCalculator: React.FC = () => {
           )}
         </div>
 
-        {/* Sticky price + submit bar (single price display) */}
+        {/* Sticky quote review + submit bar */}
         <div className="sticky bottom-0 z-10 -mx-5 rounded-b-3xl border-t border-emerald-200 bg-white/95 px-5 py-4 shadow-[0_-8px_20px_-12px_rgba(15,56,44,0.25)] backdrop-blur sm:-mx-8 sm:px-8">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0" aria-live="polite" aria-atomic="true">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-600">
-                {isOneOff ? 'Estimated price' : 'Estimated price per visit'}
+              <p className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                Tailored Quote Review
               </p>
-              <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
-                <span className="text-3xl font-extrabold tabular-nums tracking-tight text-[#0F382C]">
-                  {money(priceCalculation.pricePerVisit)}
-                </span>
-                {priceCalculation.savingsPerVisit > 0 && (
-                  <>
-                    <span className="text-sm font-semibold tabular-nums text-slate-400 line-through">
-                      {money(priceCalculation.originalPerVisit)}
-                    </span>
-                    <span className="rounded-md border border-emerald-200 bg-emerald-100 px-2 py-0.5 text-xs font-bold tabular-nums text-emerald-800">
-                      Save {money(priceCalculation.savingsPerVisit)}
-                    </span>
-                  </>
-                )}
-              </div>
-              <p className="text-xs text-slate-500">
-                {!formData.serviceType
-                  ? 'Choose a service to see your price.'
-                  : priceCalculation.pricePerVisit === 0
-                    ? 'Add rooms or extras to calculate your price.'
-                    : priceCalculation.appliedDiscounts.length > 0
-                      ? `Applied: ${priceCalculation.appliedDiscounts.join(' + ')}`
-                      : 'No hidden fees.'}
+              <p className="text-base font-bold text-[#0F382C]">
+                Our team will review &amp; confirm your quote
               </p>
+              <p className="text-xs text-slate-500">{selectionSummary}</p>
             </div>
 
             <button
@@ -887,7 +818,7 @@ export const QuoteCalculator: React.FC = () => {
               ) : (
                 <>
                   <Send className="h-4 w-4 text-[#D4AF37]" aria-hidden="true" />
-                  <span>Send Booking Request</span>
+                  <span>Send Quote Request</span>
                 </>
               )}
             </button>
@@ -895,8 +826,7 @@ export const QuoteCalculator: React.FC = () => {
 
           <p className="mt-3 flex items-center gap-2 text-xs text-slate-500">
             <ShieldCheck className="h-4 w-4 shrink-0 text-[#D4AF37]" aria-hidden="true" />
-            100% Deposit Back Guarantee on move out cleans
-          </p>
+            100% Satisfaction Guarantee </p>
         </div>
       </form>
     </div>

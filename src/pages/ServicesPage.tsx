@@ -171,7 +171,7 @@ export const ServicesPage: React.FC<ServicesPageProps> = ({ onNavigate, onSelect
             onClick={() => onNavigate('quote')}
             className="flex-shrink-0 bg-[#0F382C] hover:bg-[#1B4332] text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded-xl shadow cursor-pointer flex items-center gap-2"
           >
-            <span>Check Your Price</span>
+            <span>Request a Quote</span>
             <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
           </button>
         </div>

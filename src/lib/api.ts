@@ -92,7 +92,7 @@ export const submitContactForm = async (
       }
       return {
         success: true,
-        message: 'Thank you! Your enquiry has been received. Our customer care team will contact you within 2 business hours.',
+        message: 'Thank you! Your enquiry has been received. Our Paisley customer care team will contact you within 2 business hours.',
       };
     }
 
@@ -131,7 +131,7 @@ export const submitQuoteRequest = async (
         success: true,
         referenceNo: refNo,
         quoteId: refNo,
-        message: 'Thank you! Your instant quote has been registered. Our operations team in your area will review your booking requirements and follow up promptly.',
+        message: 'Thank you! Your quote request has been registered. Our operations team in Paisley will review your requirements and follow up with your tailored quote promptly.',
       };
     }
 

@@ -17,8 +17,6 @@ if (!function_exists('buildQuoteConfirmationEmailHtml')) {
         $serviceType = trim((string) ($data['serviceType'] ?? ''));
         $frequency = trim((string) ($data['frequency'] ?? 'one-off'));
         $preferredDate = trim((string) ($data['preferredDate'] ?? ''));
-        $pricePerVisit = (float) ($data['pricePerVisit'] ?? 0);
-        $savingsAmount = (float) ($data['savingsAmount'] ?? 0);
 
         $serviceNames = [
             'domestic-regular' => 'Regular Home Cleaning',
@@ -30,17 +28,9 @@ if (!function_exists('buildQuoteConfirmationEmailHtml')) {
         ];
         $serviceLabel = oankEsc($serviceNames[$serviceType] ?? $serviceType);
         $frequencyLabel = oankEsc(ucfirst($frequency));
-        $perVisitSuffix = $frequency === 'one-off' ? '' : ' per visit';
-        $safePrice = '£' . number_format($pricePerVisit, 2) . $perVisitSuffix;
 
         $phone = oankEsc(COMPANY_PHONE_PRIMARY);
         $whatsappLink = oankEsc(COMPANY_WHATSAPP_LINK);
-
-        $savingsHtml = '';
-        if ($savingsAmount > 0) {
-            $safeSavings = '£' . number_format($savingsAmount, 2);
-            $savingsHtml = "<p style=\"margin:6px 0 0;font-size:13px;color:#047857;\"><strong>Savings applied:</strong> {$safeSavings}</p>";
-        }
 
         $dateHtml = '';
         if ($preferredDate !== '') {
@@ -52,7 +42,7 @@ if (!function_exists('buildQuoteConfirmationEmailHtml')) {
     Dear <strong>{$safeName}</strong>,
 </p>
 <p style="font-size:15px;line-height:1.6;margin:0 0 16px;">
-    Thank you for requesting a quote with us. Our team will review your details and confirm your final price before booking.
+    Thank you for requesting a quote with us. Our team is reviewing your property details and cleaning requirements, and will contact you shortly with your tailored quote before booking.
 </p>
 <div style="background:#f8fafc;border-left:4px solid #0F382C;padding:14px 16px;margin:0 0 18px;border-radius:4px;">
     <p style="margin:0 0 6px;font-size:13px;color:#475569;">
@@ -63,14 +53,13 @@ if (!function_exists('buildQuoteConfirmationEmailHtml')) {
         <strong>Service:</strong> {$serviceLabel} ({$frequencyLabel})
     </p>
     <p style="margin:0;font-size:13px;color:#475569;">
-        <strong>Estimated Price:</strong> {$safePrice}
+        <strong>Status:</strong> Pending Review
     </p>
-    {$savingsHtml}
     {$dateHtml}
 </div>
 <p style="margin:0 0 18px;">
     <a href="https://oankcleaning.co.uk/track-job" style="display:inline-block;background:#0F382C;color:#ffffff;padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:13px;">
-        Track your job
+        Track your request
     </a>
 </p>
 <p style="font-size:14px;line-height:1.6;margin:0;">
@@ -80,8 +69,8 @@ if (!function_exists('buildQuoteConfirmationEmailHtml')) {
 HTML;
 
         return buildOankEmailHtml(
-            'Your Quote Estimate - ' . COMPANY_NAME,
-            'Your Quote Estimate',
+            'Quote Request Received - ' . COMPANY_NAME,
+            'Quote Request Received',
             $bodyHtml
         );
     }

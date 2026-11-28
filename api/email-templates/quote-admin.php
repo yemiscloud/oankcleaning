@@ -64,6 +64,7 @@ if (!function_exists('buildQuoteAdminEmailText')) {
 
         $lines = [
             'New Quote Request',
+            '[INTERNAL ADMIN OVERVIEW — Pricing is NOT shown to the customer. Review and adjust as needed before sending the quote to the client.]',
             '',
             "Quote Reference: {$quoteId}",
             "Client: {$name}",
@@ -100,15 +101,18 @@ if (!function_exists('buildQuoteAdminEmailText')) {
         }
 
         $lines[] = '';
-        $lines[] = ($frequency === 'one-off' ? 'Estimated Price: ' : 'Estimated Price Per Visit: ') . '£' . number_format($pricePerVisit, 2);
+        $lines[] = '--- Internal Quote Amount Overview (Admin Only) ---';
+        $lines[] = ($frequency === 'one-off' ? 'Suggested Internal Quote: ' : 'Suggested Internal Quote Per Visit: ') . '£' . number_format($pricePerVisit, 2);
 
         if ($numberOfTimes > 1) {
-            $lines[] = "Estimated Total ({$numberOfTimes} visits): £" . number_format($finalEstimate, 2);
+            $lines[] = "Suggested Internal Total ({$numberOfTimes} visits): £" . number_format($finalEstimate, 2);
         }
 
         if ($savingsAmount > 0) {
-            $lines[] = 'Total Savings: £' . number_format($savingsAmount, 2);
+            $lines[] = 'Discount Savings Applied: £' . number_format($savingsAmount, 2);
         }
+
+        $lines[] = 'Customer Confirmation Email: Sent WITHOUT pricing.';
 
         if ($notes !== '') {
             $lines[] = '';

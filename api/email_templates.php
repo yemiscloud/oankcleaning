@@ -285,7 +285,7 @@ HTML;
 }
 
 /**
- * Quote Request — Admin Notification (includes Quote Reference).
+ * Quote Request — Admin Notification (includes Quote Reference & internal price overview).
  *
  * @return array{subject:string, body:string, headers:string}
  */
@@ -301,6 +301,7 @@ if (!function_exists('buildQuoteAdminEmail')) {
         $serviceType = oankFormatServiceLabel((string) ($data['serviceType'] ?? ''));
         $frequency = (string) ($data['frequency'] ?? 'one-off');
         $frequencyLabel = oankFormatFrequencyLabel($frequency);
+        $numberOfTimes = max(1, (int) ($data['numberOfTimes'] ?? 1));
         $bedrooms = (int) ($data['bedrooms'] ?? 0);
         $bathrooms = (int) ($data['bathrooms'] ?? 0);
         $livingRoomDiningRoom = !empty($data['livingRoomDiningRoom']);
@@ -308,8 +309,14 @@ if (!function_exists('buildQuoteAdminEmail')) {
         $suppliesMaterials = !empty($data['suppliesCleaningMaterials']);
         $preferredDate = (string) ($data['preferredDate'] ?? 'As soon as possible');
         $bestDays = (string) ($data['bestDays'] ?? 'Flexible / Any');
+        $baseRate = (float) ($data['baseRate'] ?? 0.0);
+        $bedroomCharge = (float) ($data['bedroomCharge'] ?? 0.0);
+        $bathroomCharge = (float) ($data['bathroomCharge'] ?? 0.0);
+        $addOnsTotal = (float) ($data['addOnsTotal'] ?? 0.0);
+        $livingRoomCharge = (float) ($data['livingRoomDiningRoomCharge'] ?? 0.0);
         $undiscountedPerVisit = (float) ($data['undiscountedPerVisit'] ?? 0.0);
         $pricePerVisit = (float) ($data['pricePerVisit'] ?? 0.0);
+        $finalEstimate = (float) ($data['finalEstimate'] ?? $pricePerVisit);
         $savingsPerVisit = max(0.0, round($undiscountedPerVisit - $pricePerVisit, 2));
         $frequencyDiscountRate = (float) ($data['frequencyDiscountRate'] ?? 0.0);
         $materialsDiscountRate = (float) ($data['materialsDiscountRate'] ?? 0.0);
@@ -335,6 +342,7 @@ if (!function_exists('buildQuoteAdminEmail')) {
 
         $lines = [
             'New Quote Request',
+            '[INTERNAL ADMIN OVERVIEW — Pricing is NOT shown to the customer. Review and adjust as needed before sending the quote to the client.]',
             '',
             'Quote Reference: ' . $quoteId,
             'Client: ' . $name,
@@ -344,21 +352,40 @@ if (!function_exists('buildQuoteAdminEmail')) {
             '',
             'Property: ' . $propertyType,
             'Service: ' . $serviceType,
-            'Frequency: ' . $frequencyLabel,
+            'Frequency: ' . $frequencyLabel . ($numberOfTimes > 1 ? " ({$numberOfTimes} visits)" : ''),
             'Scope: ' . $roomsSummary,
             'Add-ons: ' . oankFormatAddOnsLabel($addOns),
             'Own Materials Supplied: ' . ($suppliesMaterials ? 'Yes (10% discount)' : 'No'),
             'Preferred Date: ' . $preferredDate,
             'Preferred Days: ' . $bestDays,
             '',
-            'Estimated Price Per Visit: £' . number_format($pricePerVisit, 2),
+            '--- Internal Quote Amount Overview (Admin Only) ---',
+            'Base Rate: £' . number_format($baseRate, 2),
+            $roomLabel . ' Charge: £' . number_format($bedroomCharge, 2),
+            'Bathrooms Charge: £' . number_format($bathroomCharge, 2),
         ];
 
-        if ($savingsPerVisit > 0) {
-            $lines[] = 'Standard Price Per Visit: £' . number_format($undiscountedPerVisit, 2);
-            $discountNote = $discountParts !== [] ? ' (' . implode(', ', $discountParts) . ')' : '';
-            $lines[] = 'Customer Savings Per Visit: £' . number_format($savingsPerVisit, 2) . $discountNote;
+        if ($livingRoomCharge > 0) {
+            $lines[] = 'Living / Dining Room: £' . number_format($livingRoomCharge, 2);
         }
+        if ($addOnsTotal > 0) {
+            $lines[] = 'Add-ons Total: £' . number_format($addOnsTotal, 2);
+        }
+
+        $lines[] = 'Standard Price Per Visit (before discounts): £' . number_format($undiscountedPerVisit, 2);
+
+        if ($savingsPerVisit > 0) {
+            $discountNote = $discountParts !== [] ? ' (' . implode(', ', $discountParts) . ')' : '';
+            $lines[] = 'Discount Savings Per Visit: £' . number_format($savingsPerVisit, 2) . $discountNote;
+        }
+
+        $lines[] = 'Suggested Internal Quote Per Visit: £' . number_format($pricePerVisit, 2);
+
+        if ($numberOfTimes > 1) {
+            $lines[] = "Suggested Internal Total ({$numberOfTimes} visits): £" . number_format($finalEstimate, 2);
+        }
+
+        $lines[] = 'Customer Confirmation Email: Sent WITHOUT pricing.';
 
         if ($notes !== '') {
             $lines[] = '';
@@ -375,7 +402,7 @@ if (!function_exists('buildQuoteAdminEmail')) {
 }
 
 /**
- * Quote Request — Client Confirmation (includes Quote Reference & tracking link).
+ * Quote Request — Client Confirmation (NO pricing included; includes Quote Reference & tracking link).
  *
  * @return array{subject:string, html:string, headers:string}
  */
@@ -391,39 +418,28 @@ if (!function_exists('buildQuoteClientEmail')) {
         $safeServiceSummary = oankEscHtml("{$serviceLabel} ({$frequencyLabel})");
         $safePreferredDate = oankEscHtml((string) ($data['preferredDate'] ?? 'As soon as possible'));
 
-        $pricePerVisit = (float) ($data['pricePerVisit'] ?? 0.0);
-        $undiscountedPerVisit = (float) ($data['undiscountedPerVisit'] ?? 0.0);
-        $savingsPerVisit = max(0.0, round($undiscountedPerVisit - $pricePerVisit, 2));
-
-        $visitSuffix = $frequency === 'one-off' ? '' : ' per visit';
-        $priceHtml = '£' . number_format($pricePerVisit, 2) . $visitSuffix;
-        if ($savingsPerVisit > 0) {
-            $priceHtml .= ' <span style="display:inline-block;margin-left:6px;padding:2px 8px;background-color:#dcfce7;color:#166534;border-radius:4px;font-size:12px;font-weight:bold;">You save £'
-                . number_format($savingsPerVisit, 2) . '</span>';
-        }
-
         $phone = oankEscHtml(COMPANY_PHONE_PRIMARY);
         $whatsappLink = oankEscHtml(COMPANY_WHATSAPP_LINK);
 
-        $subject = 'Your OanK Cleaning Quote Estimate [' . safeHeaderValue($quoteId) . ']';
+        $subject = 'We Have Received Your Quote Request [' . safeHeaderValue($quoteId) . ']';
 
         $bodyHtml = <<<HTML
 <p style="margin:0 0 14px;font-size:15px;line-height:1.6;">Hi {$safeName},</p>
 <p style="margin:0 0 18px;font-size:15px;line-height:1.6;">
-    Thank you for requesting a quote with <strong>OanK Cleaning</strong>. Our team will review your requirements and contact you shortly to confirm your booking and final price.
+    Thank you for requesting a quote with <strong>OanK Cleaning</strong>. Our team is reviewing your property details and cleaning requirements, and will contact you shortly with your tailored quote before any booking is confirmed.
 </p>
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 20px;background-color:#f8fafc;border-left:3px solid #0F382C;border-radius:4px;">
     <tr>
         <td style="padding:14px 16px;font-size:13px;line-height:1.8;color:#475569;">
             <div><strong>Quote Reference:</strong> <span style="color:#0F382C;font-weight:bold;">{$safeQuoteId}</span></div>
             <div><strong>Service:</strong> {$safeServiceSummary}</div>
-            <div><strong>Estimated Price:</strong> <strong style="color:#0F382C;">{$priceHtml}</strong></div>
             <div><strong>Preferred Date:</strong> {$safePreferredDate}</div>
+            <div><strong>Status:</strong> Pending Review</div>
         </td>
     </tr>
 </table>
 <p style="margin:0 0 16px;">
-    <a href="https://oankcleaning.co.uk/track-job" style="display:inline-block;background-color:#0F382C;color:#ffffff;padding:11px 18px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Track your quote</a>
+    <a href="https://oankcleaning.co.uk/track-job" style="display:inline-block;background-color:#0F382C;color:#ffffff;padding:11px 18px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Track your request</a>
 </p>
 <p style="margin:0 0 16px;font-size:12px;line-height:1.5;color:#64748b;">
     Please keep your quote reference private. If you need to update your request, call <a href="tel:+447731956727" style="color:#0F382C;font-weight:bold;text-decoration:none;">{$phone}</a> or <a href="{$whatsappLink}" target="_blank" rel="noopener noreferrer" style="color:#0F382C;font-weight:bold;text-decoration:underline;">message us on WhatsApp</a>.
@@ -437,8 +453,8 @@ HTML;
         return [
             'subject' => $subject,
             'html' => renderOankEmailLayoutHtml(
-                'Quote Estimate - ' . COMPANY_NAME,
-                'Your Quote Estimate',
+                'Quote Request Received - ' . COMPANY_NAME,
+                'Quote Request Received',
                 $bodyHtml
             ),
             'headers' => buildClientHtmlMailHeaders(),

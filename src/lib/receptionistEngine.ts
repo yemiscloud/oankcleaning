@@ -265,7 +265,7 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
     answer:
       `Our move-out cleaning service helps tenants and landlords prepare a property for handover. We can discuss the property checklist and agree the cleaning scope before booking.`,
     actions: [
-      { label: 'Move Out Price', route: 'quote', actionType: 'navigate' },
+      { label: 'Request Move Out Quote', route: 'quote', actionType: 'navigate' },
       { label: 'See Details', route: 'services', actionType: 'navigate' },
     ],
   },
@@ -332,9 +332,9 @@ export const KNOWLEDGE_TOPICS: KnowledgeTopic[] = [
       /cost\s+of\s+cleaning/i,
     ],
     answer:
-      `Getting a price is super easy! You have three choices:\n1. Use the Request a Quote form on this website\n2. Click 'Get in Touch' and send a quick message\n3. Call our friendly Paisley team at +44 77 3195 6727`,
+      `Requesting a quote is super easy! You have three choices:\n1. Use the Request a Quote form on this website\n2. Click 'Get in Touch' and send a quick message\n3. Call our friendly Paisley team at +44 77 3195 6727`,
     actions: [
-      { label: 'Check Price Online', route: 'quote', actionType: 'navigate' },
+      { label: 'Request a Quote', route: 'quote', actionType: 'navigate' },
       { label: 'Send a Message', route: 'contact', actionType: 'navigate' },
       { label: 'Call +44 77 3195 6727', phone: '+447731956727', actionType: 'call' },
     ],

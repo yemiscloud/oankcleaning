@@ -198,7 +198,7 @@ export const CookieConsent: React.FC = () => {
             <div className="max-w-3xl">
               <h2 className="text-base font-bold text-slate-900">Your privacy choices</h2>
               <p className="mt-1 text-sm leading-relaxed text-slate-600">
-                We use essential storage to make this website work. With your permission, we also use analytics to understand website use and marketing technologies, including Meta Pixel, to measure advertising. You can accept all optional technologies, reject them, or choose separately. You can change your choice at any time in Cookie settings. Read our Privacy Policy for more information.
+                We use essential storage to make this website work. With your permission, we also use analytics to understand website use and marketing technologies, including Meta Pixel, to measure advertising. You can accept all optional technologies, reject them, or customise your choices before saving. Read our Privacy Policy for more information.
               </p>
               <a href="/privacy-policy" className="mt-2 inline-block text-xs font-semibold text-[#0F382C] underline">Read our Privacy Policy</a>
             </div>

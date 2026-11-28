@@ -55,7 +55,12 @@ try {
  $ref=strtoupper(jaInput($input,'reference',32));
  if($action==='lookup_job'){
    if(!preg_match('/^[A-Z0-9-]{6,32}$/',$ref))sendJsonResponse(false,'Enter a valid job reference.',[],400);
-   $q=$pdo->prepare('SELECT id,reference_no,name,service,preferred_date,status,created_at,delivered_at FROM enquiries WHERE reference_no=? LIMIT 1');$q->execute([$ref]);$job=$q->fetch(PDO::FETCH_ASSOC);
+   $desiredCols=['id','reference_no','name','email','phone','service','postcode','preferred_date','preferred_days','property_type','bedrooms','bathrooms','frequency','frequency_count','frequency_discount_rate','add_ons','living_room_dining_room','materials_discount_rate','quote_estimate','original_estimate','savings_amount','price_per_visit','message','status','created_at','delivered_at'];
+   $availableCols=getEnquiriesTableColumns($pdo);
+   $selectCols=array_values(array_intersect($desiredCols,$availableCols));
+   if(empty($selectCols))$selectCols=['id','reference_no','name','service','preferred_date','status','created_at','delivered_at'];
+   $sql='SELECT '.implode(',',$selectCols).' FROM enquiries WHERE reference_no=? LIMIT 1';
+   $q=$pdo->prepare($sql);$q->execute([$ref]);$job=$q->fetch(PDO::FETCH_ASSOC);
    if(!$job)sendJsonResponse(false,'No job was found with that reference.',[],404);
    sendJsonResponse(true,'Job found.',['job'=>$job]);
  }

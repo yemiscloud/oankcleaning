@@ -84,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
             onClick={() => handleNavClick('quote')}
             className="bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-xl shadow-sm transition-all cursor-pointer whitespace-nowrap"
           >
-            Get Instant Quote
+            Request a Quote
           </button>
         </div>
 
@@ -153,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({ currentRoute, onNavigate }) => {
                 onClick={() => handleNavClick('quote')}
                 className="w-full bg-[#D4AF37] hover:bg-[#b8860b] text-[#0F382C] font-bold text-xs uppercase tracking-wider py-3 rounded-xl shadow cursor-pointer text-center"
               >
-                Get Instant Quote
+                Request a Quote
               </button>
             </div>
           </div>

@@ -19,7 +19,7 @@ export const QuotePage: React.FC<QuotePageProps> = () => {
             Request a Cleaning Quote
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-2xl mx-auto leading-relaxed">
-            Explore our starting prices and request a quote for the cleaning work you need. Our team can confirm the scope and price before you book.
+            Tell us about the cleaning work you need and submit your request. Our team will review your requirements and send you a tailored quote before you book.
           </p>
         </div>
       </section>

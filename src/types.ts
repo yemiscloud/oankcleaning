@@ -64,12 +64,7 @@ export interface ApiResponse<T = any> {
   message: string;
   referenceNo?: string;
   quoteId?: string;
-  estimatedPrice?: number;
-  originalTotal?: number;
-  savings?: number;
-  pricePerVisit?: number;
   frequencyCount?: number;
-  breakdown?: any;
   databaseDelivered?: boolean;
   emailDelivered?: boolean;
   data?: T;
